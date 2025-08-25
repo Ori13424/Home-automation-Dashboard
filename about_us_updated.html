@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+  <title data-i18n="welcome">ByteBot - Master Your Home's Smart Devices</title>
+
+  <!-- TailwindCSS -->
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet"/>
+  <!-- Font Awesome -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet"/>
+  <!-- Inter Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #f1f7fb;
+    }
+    .fade-in {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: all 0.6s ease-in-out;
+    }
+    .fade-in.visible {
+      opacity: 1;
+      transform: none;
+    }
+    .section-heading {
+      font-size: 2.5rem;
+      font-weight: bold;
+      color: #2a3a56;
+    }
+    .section-subheading {
+      font-size: 1.125rem;
+      color: #65758b;
+    }
+    .button-primary {
+      background-color: #3a77ff;
+      color: white;
+      padding: 12px 36px;
+      border-radius: 50px;
+      font-weight: 600;
+      transition: all 0.3s ease;
+    }
+    .button-primary:hover {
+      background-color: #2a5eff;
+      transform: scale(1.05);
+    }
+
+    /* Active nav link style */
+    nav a.active {
+      color: #1d4ed8; /* Tailwind blue-700 */
+      font-weight: 700;
+      border-bottom: 2px solid #3a77ff;
+      padding-bottom: 2px;
+    }
+  </style>
+</head>
+
+<body class="scroll-smooth">
+  <!-- Header -->
+  <header class="flex justify-between items-center px-6 md:px-20 py-4 bg-white shadow-md sticky top-0 z-50">
+    <div class="text-2xl font-bold text-blue-700">ByteBot</div>
+    <nav class="space-x-6 text-sm font-medium hidden md:block">
+      <a class="hover:text-blue-600" href="index.html" data-i18n="home">Home</a>
+      <a class="hover:text-blue-600" href="about_us_updated.html" data-i18n="about_us">About Us</a>
+      <a class="hover:text-blue-600" href="about.html" data-i18n="products">Products</a>
+      <a class="hover:text-blue-600" href="dashboard.html" data-i18n="smarthome_dashboard">Dashboard</a>
+      <a class="hover:text-[#0B1229] transition font-semibold text-blue-700" href="support.html" data-i18n="support">Support</a>
+    </nav>
+    <div class="flex items-center space-x-4">
+      <a href="sign_in_up.html" data-i18n="get_started" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition text-sm font-semibold">Get Started</a>
+      <select id="languageToggle" class="border border-gray-300 rounded-md text-sm px-2 py-1 focus:outline-none">
+        <option value="en">EN</option>
+        <option value="bn">বাংলা</option>
+      </select>
+    </div>
+  </header>
+
+  <!-- Main Content Section -->
+  <section class="px-6 md:px-20 py-16 bg-gradient-to-r from-blue-50 via-blue-100 to-blue-200 fade-in">
+    <div class="max-w-[960px] mx-auto">
+      <h2 class="section-heading mb-4 px-4" data-i18n="our_mission">Our Mission</h2>
+      <p class="section-subheading mb-8 px-4" data-i18n="mission_statement">
+        To empower Bangladeshi homes and businesses with sustainable, affordable, and locally-tailored smart automation solutions using recycled materials, modular designs, and Bangla-friendly interfaces.
+      </p>
+
+      <h2 class="section-heading mb-4 px-4" data-i18n="our_history">Our History</h2>
+      <p class="section-subheading mb-8 px-4" data-i18n="about_bytebots">
+        Bytebots was established by a team of proficient engineering students from the Departments of Electronics &amp; Telecommunication Engineering and Chemical Engineering at Rajshahi University of Engineering &amp; Technology (RUET). Leveraging their academic expertise in embedded systems, sustainable design, and materials engineering, the founders aimed to address the pressing needs of Bangladeshi households and institutions.
+      </p>
+
+      <h2 class="section-heading mb-4 px-4" data-i18n="meet_the_team">Meet the Team</h2>
+      <div class="grid grid-cols-[repeat(auto-fit,minmax(158px,1fr))] gap-6 px-4">
+        <!-- Team Members -->
+        <div class="text-center my-8">
+
+          <div class="flex justify-center gap-8 flex-wrap">
+            <div class="flex flex-col gap-2 text-center">
+              <div class="w-32 h-32 bg-center bg-no-repeat bg-cover rounded-full mx-auto" style="background-image: url('images/ajraf.jpg');"></div>
+              <p class="text-[#0d141c] font-medium" data-i18n="ajraf_fahim">Ajraf Fahim</p>
+              <p class="text-[#49739c] text-sm" data-i18n="product_design_and_development">Product Design and Development</p>
+            </div>
+
+            <div class="flex flex-col gap-2 text-center">
+              <div class="w-32 h-32 bg-center bg-no-repeat bg-cover rounded-full mx-auto" style="background-image: url('images/arib.jpg');"></div>
+              <p class="text-[#0d141c] font-medium" data-i18n="md_atique_ashfak_arib">Md Atique Ashfak Arib</p>
+              <p class="text-[#49739c] text-sm" data-i18n="research_and_analysis">Research and Analysis</p>
+            </div>
+
+            <div class="flex flex-col gap-2 text-center">
+              <div class="w-32 h-32 bg-center bg-no-repeat bg-cover rounded-full mx-auto" style="background-image: url('images/Fayem.jpg');"></div>
+              <p class="text-[#0d141c] font-medium" data-i18n="fayem_muktadir_rahman">Fayem Muktadir Rahman</p>
+              <p class="text-[#49739c] text-sm" data-i18n="software_development">Software Development</p>
+            </div>
+
+            <div class="flex flex-col gap-2 text-center">
+              <div class="w-32 h-32 bg-center bg-no-repeat bg-cover rounded-full mx-auto" style="background-image: url('images/dyuti.jpg');"></div>
+              <p class="text-[#0d141c] font-medium" data-i18n="maimuna_farzana_dyuti">Maimuna Farzana Dyuti</p>
+              <p class="text-[#49739c] text-sm" data-i18n="marketing">Marketing</p>
+            </div>
+
+            <div class="flex flex-col gap-2 text-center">
+              <div class="w-32 h-32 bg-center bg-no-repeat bg-cover rounded-full mx-auto" style="background-image: url('images/joy.jpg');"></div>
+              <p class="text-[#0d141c] font-medium" data-i18n="mosabbir_alam_joy">Mosabbir Alam Joy</p>
+              <p class="text-[#49739c] text-sm" data-i18n="business_strategy">Business Strategy</p>
+            </div>
+          </div>
+        </div>
+      </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="bg-gradient-to-r from-blue-50 via-blue-100 to-blue-200 text-center text-sm text-gray-600 py-8">
+    <div class="mb-4 font-semibold text-blue-700 text-xl">ByteBot</div>
+    <nav class="space-x-4 mb-4">
+      <a class="hover:text-blue-600" href="index.html" data-i18n="home">Home</a>
+      <a class="hover:text-blue-600" href="about_us_updated.html" data-i18n="about_us">About Us</a>
+      <a class="hover:text-blue-600" href="about.html" data-i18n="products">Products</a>
+      <a class="hover:text-blue-600" href="support.html" data-i18n="support">Support</a>
+      <a class="hover:text-blue-600" href="dashboard.html" data-i18n="dashboard">Dashboard</a>
+    </nav>
+    <p data-i18n="©_2025_bytebot_inc_all_rights_reserved">© 2025 ByteBot Inc. All rights reserved.</p>
+  </footer>
+
+  <!-- Language Switcher & Fade-in script -->
+  <script>
+    const langSelect = document.getElementById("languageToggle");
+    const currentLang = localStorage.getItem("language") || "en";
+    langSelect.value = currentLang;
+
+    langSelect.addEventListener("change", function () {
+      localStorage.setItem("language", this.value);
+      location.reload();
+    });
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        }
+      });
+    }, { threshold: 0.1 });
+
+    document.querySelectorAll('.fade-in').forEach(el => {
+      observer.observe(el);
+    });
+
+    // Highlight current nav link
+    document.addEventListener('DOMContentLoaded', () => {
+      const currentPath = window.location.pathname.split('/').pop();
+      document.querySelectorAll('nav a').forEach(link => {
+        if (link.getAttribute('href') === currentPath) {
+          link.classList.add('active');
+        }
+      });
+    });
+  </script>
+  <script src="lang.js"></script>
+</body>
+</html>

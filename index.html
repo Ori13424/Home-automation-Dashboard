@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title data-i18n="welcome">ByteBot - Master Your Home's Smart Devices</title>
+<link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet"/>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet"/>
+<style>
+      body {
+        font-family: 'Inter', sans-serif;
+        background-color: #f1f7fb; /* Soft background color */
+      }
+      .fade-in {
+        opacity: 0;
+        transform: translateY(20px);
+        transition: all 0.6s ease-in-out;
+      }
+      .fade-in.visible {
+        opacity: 1;
+        transform: none;
+      }
+      .section-heading {
+        font-size: 2.5rem;
+        font-weight: bold;
+        color: #2a3a56; /* Soft blue color for headings */
+      }
+      .section-subheading {
+        font-size: 1.125rem;
+        color: #65758b; /* Slightly muted gray-blue for subheadings */
+      }
+      .button-primary {
+        background-color: #3a77ff;
+        color: white;
+        padding: 12px 36px;
+        border-radius: 50px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+      }
+      .button-primary:hover {
+        background-color: #2a5eff;
+        transform: scale(1.05);
+      }
+      .product-card {
+        background-color: white;
+        border-radius: 12px;
+        box-shadow: 0px 6px 20px rgba(0, 0, 0, 0.1);
+        padding: 20px;
+        text-align: center;
+        transition: all 0.3s ease;
+      }
+      .product-card:hover {
+        transform: scale(1.05);
+      }
+      .product-image {
+        width: 100%;
+        height: auto;
+        border-radius: 12px;
+      }
+      .stats-item {
+        text-align: center;
+      }
+      .stats-item div {
+        font-size: 2.5rem;
+        font-weight: 600;
+        color: #3a77ff;
+      }
+      /* New style for active nav link */
+      nav a.active {
+        color: #1d4ed8; /* Tailwind blue-700 */
+        font-weight: 700;
+        border-bottom: 2px solid #3a77ff;
+        padding-bottom: 2px;
+      }
+    </style>
+</head>
+<body class="scroll-smooth">
+<div style="position: fixed; top: 10px; right: 10px; background: white; padding: 5px; z-index: 999;">
+
+</div>
+<!-- Header Section -->
+<header class="flex justify-between items-center px-6 md:px-20 py-4 bg-white shadow-md sticky top-0 z-50">
+  <div class="text-2xl font-bold text-blue-700">ByteBot</div>
+  <nav class="space-x-6 text-sm font-medium hidden md:block">
+    <a class="hover:text-blue-600" data-i18n="home" href="index.html">Home</a>
+    <a class="hover:text-blue-600" data-i18n="about_us" href="about_us_updated.html">About Us</a>
+    <a class="hover:text-blue-600" data-i18n="products" href="about.html">Products</a>
+    <a data-i18n="smarthome_dashboard" class="hover:text-blue-600" href="fullycorrectedcontrol.html">Dashboard</a>
+    <a href="support.html" class="hover:text-[#0B1229] transition font-semibold text-blue-700" data-i18n="support">Support</a>
+
+      
+  </nav>
+
+  <div class="flex items-center space-x-4">
+    <a data-i18n="get_started" href="sign_in_up.html"
+       class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition text-sm font-semibold">
+      Get Started
+    </a>
+    <select id="languageToggle" class="border border-gray-300 rounded-md text-sm px-2 py-1 focus:outline-none">
+      <option value="en">EN</option>
+      <option value="bn">বাংলা</option>
+    </select>
+  </div>
+</header>
+
+<!-- Hero Section -->
+<section class="flex flex-col-reverse md:flex-row items-center justify-between px-6 md:px-20 py-16 bg-gradient-to-r from-blue-50 via-blue-100 to-blue-200 fade-in">
+<div class="md:w-1/2 text-center md:text-left">
+<h1 class="section-heading mb-4" data-i18n="rooted_locally_built_securely_trusted_globally">Rooted locally. Built securely. Trusted globally</h1>
+<p class="section-subheading mb-6" data-i18n="modern_home_description"> Experience a modern home with state-of-the-art features which are locally crafted and fully controllable from your smartphone.
+
+        </p>
+<button class="button-primary" data-i18n="explore_now">Explore Now</button>
+</div>
+<div class="md:w-1/2 mb-8 md:mb-0">
+<img alt="Smart Home" class="w-full max-w-md mx-auto md:mx-1" src="images/bytebots_logo_blended-Picsart-BackgroundChanger-Picsart-BackgroundChanger.png"/>
+</div>
+</section>
+
+<!-- Seamless Control Section -->
+<section class="py-16 px-6 md:px-20 text-center bg-white fade-in">
+  <h2 class="section-heading mb-10" data-i18n="seamless_control">Seamless Control</h2>
+  <p class="section-subheading mb-6" data-i18n="manage_all_your_devices_effortlessly_from_one_place_with_our_easy-to-use_mobile_app">Manage all your devices effortlessly from one place with our easy-to-use mobile app.</p>
+  <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 gap-12 mb-12 justify-center">
+    <!-- Smart Switch Card -->
+    <div class="product-card hover:scale-105 transition-transform duration-300 cursor-pointer w-80 mx-auto" onclick="window.location.href='smart_switch.html'">
+      <img alt="Smart Switch" class="w-64 h-64 mx-auto mb-4 object-contain" src="images/demo1 (1).jpg"/>
+      <h3 class="text-2xl font-semibold mb-2" data-i18n="smart_switch">Smart Switch</h3>
+    </div>
+
+    <!-- Smart Cleaner Card -->
+    <div class="product-card hover:scale-105 transition-transform duration-300 cursor-pointer w-80 mx-auto" onclick="window.location.href='smart_cleaner.html'">
+      <img alt="Smart Cleaner" class="w-64 h-64 mx-auto mb-4 object-contain" src="images/demo1 (2).jpg"/>
+      <h3 class="text-2xl font-semibold mb-2" data-i18n="smart_cleaner">Smart Cleaner</h3>
+    </div>
+  </div>
+</section>
+
+
+
+
+<!-- How It Works Section (Updated with the provided UI Image) -->
+<section class="py-16 px-6 md:px-20 text-center bg-gradient-to-r from-blue-100 via-blue-50 to-blue-100 fade-in">
+<h2 class="section-heading mb-10" data-i18n="how_it_works">How It Works</h2>
+<p class="section-subheading mb-6">Control your devices with ease using our intuitive mobile app. Stay connected to your home, wherever you are.</p>
+<img alt="Smart App Interface" class="w-auto mx-auto" src="images/ui2-Picsart-BackgroundChanger.png"/>
+</section>
+<!-- Download Section -->
+<section class="py-16 px-6 md:px-20 text-center bg-white fade-in">
+<h2 class="text-2xl font-semibold mb-4" data-i18n="control_your_smart_home_anytime_anywhere">Control Your Smart Home Anytime, Anywhere.</h2>
+<p class="text-gray-600 mb-6" data-i18n="download_the_app_to_manage_your_devices_on_the_go">Download the app to manage your devices on the go.</p>
+<div class="space-x-4 mb-6">
+<button class="button-primary" data-i18n="app_store">App Store</button>
+<button class="button-primary" data-i18n="google_play">Google Play</button>
+</div>
+</section>
+<!-- Footer -->
+<footer class="bg-blue-50 text-center text-sm text-gray-500 py-8">
+<div class="mb-4 font-semibold text-blue-700 text-xl">ByteBot</div>
+<nav class="space-x-4 mb-4"><a class="hover:text-blue-600" data-i18n="home" href="index.html">Home</a><a class="hover:text-blue-600" data-i18n="about_us" href="about_us_updated.html">About Us</a><a class="hover:text-blue-600" data-i18n="products" href="about.html">Products</a><a class="hover:text-blue-600" data-i18n="support" href="support.html">Support</a> <a data-i18n="dashboard" href="dashboard.html">Dashboard</a>
+</nav>
+<p data-i18n="©_2025_bytebot_inc_all_rights_reserved">© 2025 ByteBot Inc. All rights reserved.</p>
+</footer>
+<script>
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+          }
+        });
+      }, {
+        threshold: 0.1
+      });
+
+      document.querySelectorAll('.fade-in').forEach(el => {
+        observer.observe(el);
+      });
+    
+  // Load selected language from localStorage
+  const langSelect = document.getElementById("languageToggle");
+  const currentLang = localStorage.getItem("language") || "en";
+  langSelect.value = currentLang;
+
+  langSelect.addEventListener("change", function () {
+    const selectedLang = this.value;
+    localStorage.setItem("language", selectedLang);
+    location.reload();
+  });
+
+  // Highlight the current page in nav
+  document.addEventListener('DOMContentLoaded', () => {
+    const currentPath = window.location.pathname.split('/').pop(); 
+    document.querySelectorAll('nav a').forEach(link => {
+      if (link.getAttribute('href') === currentPath) {
+        link.classList.add('active');
+      }
+    });
+  });
+</script>
+<script src="lang.js"></script>
+<button data-i18n="en" onclick="changeLanguage('en')">EN</button>
+<button data-i18n="বাংলা" onclick="changeLanguage('bn')">বাংলা</button>
+<script src="lang.js"></script></body>
+</html>

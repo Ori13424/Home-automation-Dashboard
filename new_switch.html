@@ -1,0 +1,1358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Switch Products - Affordable Home Automation</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+        
+        :root {
+            --primary-color: #3a77ff;
+            --secondary-color: #2a5eff;
+            --text-color: #2a3a56;
+            --text-light-color: #4a5568;
+            --background-color: #f1f7fb;
+            --product-card-bg: white;
+            --card-shadow: rgba(0, 0, 0, 0.1);
+            --active-link-color: #1d4ed8;
+        }
+        
+        body { 
+            font-family: 'Inter', sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
+        }
+        
+        .soft-card {
+            background: var(--product-card-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            box-shadow: 0 6px 20px var(--card-shadow);
+        }
+        
+        .soft-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+            border-color: rgba(58, 119, 255, 0.3);
+        }
+        
+        .gentle-pulse {
+            animation: gentle-pulse 3s ease-in-out infinite;
+        }
+        
+        @keyframes gentle-pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.8; transform: scale(1.02); }
+        }
+        
+        .soft-gradient-bg {
+            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 50%, #f1f7fb 100%);
+            position: relative;
+        }
+        
+        .soft-gradient-bg::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%233a77ff' fill-opacity='0.03'%3E%3Ccircle cx='20' cy='20' r='2'/%3E%3C/g%3E%3C/svg%3E");
+        }
+        
+        .replaceable-image {
+            border: 2px dashed var(--primary-color);
+            background: linear-gradient(45deg, #f0f9ff 25%, transparent 25%), 
+                        linear-gradient(-45deg, #f0f9ff 25%, transparent 25%), 
+                        linear-gradient(45deg, transparent 75%, #f0f9ff 75%), 
+                        linear-gradient(-45deg, transparent 75%, #f0f9ff 75%);
+            background-size: 16px 16px;
+            background-position: 0 0, 0 8px, 8px -8px, -8px 0px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--secondary-color);
+            font-weight: 500;
+            text-align: center;
+            transition: all 0.3s ease;
+            border-radius: 16px;
+        }
+        
+        .replaceable-image:hover {
+            border-color: var(--secondary-color);
+            color: var(--active-link-color);
+            transform: scale(1.01);
+        }
+        
+        .feature-icon {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            width: 60px;
+            height: 60px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+            transition: all 0.3s ease;
+        }
+        
+        .feature-icon:hover {
+            transform: rotate(5deg) scale(1.1);
+            box-shadow: 0 10px 25px rgba(58, 119, 255, 0.3);
+        }
+        
+        .price-tag {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 0.875rem;
+            display: inline-block;
+        }
+        
+        .model-card {
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .model-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+            transition: left 0.5s;
+        }
+        
+        .model-card:hover::before {
+            left: 100%;
+        }
+        
+        .model-card:hover {
+            transform: translateY(-12px);
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.15);
+        }
+        
+        .soft-button {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(58, 119, 255, 0.3);
+        }
+        
+        .soft-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(58, 119, 255, 0.4);
+            background: linear-gradient(135deg, var(--secondary-color), var(--active-link-color));
+        }
+        
+        .stats-number {
+            font-size: 2rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .section-divider {
+            height: 1px;
+            background: linear-gradient(90deg, transparent, #e5e7eb, transparent);
+            margin: 4rem 0;
+        }
+        
+        .floating-element {
+            animation: float-gentle 4s ease-in-out infinite;
+        }
+        
+        @keyframes float-gentle {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-6px); }
+        }
+        
+        .check-mark {
+            color: var(--primary-color);
+            font-weight: bold;
+        }
+        
+        .cross-mark {
+            color: #ef4444;
+            font-weight: bold;
+        }
+        
+        .soft-shadow {
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+        }
+        
+        .section-heading {
+            color: var(--text-color);
+        }
+    </style>
+</head>
+<body style="background-color: var(--background-color)">
+    <!-- ByteBot Header -->
+    <header class="flex justify-between items-center px-6 md:px-20 py-4 bg-white/80 backdrop-blur-lg shadow-sm sticky top-0 z-50 border-b border-gray-100">
+        <div class="text-2xl font-bold text-blue-700">ByteBot</div>
+        <nav class="space-x-6 text-sm font-medium hidden md:block">
+            <a class="navbar-link hover:text-blue-600" data-i18n="home" href="index.html">Home</a>
+            <a class="navbar-link hover:text-blue-600" data-i18n="about_us" href="about_us_updated.html">About Us</a>
+            <a class="navbar-link hover:text-blue-600" data-i18n="products" href="about.html">Products</a>
+            <a data-i18n="smarthome_dashboard" class="navbar-link hover:text-blue-600" href="dashboard.html">Dashboard</a>
+            <a href="support.html" class="navbar-link hover:text-[#0B1229] transition font-semibold text-blue-700" data-i18n="support">Support</a>
+        </nav>
+
+        <div class="flex items-center space-x-4">
+            <a data-i18n="get_started" href="sign_in_up.html"
+               class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition text-sm font-semibold">
+              Get Started
+            </a>
+            <select id="languageToggle" class="border border-gray-300 rounded-md text-sm px-2 py-1 focus:outline-none">
+              <option value="en">EN</option>
+              <option value="bn">বাংলা</option>
+            </select>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="soft-gradient-bg py-20 relative">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="grid lg:grid-cols-2 gap-16 items-center">
+                <div>
+                
+                    <h2 class="text-5xl lg:text-6xl font-bold mb-6 leading-tight" style="color: var(--text-color)">
+                        Smart Switching
+                        <span class="block text-transparent bg-clip-text bg-gradient-to-r" style="background: linear-gradient(135deg, var(--primary-color), var(--secondary-color)); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
+                            Made Simple
+                        </span>
+                    </h2>
+                    
+                    <p class="text-xl mb-8 leading-relaxed" style="color: var(--text-light-color)">
+                        Advanced smart switch technology with Bangla interface, offline operation, and energy monitoring. Perfect for every Bangladesh home.
+                    </p>
+                    
+                    <!-- Key Benefits -->
+                    <div class="grid grid-cols-2 gap-4 mb-8">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-2 h-2 bg-blue-500 rounded-full"></div>
+                            <span class="text-gray-700 font-medium">Bangla Interface</span>
+                        </div>
+                        <div class="flex items-center space-x-3">
+                            <div class="w-2 h-2 bg-blue-500 rounded-full"></div>
+                            <span class="text-gray-700 font-medium">Works Offline</span>
+                        </div>
+                        <div class="flex items-center space-x-3">
+                            <div class="w-2 h-2 bg-blue-500 rounded-full"></div>
+                            <span class="text-gray-700 font-medium">Energy Monitoring</span>
+                        </div>
+                        <div class="flex items-center space-x-3">
+                            <div class="w-2 h-2 bg-blue-500 rounded-full"></div>
+                            <span class="text-gray-700 font-medium">Easy Installation</span>
+                        </div>
+                    </div>
+                    
+                    <div class="flex flex-col sm:flex-row gap-4">
+                        <button class="soft-button">
+                            Explore Models
+                        </button>
+                        <button class="bg-white text-blue-600 px-8 py-4 rounded-full font-semibold border-2 border-blue-200 hover:border-blue-300 transition-all">
+                            Learn More
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Hero Image -->
+                <div class="floating-element">
+                    <div class="replaceable-image h-96 soft-shadow">
+                        <div>
+                            <div class="text-6xl mb-4">💡</div>
+                            <div class="text-lg">Hero Product Image<br>Replace with main smart switch<br>Recommended: 600x500px</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="py-20" style="background-color: var(--product-card-bg)">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <div class="feature-icon mx-auto mb-6">
+                    <span class="text-white text-2xl">⚡</span>
+                </div>
+                <h2 class="text-4xl font-bold mb-4 section-heading">Smart Features</h2>
+                <p class="text-xl max-w-2xl mx-auto" style="color: var(--text-light-color)">Every feature designed with Bangladesh homes and lifestyles in mind</p>
+            </div>
+
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Smart Scheduling -->
+                <div class="soft-card rounded-3xl p-8">
+                    <div class="feature-icon">
+                        <span class="text-white text-2xl">⏰</span>
+                    </div>
+                    
+                    <div class="replaceable-image h-48 mb-6">
+                        <div>
+                            <div class="text-4xl mb-2">⏰</div>
+                            <div>Smart Scheduling<br>400x300px</div>
+                        </div>
+                    </div>
+                    
+                    <h3 class="text-xl font-bold text-gray-900 mb-3">Smart Scheduling</h3>
+                    <p class="text-gray-600 mb-6">Time-based automated switching for lights, fans, and appliances. Set schedules that match your daily routine.</p>
+                    
+                    <div class="space-y-3">
+                        <div class="flex items-center text-sm text-gray-500">
+                            <span class="check-mark mr-3">✓</span> Daily/weekly schedules
+                        </div>
+                        <div class="flex items-center text-sm text-gray-500">
+                            <span class="check-mark mr-3">✓</span> Sunrise/sunset automation
+                        </div>
+                        <div class="flex items-center text-sm text-gray-500">
+                            <span class="check-mark mr-3">✓</span> Holiday mode settings
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Manual & App Control -->
+                <div class="soft-card rounded-3xl p-8">
+                    <div class="feature-icon">
+                        <span class="text-white text-2xl">📱</span>
+                    </div>
+                    
+                    <div class="replaceable-image h-48 mb-6">
+                        <div>
+                            <div class="text-4xl mb-2">📱</div>
+                            <div>App Control<br>400x300px</div>
+                        </div>
+                    </div>
+                    
+                    <h3 class="text-xl font-bold text-gray-900 mb-3">Manual & App Control</h3>
+                    <p class="text-gray-600 mb-6">Physical switch and mobile app operation. Control your switches from anywhere in your home or remotely.</p>
+                    
+                    <div class="space-y-3">
+                        <div class="flex items-center text-sm text-gray-500">
+                            <span class="check-mark mr-3">✓</span> Physical switch operation
+                        </div>
+                        <div class="flex items-center text-sm text-gray-500">
+                            <span class="check-mark mr-3">✓</span> Mobile app control
+                        </div>
+                        <div class="flex items-center text-sm text-gray-500">
+                            <span class="check-mark mr-3">✓</span> Remote access capability
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Bangla Interface -->
+                <div class="soft-card rounded-3xl p-8">
+                    <div class="feature-icon">
+                        <span class="text-white text-2xl">🗣️</span>
+                    </div>
+                    
+                    <div class="replaceable-image h-48 mb-6">
+                        <div>
+                            <div class="text-4xl mb-2">🗣️</div>
+                            <div>Bangla Interface<br>400x300px</div>
+                        </div>
+                    </div>
+                    
+                    <h3 class="text-xl font-bold text-gray-900 mb-3">Bangla Interface</h3>
+                    <p class="text-gray-600 mb-6">App UI and voice commands in Bangla. Navigate and control your smart switches in your native language.</p>
+                    
+                    <div class="space-y-3">
+                        <div class="flex items-center text-sm text-gray-500">
+                            <span class="check-mark mr-3">✓</span> Full Bangla app interface
+                        </div>
+                        <div class="flex items-center text-sm text-gray-500">
+                            <span class="check-mark mr-3">✓</span> Voice commands in Bangla
+                        </div>
+                        <div class="flex items-center text-sm text-gray-500">
+                            <span class="check-mark mr-3">✓</span> Local language support
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Offline Functionality -->
+                <div class="soft-card rounded-3xl p-8">
+                    <div class="feature-icon">
+                        <span class="text-white text-2xl">📶</span>
+                    </div>
+                    
+                    <div class="replaceable-image h-48 mb-6">
+                        <div>
+                            <div class="text-4xl mb-2">📶</div>
+                            <div>Offline Control<br>400x300px</div>
+                        </div>
+                    </div>
+                    
+                    <h3 class="text-xl font-bold text-gray-900 mb-3">Offline Functionality</h3>
+                    <p class="text-gray-600 mb-6">Works without internet using local Zigbee or Bluetooth. Reliable operation even during internet outages.</p>
+                    
+                    <div class="space-y-3">
+                        <div class="flex items-center text-sm text-gray-500">
+                            <span class="check-mark mr-3">✓</span> Local Zigbee network
+                        </div>
+                        <div class="flex items-center text-sm text-gray-500">
+                            <span class="check-mark mr-3">✓</span> Bluetooth connectivity
+                        </div>
+                        <div class="flex items-center text-sm text-gray-500">
+                            <span class="check-mark mr-3">✓</span> No internet dependency
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Energy Monitoring -->
+                <div class="soft-card rounded-3xl p-8">
+                    <div class="feature-icon">
+                        <span class="text-white text-2xl">⚡</span>
+                    </div>
+                    
+                    <div class="replaceable-image h-48 mb-6">
+                        <div>
+                            <div class="text-4xl mb-2">⚡</div>
+                            <div>Energy Monitor<br>400x300px</div>
+                        </div>
+                    </div>
+                    
+                    <h3 class="text-xl font-bold text-gray-900 mb-3">Energy Monitoring</h3>
+                    <p class="text-gray-600 mb-6">Real-time power consumption display. Track your electricity usage and save money on your bills.</p>
+                    
+                    <div class="space-y-3">
+                        <div class="flex items-center text-sm text-gray-500">
+                            <span class="check-mark mr-3">✓</span> Real-time power tracking
+                        </div>
+                        <div class="flex items-center text-sm text-gray-500">
+                            <span class="check-mark mr-3">✓</span> Monthly usage reports
+                        </div>
+                        <div class="flex items-center text-sm text-gray-500">
+                            <span class="check-mark mr-3">✓</span> Cost calculation in Taka
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Modular Design -->
+                <div class="soft-card rounded-3xl p-8">
+                    <div class="feature-icon">
+                        <span class="text-white text-2xl">🔧</span>
+                    </div>
+                    
+                    <div class="replaceable-image h-48 mb-6">
+                        <div>
+                            <div class="text-4xl mb-2">🔧</div>
+                            <div>Modular Design<br>400x300px</div>
+                        </div>
+                    </div>
+                    
+                    <h3 class="text-xl font-bold text-gray-900 mb-3">Modular Design</h3>
+                    <p class="text-gray-600 mb-6">Replaceable switch modules and expandable setup. Easy upgrades and repairs without replacing the entire unit.</p>
+                    
+                    <div class="space-y-3">
+                        <div class="flex items-center text-sm text-gray-500">
+                            <span class="check-mark mr-3">✓</span> Replaceable modules
+                        </div>
+                        <div class="flex items-center text-sm text-gray-500">
+                            <span class="check-mark mr-3">✓</span> Expandable system
+                        </div>
+                        <div class="flex items-center text-sm text-gray-500">
+                            <span class="check-mark mr-3">✓</span> Easy maintenance
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="section-divider"></div>
+
+    <!-- Models Section -->
+    <section class="py-20" style="background-color: var(--background-color)">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <div class="feature-icon mx-auto mb-6">
+                    <span class="text-white text-2xl">🛒</span>
+                </div>
+                <h2 class="text-4xl font-bold mb-4 section-heading">Choose Your Model</h2>
+                <p class="text-xl max-w-2xl mx-auto" style="color: var(--text-light-color)">Three carefully designed options for different home sizes and budgets</p>
+            </div>
+
+            <!-- Model Cards -->
+            <div class="grid md:grid-cols-3 gap-8 mb-16">
+                <!-- Basic Model -->
+                <div class="model-card soft-card rounded-3xl p-8 bg-white">
+                    <div class="text-center mb-6">
+                        <div class="inline-block bg-gray-100 text-gray-600 px-4 py-2 rounded-full text-sm font-semibold mb-4">
+                            STARTER
+                        </div>
+                        <h3 class="text-2xl font-bold text-gray-900 mb-2">SmartSwitch Basic</h3>
+                        <div class="stats-number text-4xl mb-2">৳1,500</div>
+                        <p class="text-gray-600">Perfect for single rooms</p>
+                    </div>
+                    
+                    <div class="replaceable-image h-48 mb-6">
+                        <div>
+                            <div class="text-4xl mb-2">💡</div>
+                            <div>Basic Model Image<br>350x250px</div>
+                        </div>
+                    </div>
+                    
+                    <div class="space-y-3 mb-8">
+                        <div class="flex items-center"><span class="check-mark mr-3 text-lg">✓</span> Manual & app control</div>
+                        <div class="flex items-center"><span class="check-mark mr-3 text-lg">✓</span> Basic scheduling</div>
+                        <div class="flex items-center"><span class="check-mark mr-3 text-lg">✓</span> Bangla interface</div>
+                        <div class="flex items-center"><span class="check-mark mr-3 text-lg">✓</span> Offline functionality</div>
+                        <div class="flex items-center"><span class="check-mark mr-3 text-lg">✓</span> Easy installation</div>
+                        <div class="flex items-center"><span class="cross-mark mr-3 text-lg">✗</span> Energy monitoring</div>
+                        <div class="flex items-center"><span class="cross-mark mr-3 text-lg">✗</span> Modular design</div>
+                    </div>
+                    
+                    <button class="w-full bg-gray-600 hover:bg-gray-700 text-white py-4 rounded-2xl font-semibold transition-all">
+                        Order Basic Model
+                    </button>
+                </div>
+
+                <!-- Standard Model -->
+                <div class="model-card soft-card rounded-3xl p-8 bg-white border-2 border-emerald-200 relative">
+                     <div class="text-center mb-6">
+                        <div class="inline-block bg-blue-400 text-black-600 px-4 py-2 rounded-full text-sm font-semibold mb-4">
+                            POPULAR
+                        </div>
+                    </div>
+                    
+                    
+                    <div class="text-center mb-6 mt-4">
+                        <h3 class="text-2xl font-bold text-gray-900 mb-2">SmartSwitch Standard</h3>
+                        <div class="stats-number text-4xl mb-2">৳2,200</div>
+                        <p class="text-gray-600">Ideal for multiple rooms</p>
+                    </div>
+                    
+                    <div class="replaceable-image h-48 mb-6">
+                        <div>
+                            <div class="text-4xl mb-2">💡</div>
+                            <div>Standard Model Image<br>350x250px</div>
+                        </div>
+                    </div>
+                    
+                    <div class="space-y-3 mb-8">
+                        <div class="flex items-center"><span class="check-mark mr-3 text-lg">✓</span> All Basic features</div>
+                        <div class="flex items-center"><span class="check-mark mr-3 text-lg">✓</span> Energy monitoring</div>
+                        <div class="flex items-center"><span class="check-mark mr-3 text-lg">✓</span> Advanced scheduling</div>
+                        <div class="flex items-center"><span class="check-mark mr-3 text-lg">✓</span> Voice commands</div>
+                        <div class="flex items-center"><span class="check-mark mr-3 text-lg">✓</span> Zigbee hub included</div>
+                        <div class="flex items-center"><span class="check-mark mr-3 text-lg">✓</span> Eco-friendly enclosure</div>
+                        <div class="flex items-center"><span class="cross-mark mr-3 text-lg">✗</span> Modular design</div>
+                    </div>
+                    
+                    <button class="w-full bg-gradient-to-r from-blue-600 to-blue-600 hover:from-blue-700 hover:to-blue-700 text-white py-4 rounded-2xl font-semibold transition-all">
+                        Order Standard Model
+                    </button>
+                </div>
+
+                <!-- Premium Model -->
+                <div class="model-card soft-card rounded-3xl p-8 bg-white">
+                    <div class="text-center mb-6">
+                        <div class="inline-block bg-gradient-to-r from-purple-100 to-pink-100 text-purple-600 px-4 py-2 rounded-full text-sm font-semibold mb-4">
+                            PREMIUM
+                        </div>
+                        <h3 class="text-2xl font-bold text-gray-900 mb-2">SmartSwitch Premium</h3>
+                        <div class="stats-number text-4xl mb-2">৳3,000</div>
+                        <p class="text-gray-600">Complete solution for smart homes</p>
+                    </div>
+                    
+                    <div class="replaceable-image h-48 mb-6">
+                        <div>
+                            <div class="text-4xl mb-2">💡</div>
+                            <div>Premium Model Image<br>350x250px</div>
+                        </div>
+                    </div>
+                    
+                    <div class="space-y-3 mb-8">
+                        <div class="flex items-center"><span class="check-mark mr-3 text-lg">✓</span> All Standard features</div>
+                        <div class="flex items-center"><span class="check-mark mr-3 text-lg">✓</span> Modular design</div>
+                        <div class="flex items-center"><span class="check-mark mr-3 text-lg">✓</span> Multi-gang support</div>
+                        <div class="flex items-center"><span class="check-mark mr-3 text-lg">✓</span> Scene automation</div>
+                        <div class="flex items-center"><span class="check-mark mr-3 text-lg">✓</span> Advanced energy analytics</div>
+                        <div class="flex items-center"><span class="check-mark mr-3 text-lg">✓</span> Premium warranty</div>
+                        <div class="flex items-center"><span class="check-mark mr-3 text-lg">✓</span> Free installation</div>
+                    </div>
+                    
+                    <button class="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white py-4 rounded-2xl font-semibold transition-all">
+                        Order Premium Model
+                    </button>
+                </div>
+            </div>
+
+            <!-- Detailed Comparison Table -->
+            <div class="soft-card rounded-3xl overflow-hidden bg-white">
+                <div class="px-8 py-6 bg-gray-50 border-b border-gray-100">
+                    <h3 class="text-2xl font-bold text-gray-900">Complete Feature Comparison</h3>
+                </div>
+                
+                <div class="overflow-x-auto">
+                    <table class="w-full">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th class="px-6 py-4 text-left font-semibold text-gray-900">Features</th>
+                                <th class="px-6 py-4 text-center font-semibold text-gray-900">Basic<br><span class="text-blue-600">৳1,500</span></th>
+                                <th class="px-6 py-4 text-center font-semibold text-gray-900">Standard<br><span class="text-blue-600">৳2,200</span></th>
+                                <th class="px-6 py-4 text-center font-semibold text-gray-900">Premium<br><span class="text-blue-600">৳3,000</span></th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-100">
+                            <tr>
+                                <td class="px-6 py-4 font-medium text-gray-900">Manual & App Control</td>
+                                <td class="px-6 py-4 text-center"><span class="check-mark text-2xl">✓</span></td>
+                                <td class="px-6 py-4 text-center"><span class="check-mark text-2xl">✓</span></td>
+                                <td class="px-6 py-4 text-center"><span class="check-mark text-2xl">✓</span></td>
+                            </tr>
+                            <tr class="bg-gray-50">
+                                <td class="px-6 py-4 font-medium text-gray-900">Bangla Interface</td>
+                                <td class="px-6 py-4 text-center"><span class="check-mark text-2xl">✓</span></td>
+                                <td class="px-6 py-4 text-center"><span class="check-mark text-2xl">✓</span></td>
+                                <td class="px-6 py-4 text-center"><span class="check-mark text-2xl">✓</span></td>
+                            </tr>
+                            <tr>
+                                <td class="px-6 py-4 font-medium text-gray-900">Smart Scheduling</td>
+                                <td class="px-6 py-4 text-center text-gray-500">Basic</td>
+                                <td class="px-6 py-4 text-center text-blue-600">Advanced</td>
+                                <td class="px-6 py-4 text-center text-blue-600">Premium</td>
+                            </tr>
+                            <tr class="bg-gray-50">
+                                <td class="px-6 py-4 font-medium text-gray-900">Offline Functionality</td>
+                                <td class="px-6 py-4 text-center"><span class="check-mark text-2xl">✓</span></td>
+                                <td class="px-6 py-4 text-center"><span class="check-mark text-2xl">✓</span></td>
+                                <td class="px-6 py-4 text-center"><span class="check-mark text-2xl">✓</span></td>
+                            </tr>
+                            <tr>
+                                <td class="px-6 py-4 font-medium text-gray-900">Energy Monitoring</td>
+                                <td class="px-6 py-4 text-center"><span class="cross-mark text-2xl">✗</span></td>
+                                <td class="px-6 py-4 text-center"><span class="check-mark text-2xl">✓</span></td>
+                                <td class="px-6 py-4 text-center"><span class="check-mark text-2xl">✓</span></td>
+                            </tr>
+                            <tr class="bg-gray-50">
+                                <td class="px-6 py-4 font-medium text-gray-900">Voice Commands</td>
+                                <td class="px-6 py-4 text-center"><span class="cross-mark text-2xl">✗</span></td>
+                                <td class="px-6 py-4 text-center"><span class="check-mark text-2xl">✓</span></td>
+                                <td class="px-6 py-4 text-center"><span class="check-mark text-2xl">✓</span></td>
+                            </tr>
+                            <tr>
+                                <td class="px-6 py-4 font-medium text-gray-900">Modular Design</td>
+                                <td class="px-6 py-4 text-center"><span class="cross-mark text-2xl">✗</span></td>
+                                <td class="px-6 py-4 text-center"><span class="cross-mark text-2xl">✗</span></td>
+                                <td class="px-6 py-4 text-center"><span class="check-mark text-2xl">✓</span></td>
+                            </tr>
+                            <tr class="bg-gray-50">
+                                <td class="px-6 py-4 font-medium text-gray-900">Zigbee Hub</td>
+                                <td class="px-6 py-4 text-center"><span class="cross-mark text-2xl">✗</span></td>
+                                <td class="px-6 py-4 text-center"><span class="check-mark text-2xl">✓</span></td>
+                                <td class="px-6 py-4 text-center"><span class="check-mark text-2xl">✓</span></td>
+                            </tr>
+                            <tr>
+                                <td class="px-6 py-4 font-medium text-gray-900">Eco-Friendly Enclosure</td>
+                                <td class="px-6 py-4 text-center"><span class="cross-mark text-2xl">✗</span></td>
+                                <td class="px-6 py-4 text-center"><span class="check-mark text-2xl">✓</span></td>
+                                <td class="px-6 py-4 text-center"><span class="check-mark text-2xl">✓</span></td>
+                            </tr>
+                            <tr class="bg-gray-50">
+                                <td class="px-6 py-4 font-medium text-gray-900">Multi-Gang Support</td>
+                                <td class="px-6 py-4 text-center text-gray-500">Single</td>
+                                <td class="px-6 py-4 text-center text-gray-500">Up to 2</td>
+                                <td class="px-6 py-4 text-center text-blue-600">Up to 4</td>
+                            </tr>
+                            <tr>
+                                <td class="px-6 py-4 font-medium text-gray-900">Warranty</td>
+                                <td class="px-6 py-4 text-center text-gray-500">6 months</td>
+                                <td class="px-6 py-4 text-center text-gray-500">1 year</td>
+                                <td class="px-6 py-4 text-center text-blue-600">2 years</td>
+                            </tr>
+                            <tr class="bg-gray-50">
+                                <td class="px-6 py-4 font-medium text-gray-900">Installation</td>
+                                <td class="px-6 py-4 text-center text-gray-500">Self-setup</td>
+                                <td class="px-6 py-4 text-center text-gray-500">Guided setup</td>
+                                <td class="px-6 py-4 text-center text-blue-600">Free installation</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Call to Action -->
+    <section class="soft-gradient-bg py-20">
+        <div class="max-w-4xl mx-auto text-center px-4 sm:px-6 lg:px-8">
+            <div class="feature-icon mx-auto mb-8">
+                <span class="text-white text-2xl">🚀</span>
+            </div>
+            
+            <h2 class="text-4xl font-bold mb-6 section-heading">Ready to Transform Your Home?</h2>
+            <p class="text-xl mb-8 max-w-2xl mx-auto" style="color: var(--text-light-color)">Join 1000+ satisfied customers worldwide who've made their homes smarter with our switch solutions</p>
+            
+            <div class="flex flex-col sm:flex-row gap-4 justify-center mb-12">
+                <button class="soft-button transform hover:scale-105 hover:rotate-1 transition-all duration-300">
+                    📞 Call: +1-800-SWITCH
+                </button>
+                <button class="bg-white text-blue-600 px-8 py-4 rounded-full font-semibold border-2 border-blue-200 hover:border-blue-300 hover:shadow-lg transform hover:scale-105 transition-all duration-300">
+                    💬 Live Chat
+                </button>
+            </div>
+            
+            <div class="grid grid-cols-3 gap-8">
+                <div class="soft-card rounded-2xl p-6 bg-white/60 backdrop-blur-sm">
+                    <div class="stats-number">1000+</div>
+                    <div class="text-gray-600 font-medium">Happy Customers</div>
+                </div>
+                <div class="soft-card rounded-2xl p-6 bg-white/60 backdrop-blur-sm">
+                    <div class="stats-number">24/7</div>
+                    <div class="text-gray-600 font-medium">Support Available</div>
+                </div>
+                <div class="soft-card rounded-2xl p-6 bg-white/60 backdrop-blur-sm">
+                    <div class="stats-number">7 Days</div>
+                    <div class="text-gray-600 font-medium">Money Back Guarantee</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Request Demo Section -->
+    <section class="soft-gradient-bg py-20">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <div class="feature-icon mx-auto mb-6">
+                    <span class="text-white text-2xl">🎯</span>
+                </div>
+                <h2 class="text-4xl font-bold mb-4 section-heading">See It in Action</h2>
+                <p class="text-xl max-w-2xl mx-auto" style="color: var(--text-light-color)">Schedule a free demonstration at your home or visit our showroom to experience Smart Switch technology firsthand</p>
+            </div>
+
+            <div class="grid lg:grid-cols-2 gap-12 items-start">
+                <!-- Demo Request Form -->
+                <div class="soft-card rounded-3xl p-8 bg-white">
+                    <h3 class="text-2xl font-bold text-gray-900 mb-6">Request Your Free Demo</h3>
+                    
+                    <form id="demoForm" class="space-y-6">
+                        <!-- Contact Information -->
+                        <div class="grid md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-semibold text-gray-900 mb-2">Full Name *</label>
+                                <input type="text" id="demoName" required class="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-blue-400 focus:outline-none transition-all">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-semibold text-gray-900 mb-2">Phone Number *</label>
+                                <input type="tel" id="demoPhone" required placeholder="+880 1XXX-XXXXXX" class="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-blue-400 focus:outline-none transition-all">
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-900 mb-2">Email Address</label>
+                            <input type="email" id="demoEmail" class="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-blue-400 focus:outline-none transition-all">
+                        </div>
+
+                        <!-- Location -->
+                        <div class="grid md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-semibold text-gray-900 mb-2">City *</label>
+                                <select id="demoCity" required class="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-blue-400 focus:outline-none transition-all">
+                                    <option value="">Select your city</option>
+                                    <option value="Dhaka">Dhaka</option>
+                                    <option value="Chittagong">Chittagong</option>
+                                    <option value="Sylhet">Sylhet</option>
+                                    <option value="Rajshahi">Rajshahi</option>
+                                    <option value="Khulna">Khulna</option>
+                                    <option value="Barisal">Barisal</option>
+                                    <option value="Rangpur">Rangpur</option>
+                                    <option value="Mymensingh">Mymensingh</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-semibold text-gray-900 mb-2">Area/District</label>
+                                <input type="text" id="demoArea" placeholder="e.g., Dhanmondi, Gulshan" class="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-blue-400 focus:outline-none transition-all">
+                            </div>
+                        </div>
+
+                        <!-- Demo Type -->
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-900 mb-3">Demo Preference *</label>
+                            <div class="space-y-3">
+                                <label class="flex items-start space-x-3 cursor-pointer p-3 rounded-xl border-2 border-gray-200 hover:border-blue-300 transition-all">
+                                    <input type="radio" name="demoType" value="home" required class="w-5 h-5 text-blue-600 focus:ring-blue-500 mt-1">
+                                    <div>
+                                        <div class="font-semibold text-gray-900">🏠 Home Demo (Free)</div>
+                                        <div class="text-sm text-gray-600">Our expert visits your home with the product for a personalized demonstration</div>
+                                    </div>
+                                </label>
+                                <label class="flex items-start space-x-3 cursor-pointer p-3 rounded-xl border-2 border-gray-200 hover:border-blue-300 transition-all">
+                                    <input type="radio" name="demoType" value="showroom" required class="w-5 h-5 text-blue-600 focus:ring-blue-500 mt-1">
+                                    <div>
+                                        <div class="font-semibold text-gray-900">🏢 Showroom Visit</div>
+                                        <div class="text-sm text-gray-600">Visit our showroom to see all models and get hands-on experience</div>
+                                    </div>
+                                </label>
+                                <label class="flex items-start space-x-3 cursor-pointer p-3 rounded-xl border-2 border-gray-200 hover:border-blue-300 transition-all">
+                                    <input type="radio" name="demoType" value="video" required class="w-5 h-5 text-blue-600 focus:ring-blue-500 mt-1">
+                                    <div>
+                                        <div class="font-semibold text-gray-900">📹 Video Call Demo</div>
+                                        <div class="text-sm text-gray-600">Live video demonstration via WhatsApp or Zoom call</div>
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Interested Models -->
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-900 mb-3">Interested Models (Select all that apply)</label>
+                            <div class="space-y-2">
+                                <label class="flex items-center space-x-3 cursor-pointer">
+                                    <input type="checkbox" value="SmartSwitch Basic" class="w-4 h-4 text-blue-600 rounded focus:ring-blue-500">
+                                    <span class="text-gray-700">SmartSwitch Basic (৳1,500)</span>
+                                </label>
+                                <label class="flex items-center space-x-3 cursor-pointer">
+                                    <input type="checkbox" value="SmartSwitch Standard" class="w-4 h-4 text-blue-600 rounded focus:ring-blue-500">
+                                    <span class="text-gray-700">SmartSwitch Standard (৳2,200)</span>
+                                </label>
+                                <label class="flex items-center space-x-3 cursor-pointer">
+                                    <input type="checkbox" value="SmartSwitch Premium" class="w-4 h-4 text-blue-600 rounded focus:ring-blue-500">
+                                    <span class="text-gray-700">SmartSwitch Premium (৳3,000)</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Preferred Time -->
+                        <div class="grid md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-semibold text-gray-900 mb-2">Preferred Date</label>
+                                <input type="date" id="demoDate" class="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-blue-400 focus:outline-none transition-all">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-semibold text-gray-900 mb-2">Preferred Time</label>
+                                <select id="demoTime" class="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-blue-400 focus:outline-none transition-all">
+                                    <option value="">Select time</option>
+                                    <option value="Morning (9 AM - 12 PM)">Morning (9 AM - 12 PM)</option>
+                                    <option value="Afternoon (12 PM - 4 PM)">Afternoon (12 PM - 4 PM)</option>
+                                    <option value="Evening (4 PM - 8 PM)">Evening (4 PM - 8 PM)</option>
+                                    <option value="Weekend">Weekend (Flexible)</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Special Requests -->
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-900 mb-2">Special Requests or Questions</label>
+                            <textarea id="demoNotes" rows="3" placeholder="Any specific features you want to see? Questions about installation? Let us know!" class="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-blue-400 focus:outline-none transition-all resize-none"></textarea>
+                        </div>
+
+                        <!-- Submit Button -->
+                        <button type="submit" class="w-full soft-button text-lg py-4">
+                            🎯 Schedule My Demo
+                        </button>
+                    </form>
+
+                    <!-- Demo Success Message -->
+                    <div id="demoSuccess" class="hidden text-center py-8">
+                        <div class="text-5xl mb-4">✅</div>
+                        <h3 class="text-2xl font-bold text-gray-900 mb-3">Demo Scheduled!</h3>
+                        <p class="text-gray-600 mb-6">We'll contact you within 2 hours to confirm your demo appointment. Get ready to see the future of smart switching!</p>
+                        <button onclick="resetDemoForm()" class="soft-button">
+                            Schedule Another Demo
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Demo Information -->
+                <div class="space-y-8">
+                    <!-- What to Expect -->
+                    <div class="soft-card rounded-3xl p-8 bg-white/80 backdrop-blur-sm">
+                        <h3 class="text-2xl font-bold text-gray-900 mb-6">What to Expect</h3>
+                        <div class="space-y-4">
+                            <div class="flex items-start space-x-4">
+                                <div class="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
+                                    <span class="text-blue-600 text-sm font-bold">1</span>
+                                </div>
+                                <div>
+                                    <h4 class="font-semibold text-gray-900">Live Product Demo</h4>
+                                    <p class="text-gray-600 text-sm">See the Smart Switch in action with real switching scenarios</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start space-x-4">
+                                <div class="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
+                                    <span class="text-blue-600 text-sm font-bold">2</span>
+                                </div>
+                                <div>
+                                    <h4 class="font-semibold text-gray-900">Feature Walkthrough</h4>
+                                    <p class="text-gray-600 text-sm">Explore Bangla interface, offline mode, and energy monitoring</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start space-x-4">
+                                <div class="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
+                                    <span class="text-blue-600 text-sm font-bold">3</span>
+                                </div>
+                                <div>
+                                    <h4 class="font-semibold text-gray-900">Q&A Session</h4>
+                                    <p class="text-gray-600 text-sm">Get all your questions answered by our product experts</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start space-x-4">
+                                <div class="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
+                                    <span class="text-blue-600 text-sm font-bold">4</span>
+                                </div>
+                                <div>
+                                    <h4 class="font-semibold text-gray-900">Special Demo Pricing</h4>
+                                    <p class="text-gray-600 text-sm">Exclusive discounts available only during demo sessions</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Demo Stats -->
+                    <div class="soft-card rounded-3xl p-8 bg-white/80 backdrop-blur-sm">
+                        <h3 class="text-2xl font-bold text-gray-900 mb-6">Demo Statistics</h3>
+                        <div class="grid grid-cols-2 gap-6">
+                            <div class="text-center">
+                                <div class="stats-number text-3xl">92%</div>
+                                <div class="text-gray-600 text-sm">Purchase After Demo</div>
+                            </div>
+                            <div class="text-center">
+                                <div class="stats-number text-3xl">25min</div>
+                                <div class="text-gray-600 text-sm">Average Demo Time</div>
+                            </div>
+                            <div class="text-center">
+                                <div class="stats-number text-3xl">150+</div>
+                                <div class="text-gray-600 text-sm">Demos This Month</div>
+                            </div>
+                            <div class="text-center">
+                                <div class="stats-number text-3xl">4.8★</div>
+                                <div class="text-gray-600 text-sm">Demo Experience Rating</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Contact Options -->
+                    <div class="soft-card rounded-3xl p-8 bg-white/80 backdrop-blur-sm">
+                        <h3 class="text-2xl font-bold text-gray-900 mb-6">Contact Options</h3>
+                        <div class="space-y-4">
+                            <div class="flex items-start space-x-3 transform hover:translate-x-2 transition-transform duration-300">
+                                <span class="text-blue-600 text-lg">📞</span>
+                                <div>
+                                    <div class="font-semibold text-gray-900">Phone Support</div>
+                                    <div class="text-gray-600 text-sm">+1-800-SWITCH (24/7)</div>
+                                    <div class="text-gray-500 text-xs">Instant support available</div>
+                                </div>
+                            </div>
+                            <div class="flex items-start space-x-3 transform hover:translate-x-2 transition-transform duration-300">
+                                <span class="text-blue-600 text-lg">💬</span>
+                                <div>
+                                    <div class="font-semibold text-gray-900">Live Chat</div>
+                                    <div class="text-gray-600 text-sm">Available on website</div>
+                                    <div class="text-gray-500 text-xs">Average response: 2 minutes</div>
+                                </div>
+                            </div>
+                            <div class="flex items-start space-x-3 transform hover:translate-x-2 transition-transform duration-300">
+                                <span class="text-blue-600 text-lg">📧</span>
+                                <div>
+                                    <div class="font-semibold text-gray-900">Email Support</div>
+                                    <div class="text-gray-600 text-sm">support@smartswitch.com</div>
+                                    <div class="text-gray-500 text-xs">Response within 4 hours</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Add Feedback Section -->
+    <section class="py-20" style="background-color: var(--product-card-bg)">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <div class="feature-icon mx-auto mb-6">
+                    <span class="text-white text-2xl">📝</span>
+                </div>
+                <h2 class="text-4xl font-bold mb-4 section-heading">Share Your Experience</h2>
+                <p class="text-xl max-w-2xl mx-auto" style="color: var(--text-light-color)">Help other customers by sharing your feedback about our Smart Switch products</p>
+            </div>
+
+            <div class="soft-card rounded-3xl p-8 bg-gradient-to-br from-blue-50 to-indigo-50">
+                <form id="feedbackForm" class="space-y-8">
+                    <!-- Personal Information -->
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-900 mb-3">Your Name *</label>
+                            <input type="text" id="customerName" required class="w-full px-4 py-3 rounded-2xl border-2 border-gray-200 focus:border-blue-400 focus:outline-none transition-all bg-white">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-900 mb-3">City *</label>
+                            <select id="customerCity" required class="w-full px-4 py-3 rounded-2xl border-2 border-gray-200 focus:border-blue-400 focus:outline-none transition-all bg-white">
+                                <option value="">Select your city</option>
+                                <option value="Dhaka">Dhaka</option>
+                                <option value="Chittagong">Chittagong</option>
+                                <option value="Sylhet">Sylhet</option>
+                                <option value="Rajshahi">Rajshahi</option>
+                                <option value="Khulna">Khulna</option>
+                                <option value="Barisal">Barisal</option>
+                                <option value="Rangpur">Rangpur</option>
+                                <option value="Mymensingh">Mymensingh</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Product Information -->
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-900 mb-3">Which Model Do You Own? *</label>
+                            <select id="productModel" required class="w-full px-4 py-3 rounded-2xl border-2 border-gray-200 focus:border-blue-400 focus:outline-none transition-all bg-white">
+                                <option value="">Select your model</option>
+                                <option value="SmartSwitch Basic">SmartSwitch Basic (৳1,500)</option>
+                                <option value="SmartSwitch Standard">SmartSwitch Standard (৳2,200)</option>
+                                <option value="SmartSwitch Premium">SmartSwitch Premium (৳3,000)</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-900 mb-3">How Long Have You Used It?</label>
+                            <select id="usageDuration" class="w-full px-4 py-3 rounded-2xl border-2 border-gray-200 focus:border-blue-400 focus:outline-none transition-all bg-white">
+                                <option value="">Select duration</option>
+                                <option value="Less than 1 month">Less than 1 month</option>
+                                <option value="1-3 months">1-3 months</option>
+                                <option value="3-6 months">3-6 months</option>
+                                <option value="6-12 months">6-12 months</option>
+                                <option value="More than 1 year">More than 1 year</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Rating Section -->
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-900 mb-4">Overall Rating *</label>
+                        <div class="flex items-center space-x-2 mb-2">
+                            <div id="starRating" class="flex space-x-1">
+                                <button type="button" class="star-btn text-3xl text-gray-300 hover:text-yellow-400 transition-colors" data-rating="1">⭐</button>
+                                <button type="button" class="star-btn text-3xl text-gray-300 hover:text-yellow-400 transition-colors" data-rating="2">⭐</button>
+                                <button type="button" class="star-btn text-3xl text-gray-300 hover:text-yellow-400 transition-colors" data-rating="3">⭐</button>
+                                <button type="button" class="star-btn text-3xl text-gray-300 hover:text-yellow-400 transition-colors" data-rating="4">⭐</button>
+                                <button type="button" class="star-btn text-3xl text-gray-300 hover:text-yellow-400 transition-colors" data-rating="5">⭐</button>
+                            </div>
+                            <span id="ratingText" class="text-gray-600 ml-4">Click to rate</span>
+                        </div>
+                        <input type="hidden" id="selectedRating" required>
+                    </div>
+
+                    <!-- Feedback Categories -->
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-900 mb-4">What Did You Like Most? (Select all that apply)</label>
+                        <div class="grid md:grid-cols-2 gap-3">
+                            <label class="flex items-center space-x-3 cursor-pointer">
+                                <input type="checkbox" value="Smart Scheduling" class="w-5 h-5 text-blue-600 rounded focus:ring-blue-500">
+                                <span class="text-gray-700">Smart Scheduling</span>
+                            </label>
+                            <label class="flex items-center space-x-3 cursor-pointer">
+                                <input type="checkbox" value="App Control" class="w-5 h-5 text-blue-600 rounded focus:ring-blue-500">
+                                <span class="text-gray-700">App Control</span>
+                            </label>
+                            <label class="flex items-center space-x-3 cursor-pointer">
+                                <input type="checkbox" value="Bangla Interface" class="w-5 h-5 text-blue-600 rounded focus:ring-blue-500">
+                                <span class="text-gray-700">Bangla Interface</span>
+                            </label>
+                            <label class="flex items-center space-x-3 cursor-pointer">
+                                <input type="checkbox" value="Offline Functionality" class="w-5 h-5 text-blue-600 rounded focus:ring-blue-500">
+                                <span class="text-gray-700">Offline Functionality</span>
+                            </label>
+                            <label class="flex items-center space-x-3 cursor-pointer">
+                                <input type="checkbox" value="Energy Monitoring" class="w-5 h-5 text-blue-600 rounded focus:ring-blue-500">
+                                <span class="text-gray-700">Energy Monitoring</span>
+                            </label>
+                            <label class="flex items-center space-x-3 cursor-pointer">
+                                <input type="checkbox" value="Easy Installation" class="w-5 h-5 text-blue-600 rounded focus:ring-blue-500">
+                                <span class="text-gray-700">Easy Installation</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Detailed Feedback -->
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-900 mb-3">Your Detailed Review *</label>
+                        <textarea id="detailedReview" required rows="5" placeholder="Share your experience with our Smart Switch. How has it helped your home? What features do you love most?" class="w-full px-4 py-3 rounded-2xl border-2 border-gray-200 focus:border-blue-400 focus:outline-none transition-all bg-white resize-none"></textarea>
+                    </div>
+
+                    <!-- Language Preference -->
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-900 mb-3">Preferred Language for Review</label>
+                        <div class="flex space-x-6">
+                            <label class="flex items-center space-x-2 cursor-pointer">
+                                <input type="radio" name="language" value="English" checked class="w-4 h-4 text-blue-600 focus:ring-blue-500">
+                                <span class="text-gray-700">English</span>
+                            </label>
+                            <label class="flex items-center space-x-2 cursor-pointer">
+                                <input type="radio" name="language" value="Bangla" class="w-4 h-4 text-blue-600 focus:ring-blue-500">
+                                <span class="text-gray-700">বাংলা</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Recommendation -->
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-900 mb-3">Would You Recommend to Others? *</label>
+                        <div class="flex space-x-6">
+                            <label class="flex items-center space-x-2 cursor-pointer">
+                                <input type="radio" name="recommend" value="Yes" required class="w-4 h-4 text-blue-600 focus:ring-blue-500">
+                                <span class="text-gray-700">Yes, definitely!</span>
+                            </label>
+                            <label class="flex items-center space-x-2 cursor-pointer">
+                                <input type="radio" name="recommend" value="Maybe" required class="w-4 h-4 text-blue-600 focus:ring-blue-500">
+                                <span class="text-gray-700">Maybe</span>
+                            </label>
+                            <label class="flex items-center space-x-2 cursor-pointer">
+                                <input type="radio" name="recommend" value="No" required class="w-4 h-4 text-blue-600 focus:ring-blue-500">
+                                <span class="text-gray-700">No</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Submit Button -->
+                    <div class="text-center pt-6">
+                        <button type="submit" class="soft-button text-lg px-12 py-4">
+                            📤 Submit Your Feedback
+                        </button>
+                        <p class="text-sm text-gray-500 mt-4">Your feedback helps us improve and helps other customers make informed decisions</p>
+                    </div>
+                </form>
+
+                <!-- Success Message (Hidden by default) -->
+                <div id="successMessage" class="hidden text-center py-12">
+                    <div class="text-6xl mb-4">🎉</div>
+                    <h3 class="text-3xl font-bold text-gray-900 mb-4">Thank You!</h3>
+                    <p class="text-xl text-gray-600 mb-6">Your feedback has been submitted successfully. We appreciate you taking the time to share your experience!</p>
+                    <button onclick="resetForm()" class="soft-button">
+                        Submit Another Review
+                    </button>
+                </div>
+            </div>
+
+            <!-- Contact Information -->
+            <div class="mt-16 text-center">
+                <div class="soft-card rounded-3xl p-8 bg-gradient-to-br from-blue-50 to-indigo-50">
+                    <h3 class="text-2xl font-bold text-gray-900 mb-4">Need Help or Have Questions?</h3>
+                    <p class="text-gray-600 mb-6">Our customer support team is here to help you 24/7</p>
+                    
+                    <div class="grid md:grid-cols-3 gap-6">
+                        <div class="text-center">
+                            <div class="text-3xl mb-2">📞</div>
+                            <p class="font-semibold text-gray-900">Call Us</p>
+                            <p class="text-blue-600">+1-800-SWITCH</p>
+                        </div>
+                        <div class="text-center">
+                            <div class="text-3xl mb-2">💬</div>
+                            <p class="font-semibold text-gray-900">Live Chat</p>
+                            <p class="text-blue-600">Available 24/7</p>
+                        </div>
+                        <div class="text-center">
+                            <div class="text-3xl mb-2">📧</div>
+                            <p class="font-semibold text-gray-900">Email</p>
+                            <p class="text-blue-600">support@bytebot.com</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ByteBot Footer -->
+    <footer class="bg-blue-50 text-center text-sm text-gray-500 py-8">
+        <div class="mb-4 font-semibold text-blue-700 text-xl">ByteBot</div>
+        <nav class="space-x-4 mb-4">
+            <a class="navbar-link hover:text-blue-600" data-i18n="home" href="index.html">Home</a>
+            <a class="navbar-link hover:text-blue-600" data-i18n="about_us" href="about_us_updated.html">About Us</a>
+            <a class="navbar-link hover:text-blue-600" data-i18n="products" href="about.html">Products</a>
+            <a class="navbar-link hover:text-blue-600" data-i18n="support" href="support.html">Support</a>
+            <a class="navbar-link hover:text-blue-600" data-i18n="dashboard" href="dashboard.html">Dashboard</a>
+        </nav>
+        <p data-i18n="©_2025_bytebot_inc_all_rights_reserved">© 2025 ByteBot Inc. All rights reserved.</p>
+    </footer>
+
+    <script>
+        // Star Rating Functionality
+        const starButtons = document.querySelectorAll('.star-btn');
+        const ratingText = document.getElementById('ratingText');
+        const selectedRatingInput = document.getElementById('selectedRating');
+        let currentRating = 0;
+
+        const ratingTexts = {
+            1: 'Poor - Needs improvement',
+            2: 'Fair - Below expectations',
+            3: 'Good - Meets expectations',
+            4: 'Very Good - Exceeds expectations',
+            5: 'Excellent - Outstanding!'
+        };
+
+        starButtons.forEach((star, index) => {
+            star.addEventListener('click', (e) => {
+                e.preventDefault();
+                currentRating = parseInt(star.dataset.rating);
+                selectedRatingInput.value = currentRating;
+                updateStarDisplay();
+                ratingText.textContent = ratingTexts[currentRating];
+            });
+
+            star.addEventListener('mouseenter', () => {
+                const hoverRating = parseInt(star.dataset.rating);
+                highlightStars(hoverRating);
+            });
+        });
+
+        document.getElementById('starRating').addEventListener('mouseleave', () => {
+            updateStarDisplay();
+        });
+
+        function highlightStars(rating) {
+            starButtons.forEach((star, index) => {
+                if (index < rating) {
+                    star.classList.remove('text-gray-300');
+                    star.classList.add('text-yellow-400');
+                } else {
+                    star.classList.remove('text-yellow-400');
+                    star.classList.add('text-gray-300');
+                }
+            });
+        }
+
+        function updateStarDisplay() {
+            highlightStars(currentRating);
+        }
+
+        // Form Submission
+        document.getElementById('feedbackForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Validate required fields
+            const name = document.getElementById('customerName').value;
+            const city = document.getElementById('customerCity').value;
+            const model = document.getElementById('productModel').value;
+            const rating = document.getElementById('selectedRating').value;
+            const review = document.getElementById('detailedReview').value;
+            const recommend = document.querySelector('input[name="recommend"]:checked');
+
+            if (!name || !city || !model || !rating || !review || !recommend) {
+                alert('Please fill in all required fields and provide a rating.');
+                return;
+            }
+
+            // Collect selected features
+            const selectedFeatures = [];
+            document.querySelectorAll('input[type="checkbox"]:checked').forEach(checkbox => {
+                selectedFeatures.push(checkbox.value);
+            });
+
+            // Get language preference
+            const language = document.querySelector('input[name="language"]:checked').value;
+
+            // Simulate form submission
+            setTimeout(() => {
+                document.getElementById('feedbackForm').style.display = 'none';
+                document.getElementById('successMessage').classList.remove('hidden');
+                
+                // Scroll to success message
+                document.getElementById('successMessage').scrollIntoView({ 
+                    behavior: 'smooth',
+                    block: 'center'
+                });
+            }, 1000);
+        });
+
+        // Reset Form Function
+        function resetForm() {
+            document.getElementById('feedbackForm').reset();
+            currentRating = 0;
+            selectedRatingInput.value = '';
+            updateStarDisplay();
+            ratingText.textContent = 'Click to rate';
+            
+            document.getElementById('successMessage').classList.add('hidden');
+            document.getElementById('feedbackForm').style.display = 'block';
+            
+            // Scroll back to form
+            document.getElementById('feedbackForm').scrollIntoView({ 
+                behavior: 'smooth',
+                block: 'start'
+            });
+        }
+
+        // Demo Form Functionality
+        document.getElementById('demoForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Validate required fields
+            const name = document.getElementById('demoName').value;
+            const phone = document.getElementById('demoPhone').value;
+            const city = document.getElementById('demoCity').value;
+            const demoType = document.querySelector('input[name="demoType"]:checked');
+
+            if (!name || !phone || !city || !demoType) {
+                alert('Please fill in all required fields (Name, Phone, City, and Demo Preference).');
+                return;
+            }
+
+            // Collect selected models
+            const selectedModels = [];
+            document.querySelectorAll('#demoForm input[type="checkbox"]:checked').forEach(checkbox => {
+                selectedModels.push(checkbox.value);
+            });
+
+            // Get form data
+            const formData = {
+                name: name,
+                phone: phone,
+                email: document.getElementById('demoEmail').value,
+                city: city,
+                area: document.getElementById('demoArea').value,
+                demoType: demoType.value,
+                models: selectedModels,
+                date: document.getElementById('demoDate').value,
+                time: document.getElementById('demoTime').value,
+                notes: document.getElementById('demoNotes').value
+            };
+
+            // Simulate form submission
+            setTimeout(() => {
+                document.getElementById('demoForm').style.display = 'none';
+                document.getElementById('demoSuccess').classList.remove('hidden');
+                
+                // Scroll to success message
+                document.getElementById('demoSuccess').scrollIntoView({ 
+                    behavior: 'smooth',
+                    block: 'center'
+                });
+            }, 1000);
+        });
+
+        // Reset Demo Form Function
+        function resetDemoForm() {
+            document.getElementById('demoForm').reset();
+            
+            document.getElementById('demoSuccess').classList.add('hidden');
+            document.getElementById('demoForm').style.display = 'block';
+            
+            // Scroll back to form
+            document.getElementById('demoForm').scrollIntoView({ 
+                behavior: 'smooth',
+                block: 'start'
+            });
+        }
+
+        // Set minimum date to today for demo scheduling
+        document.addEventListener('DOMContentLoaded', function() {
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('demoDate').setAttribute('min', today);
+        });
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'96766c2df461a478',t:'MTc1Mzg5NDkzNS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>

@@ -1,0 +1,2239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Home Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    
+    <style>
+        :root {
+            --primary-color: #0096c7;
+            --primary-hover: #0077b6;
+            --accent-color: #48cae4;
+            --accent-hover: #00b4d8;
+            --text-dark: #212529;
+            --text-light: #6c757d;
+            --bg-main: #f0f7ff;
+            --bg-card: #ffffff;
+            --border-color: #e9ecef;
+            --shadow: 0 8px 24px rgba(149, 157, 165, 0.1);
+            --shadow-hover: 0 12px 30px rgba(149, 157, 165, 0.15);
+            --success: #4ade80;
+            --danger: #f87171;
+            /* --- MODIFIED: THEME-AWARE PULSE EFFECT COLORS --- */
+            --pulse-shadow-start: rgba(0, 119, 182, 0.4);
+            --pulse-shadow-end: rgba(0, 119, 182, 0.6);
+        }
+
+        /* --- NEW: BLACK THEME STYLES --- */
+        html.dark {
+            --text-dark: #f8f9fa;
+            --text-light: #adb5bd;
+            --bg-main: #121212;
+            --bg-card: #1e1e1e;
+            --border-color: #343a40;
+            --shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+            --shadow-hover: 0 12px 30px rgba(0, 0, 0, 0.3);
+            /* --- MODIFIED: THEME-AWARE PULSE EFFECT COLORS (DARK) --- */
+            --pulse-shadow-start: rgba(72, 202, 228, 0.35); /* Using accent color for a brighter glow */
+            --pulse-shadow-end: rgba(72, 202, 228, 0.5);
+        }
+
+        body {
+            background-color: var(--bg-main);
+            font-family: 'Poppins', -apple-system, BlinkMacSystemFont, sans-serif;
+            color: var(--text-dark);
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+        
+        .dynamic-title {
+            background: linear-gradient(45deg, var(--primary-color), var(--accent-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            transition: transform 0.3s ease;
+            
+        }
+        .dynamic-title:hover {
+            transform: scale(1.03);
+        }
+
+        .card {
+            background-color: var(--bg-card);
+            border-radius: 1rem;
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow);
+            transition: all 0.3s ease;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-hover);
+        }
+        
+        /* --- NEW: Schedule Card hover effect --- */
+        .schedule-card:hover {
+            border-left-color: var(--primary-color);
+            border-left-width: 4px;
+        }
+
+        /* Animations */
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes slideInUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        @keyframes slideInRight { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+        @keyframes fadeOut { from { opacity: 1; } to { opacity: 0; } }
+        
+        /* --- MODIFIED: Pulse animation for schedule button --- */
+        @keyframes pulse {
+            0% { box-shadow: 0 4px 12px var(--pulse-shadow-start); }
+            50% { box-shadow: 0 6px 20px var(--pulse-shadow-end); }
+            100% { box-shadow: 0 4px 12px var(--pulse-shadow-start); }
+        }
+
+        .fade-in { animation: fadeIn 0.5s ease-out forwards; }
+        .slide-in-up { animation: slideInUp 0.5s ease-out forwards; }
+
+        .notification-slide { animation: slideInRight 0.4s ease-out; }
+        .toast-notification { animation: slideInRight 0.5s ease, fadeOut 0.5s ease 4.5s forwards; }
+
+        /* Buttons */
+        .btn { padding: 0.75rem 1.5rem; border-radius: 0.5rem; font-weight: 600; transition: all 0.2s ease; text-align: center; }
+        .btn-primary { background-color: var(--primary-color); color: white; box-shadow: 0 4px 12px rgba(0, 119, 182, 0.4); }
+        .btn-primary:hover { background-color: var(--primary-hover); }
+        .btn-accent { background-color: var(--accent-color); color: white; }
+        .btn-accent:hover { background-color: var(--accent-hover); }
+        .btn-danger { background-color: var(--danger); color: white; }
+        .btn-danger:hover { background-color: #f76161; }
+        .btn-secondary { background-color: #e9ecef; color: var(--text-dark); }
+        .btn-secondary:hover { background-color: #dee2e6; }
+        html.dark .btn-secondary { background-color: #343a40; color: var(--text-dark); }
+        html.dark .btn-secondary:hover { background-color: #495057; }
+        
+        /* --- NEW: General button hover and active effects --- */
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow);
+        }
+        .btn:active {
+            transform: translateY(0px) scale(0.98);
+            box-shadow: none;
+            transition-duration: 0.1s;
+        }
+
+        /* --- NEW: Schedule button animation class --- */
+        .btn-add-schedule {
+            animation: pulse 2.5s ease-in-out infinite;
+        }
+        
+        .tab-container { background-color: var(--bg-card); border: 1px solid var(--border-color); border-radius: 0.75rem; padding: 0.5rem; }
+        .tab { padding: 0.75rem 1.5rem; border-radius: 0.5rem; font-weight: 500; color: var(--text-light); transition: all 0.3s ease; cursor: pointer; }
+        .tab:hover { background-color: #f1f3f5; color: var(--text-dark); }
+        html.dark .tab:hover { background-color: #2c2c2e; color: var(--text-dark); }
+        .tab-active { background-color: var(--primary-color); color: white !important; box-shadow: 0 4px 12px rgba(0, 119, 182, 0.4); }
+        
+        .form-input, .form-select { width: 100%; background-color: #f1f3f5; border: 1px solid var(--border-color); border-radius: 0.5rem; padding: 0.75rem 1rem; color: var(--text-dark); transition: border-color 0.2s ease, box-shadow 0.2s ease; }
+        html.dark .form-input, html.dark .form-select { background-color: #2c2c2e; border-color: #495057; color: var(--text-dark); }
+        .form-input:focus, .form-select:focus { outline: none; border-color: var(--primary-color); box-shadow: 0 0 0 3px rgba(0, 119, 182, 0.3); }
+
+        .modal-backdrop { background-color: rgba(0, 0, 0, 0.2); backdrop-filter: blur(5px); }
+        html.dark .modal-backdrop { background-color: rgba(0, 0, 0, 0.5); }
+        .modal-content { background-color: var(--bg-card); border-radius: 1rem; box-shadow: var(--shadow-hover); animation: slideInUp 0.4s ease-out; }
+
+        /* --- NEW STYLES FOR DEVICE CARDS --- */
+        .device-card {
+            background-color: var(--bg-card);
+            border-radius: 1.5rem;
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow);
+            transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+            cursor: pointer;
+            color: var(--text-dark);
+        }
+        .device-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-hover);
+        }
+        .device-card.on {
+            background: linear-gradient(135deg, #48cae4, #0096c7);
+            color: white;
+            border-color: transparent;
+        }
+        .device-card.on .text-gray-500 {
+            color: rgba(255, 255, 255, 0.8);
+        }
+        html.dark .device-card.on .text-gray-500 {
+             color: rgba(255, 255, 255, 0.8);
+        }
+        .device-card.on .device-icon svg {
+            stroke: white;
+        }
+        .device-card .toggle-slider {
+            background-color: #ccc;
+        }
+        html.dark .device-card .toggle-slider {
+            background-color: #495057;
+        }
+        .device-card.on .toggle-slider {
+            background-color: rgba(255, 255, 255, 0.4);
+        }
+        .device-card .toggle-switch input:checked + .toggle-slider {
+            background-color: var(--primary-color);
+        }
+        .device-card.on .toggle-switch input:checked + .toggle-slider {
+            background-color: #ffffff;
+        }
+        .device-card .toggle-slider:before {
+            background-color: white;
+        }
+        html.dark .device-card .toggle-slider:before {
+             background-color: #1e1e1e;
+        }
+        .device-card.on .toggle-slider:before {
+            background-color: var(--primary-color);
+        }
+        .device-icon {
+            width: 3.5rem;
+            height: 3.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background-color: rgba(128, 128, 128, 0.08);
+            transition: background-color 0.4s ease;
+        }
+        html.dark .device-icon {
+            background-color: rgba(255, 255, 255, 0.05);
+        }
+        .device-card.on .device-icon {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+        .device-icon svg {
+            stroke: var(--text-dark);
+            transition: stroke 0.4s ease;
+            width: 1.75rem;
+            height: 1.75rem;
+        }
+        .toggle-switch { position: relative; display: inline-block; width: 52px; height: 30px; }
+        .toggle-switch input { opacity: 0; width: 0; height: 0; }
+        .toggle-slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; transition: .4s; border-radius: 34px; }
+        .toggle-slider:before { position: absolute; content: ""; height: 22px; width: 22px; left: 4px; bottom: 4px; transition: .4s; border-radius: 50%; }
+        input:checked + .toggle-slider:before { transform: translateX(22px); }
+
+        /* --- STYLES FOR NEW DEVICE CONTROL MODAL --- */
+        .control-modal-content {
+            background: #f8f9fa;
+            border-radius: 1.5rem;
+            box-shadow: var(--shadow-hover);
+            animation: slideInUp 0.4s ease-out;
+            width: 100%;
+            max-width: 380px;
+            color: #343a40;
+        }
+        html.dark .control-modal-content {
+            background: #2c2c2e;
+            color: var(--text-dark);
+        }
+        .dial-container {
+            position: relative;
+            width: 250px;
+            height: 250px;
+            margin: 2rem auto;
+            cursor: pointer;
+        }
+        .dial-background {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            border-radius: 50%;
+            background: #e9ecef;
+            box-shadow: inset 0 0 20px rgba(0,0,0,0.05);
+        }
+        html.dark .dial-background {
+             background: #1e1e1e;
+             box-shadow: inset 0 0 20px rgba(0,0,0,0.2);
+        }
+        .dial-progress {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            border-radius: 50%;
+            clip-path: circle(50%);
+        }
+        .dial-center {
+            position: absolute;
+            top: 15%; left: 15%; width: 70%; height: 70%;
+            background: #f8f9fa;
+            border-radius: 50%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            pointer-events: none;
+        }
+        html.dark .dial-center {
+             background: #2c2c2e;
+        }
+        .dial-value {
+            font-size: 3.5rem; font-weight: 700; line-height: 1; color: var(--text-dark);
+        }
+        .dial-value sup {
+            font-size: 1.5rem; font-weight: 600; vertical-align: top;
+        }
+        .dial-label {
+            font-size: 0.9rem; color: var(--text-light); margin-top: 0.5rem;
+        }
+
+        .mode-selector {
+            display: flex; gap: 1rem; justify-content: center; padding: 0 1rem;
+        }
+        .mode-button {
+            background: white; border: 1px solid var(--border-color); border-radius: 1rem;
+            padding: 1rem 0.5rem;
+            width: 80px; height: 80px;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            cursor: pointer; transition: all 0.3s ease;
+            font-weight: 500; color: var(--text-light);
+            text-align: center;
+        }
+        html.dark .mode-button {
+            background: #3a3a3c;
+        }
+        .mode-button:hover {
+            transform: translateY(-3px); box-shadow: var(--shadow);
+        }
+        .mode-button.active {
+            background: linear-gradient(45deg, var(--accent-color), var(--primary-color));
+            color: white; border-color: transparent;
+            box-shadow: 0 8px 20px rgba(0, 119, 182, 0.3);
+        }
+        .mode-button svg {
+            width: 24px;
+            height: 24px;
+            stroke: var(--text-dark);
+        }
+        .mode-button.active svg {
+            stroke: white;
+        }
+        .power-button-container {
+            margin-top: 2rem; display: flex; justify-content: center;
+        }
+        .power-button {
+            width: 70px; height: 70px; border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent-color), var(--primary-color));
+            box-shadow: 0 8px 20px rgba(0, 119, 182, 0.3);
+            color: white;
+            display: flex; align-items: center; justify-content: center;
+            border: none; cursor: pointer; transition: all 0.3s ease;
+        }
+        .power-button:hover {
+            transform: scale(1.05);
+        }
+        .power-button.off {
+            background: #e9ecef; color: var(--text-light); box-shadow: none;
+        }
+        html.dark .power-button.off {
+             background: #3a3a3c; color: var(--text-light);
+        }
+        .power-button svg {
+            width: 32px; height: 32px;
+        }
+        .status-message {
+            text-align: center;
+            margin-top: 20px;
+            padding: 10px;
+            border-radius: 8px;
+            display: none;
+        }
+        .status-message.success {
+            background-color: #d1e7dd;
+            color: #0f5132;
+        }
+        html.dark .status-message.success {
+             background-color: #0f5132; color: #d1e7dd;
+        }
+        .status-message.error {
+            background-color: #f8d7da;
+            color: #842029;
+        }
+        html.dark .status-message.error {
+             background-color: #842029; color: #f8d7da;
+        }
+        .room-icon-btn svg { width: 2rem; height: 2rem; }
+
+        /* --- NEW: Special Schedule Button --- */
+.btn-schedule-special {
+    background: linear-gradient(45deg, var(--accent-color), var(--primary-color));
+    color: white;
+    border: none;
+    box-shadow: 0 4px 12px rgba(0, 119, 182, 0.3);
+    animation: pulse 2.5s ease-in-out infinite;
+    background-size: 150% 150%; 
+    transition: background-position 0.4s ease, transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.btn-schedule-special:hover {
+    background-position: right center; /* Creates a subtle gradient shift on hover */
+    box-shadow: var(--shadow-hover);
+    transform: translateY(-2px) scale(1.02);
+}
+
+        /* Other Dark Mode Overrides */
+        html.dark .bg-card\/80 { background-color: rgba(30, 30, 30, 0.8); }
+        html.dark .border-b, html.dark .border-t, html.dark .border-gray-200 { border-color: var(--border-color); }
+        html.dark .text-gray-800, html.dark .text-gray-700 { color: var(--text-dark); }
+        html.dark .text-gray-500, html.dark .text-gray-600 { color: var(--text-light); }
+        html.dark .bg-blue-100 { background-color: rgba(0, 150, 199, 0.2); }
+        html.dark .text-blue-500 { color: var(--accent-color); }
+        html.dark .bg-green-100 { background-color: rgba(74, 222, 128, 0.2); }
+        html.dark .text-green-500 { color: var(--success); }
+        html.dark .bg-indigo-100 { background-color: rgba(129, 140, 248, 0.2); }
+        html.dark .text-indigo-500 { color: #a5b4fc; }
+        html.dark .bg-yellow-100 { background-color: rgba(252, 163, 17, 0.2); }
+        html.dark .text-yellow-500 { color: #fca311; }
+        html.dark .bg-red-50 { background-color: rgba(248, 113, 113, 0.1); }
+        html.dark .bg-red-100 { background-color: rgba(248, 113, 113, 0.2); }
+        html.dark .text-red-600 { color: var(--danger); }
+        html.dark .bg-gray-100 { background-color: #2c2c2e; }
+        html.dark .hover\:bg-gray-200:hover { background-color: #3a3a3c; }
+        html.dark .bg-gray-50 { background-color: #2c2c2e; }
+        html.dark .bg-purple-500 { background-color: #8b5cf6; }
+        html.dark .hover\:bg-purple-600:hover { background-color: #7c3aed; }
+
+
+        /* --- NEW: Energy Page Styles --- */
+.progress-bar-container {
+    width: 100%;
+    background-color: var(--border-color);
+    border-radius: 0.5rem;
+    overflow: hidden;
+}
+
+.progress-bar {
+    height: 1.25rem;
+    line-height: 1.25rem;
+    background: linear-gradient(90deg, var(--accent-color), var(--primary-color));
+    color: white;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-align: right;
+    padding-right: 0.5rem;
+    white-space: nowrap;
+    transition: width 0.5s ease-in-out;
+}
+    </style>
+</head>
+<body class="min-h-screen">
+    <header class="bg-card/80 backdrop-blur-sm border-b border-gray-200 sticky top-0 z-40">
+        <div class="max-w-screen-xl mx-auto p-4 flex justify-between items-center">
+            <div>
+                <h1 class="text-3xl font-bold dynamic-title">ByteBot</h1>
+                <p class="text-gray-500 mt-1">Smart Living, Locally Crafted</p>
+            </div>
+            <div class="flex items-center space-x-4 md:space-x-6">
+                <button onclick="toggleTheme()" id="theme-toggle-btn" class="p-2 rounded-full text-gray-500 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-color" style="transition: background-color 0.2s;"></button>
+                <div id="network-clock" class="text-right">
+                    <div class="text-2xl font-semibold text-gray-800">--:--:-- --</div>
+                    <div class="text-xs text-gray-500">Syncing...</div>
+                </div>
+                <div class="text-right">
+                    <div class="text-sm text-gray-500">User</div>
+                    <div class="font-semibold text-gray-800" id="display-user-name">John Doe</div>
+                </div>
+               <div id="user-avatar-container" class="w-12 h-12 bg-gradient-to-br from-primary-color to-accent-color rounded-full flex items-center justify-center text-xl text-white shadow-lg overflow-hidden">
+    </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-screen-xl mx-auto p-4 md:p-6">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8 fade-in">
+    <div class="card p-6">
+        <div class="flex items-center justify-between">
+            <div>
+                <div class="text-3xl font-bold" id="total-devices">0</div>
+                <div class="text-sm text-gray-500 mt-1">Total Devices</div>
+            </div>
+            <div class="w-16 h-16 bg-blue-100 rounded-full text-blue-500 flex items-center justify-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                </svg>
+            </div>
+        </div>
+    </div>
+    <div class="card p-6">
+        <div class="flex items-center justify-between">
+            <div>
+                <div class="text-3xl font-bold text-green-500" id="active-devices">0</div>
+                <div class="text-sm text-gray-500 mt-1">Active Now</div>
+            </div>
+            <div class="w-16 h-16 bg-green-100 rounded-full text-green-500 flex items-center justify-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M18.36 6.64a9 9 0 1 1-12.73 0"></path>
+                    <line x1="12" y1="2" x2="12" y2="12"></line>
+                </svg>
+            </div>
+        </div>
+    </div>
+    <div class="card p-6">
+        <div class="flex items-center justify-between">
+            <div>
+                <div class="text-3xl font-bold" style="color: var(--accent-color);" id="total-rooms">0</div>
+                <div class="text-sm text-gray-500 mt-1">Rooms</div>
+            </div>
+            <div class="w-16 h-16 bg-indigo-100 rounded-full text-indigo-500 flex items-center justify-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                    <line x1="12" y1="3" x2="12" y2="21"></line>
+                    <line x1="3" y1="12" x2="21" y2="12"></line>
+                </svg>
+            </div>
+        </div>
+    </div>
+    <div class="card p-6">
+        <div class="flex items-center justify-between">
+            <div>
+                <div class="text-3xl font-bold text-yellow-500" id="power-usage">0W</div>
+                <div class="text-sm text-gray-500 mt-1">Power Usage</div>
+            </div>
+            <div class="w-16 h-16 bg-yellow-100 rounded-full text-yellow-500 flex items-center justify-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="5"></circle>
+                    <line x1="12" y1="1" x2="12" y2="3"></line>
+                    <line x1="12" y1="21" x2="12" y2="23"></line>
+                    <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                    <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                    <line x1="1" y1="12" x2="3" y2="12"></line>
+                    <line x1="21" y1="12" x2="23" y2="12"></line>
+                    <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                    <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                </svg>
+            </div>
+        </div>
+    </div>
+</div>
+        
+        <div class="flex flex-wrap space-x-2 mb-8 tab-container">
+            <button onclick="showTab('overview')" id="tab-overview" class="tab tab-active flex-grow">Overview</button>
+            <button onclick="showTab('devices')" id="tab-devices" class="tab flex-grow">All Devices</button>
+            <button onclick="showTab('rooms')" id="tab-rooms" class="tab flex-grow">Rooms</button>
+            <button onclick="showTab('automation')" id="tab-automation" class="tab flex-grow">Automation</button>
+            <button onclick="showTab('energy')" id="tab-energy" class="tab flex-grow">Energy</button>
+            <button onclick="showTab('settings')" id="tab-settings" class="tab flex-grow">Settings</button>
+            <button onclick="showTab('wifi')" id="tab-wifi" class="tab flex-grow">Configure Wi-Fi</button>
+        </div>
+        
+        <div id="content-overview" class="tab-content fade-in">
+            <div class="mb-8">
+                <h2 class="text-2xl font-bold mb-4 text-gray-800">Common Scenes</h2>
+                <div id="overview-scenes-container" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+                    </div>
+            </div>
+            <div class="mb-8">
+                <h2 class="text-2xl font-bold mb-4 text-gray-800">Quick Access</h2>
+                <div id="quick-access-container" class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                    </div>
+            </div>
+            <div><h2 class="text-2xl font-bold mb-4 text-gray-800">Recent Activity</h2><div class="card p-6 max-h-96 overflow-y-auto"><div id="notifications-current" class="space-y-3 mb-4"></div><div id="notifications-history-container" class="mt-4 pt-4 border-t border-gray-200"><h3 class="text-xl font-semibold mb-3 text-gray-700">Activity History</h3><select id="notification-history-select" onchange="displayHistoricalNotifications(this.value)" class="form-select"><option value="">Select a previous session</option></select><div id="notifications-history-display" class="space-y-3 mt-4"></div></div></div></div>
+        </div>
+        <div id="content-devices" class="tab-content hidden fade-in"><div class="flex flex-wrap justify-between items-center mb-6 gap-4"><h2 class="text-2xl font-bold text-gray-800">All Devices</h2><div class="flex items-center space-x-4"><select id="device-filter" onchange="filterDevices()" class="form-select"><option value="all">All Categories</option><option value="lights">Lights</option><option value="climate">Climate</option><option value="security">Security</option><option value="appliances">Speakers</option><option value="switch">Smart Switches</option><option value="fan">Smart Fan</option><option value="cleaner">Smart Cleaner</option><option value="router">Routers</option></select><button onclick="showAddDeviceModal()" class="btn btn-primary whitespace-nowrap">+ Add Device</button></div></div><div id="all-devices-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"></div></div>
+        <div id="content-rooms" class="tab-content hidden fade-in"><div class="flex justify-between items-center mb-6"><h2 class="text-2xl font-bold text-gray-800">Rooms</h2><button onclick="showAddRoomModal()" class="btn btn-accent">+ Add Room</button></div><div id="detailed-rooms-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div></div>
+        <div id="content-automation" class="tab-content hidden fade-in">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-2xl font-bold text-gray-800">Automation</h2>
+                <div class="flex items-center space-x-2">
+                    <button onclick="showCreateGroupModal()" class="btn bg-purple-500 hover:bg-purple-600 text-white">+ Create Group</button>
+                </div>
+            </div>
+            <div class="mb-8">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-xl font-semibold text-gray-700 flex items-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 mr-3 opacity-70" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
+                        <span>Common Scenes</span>
+                    </h3>
+                    <button onclick="showSceneModal()" class="btn btn-accent">+ Add Scene</button>
+                </div>
+                <div id="automation-scenes-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+            </div>
+            <div class="mb-8">
+                 <h3 class="text-xl font-semibold mb-4 text-gray-700 flex items-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 mr-3 opacity-70" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+                    <span>Active Schedules</span>
+                </h3>
+                <div id="active-schedules" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+            </div>
+            <div>
+                 <h3 class="text-xl font-semibold mb-4 text-gray-700 flex items-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 mr-3 opacity-70" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+                    <span>Device Groups</span>
+                </h3>
+                <div id="device-groups" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+            </div>
+        </div>
+      <div id="content-settings" class="tab-content hidden fade-in">
+            <h2 class="text-2xl font-bold mb-6 text-gray-800">Settings</h2>
+            <div class="card p-6 mb-8">
+                <h3 class="text-xl font-semibold mb-4 text-gray-700">User Profile</h3>
+                <div id="user-profile-container">
+                </div>
+            </div>
+            <div class="card p-6">
+                <h3 class="text-xl font-semibold mb-4 text-gray-700">System Management</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    <button onclick="clearAllActivityData()" class="card p-6 hover:border-yellow-400 transition-all text-center flex flex-col items-center justify-center space-y-2">
+                        <div class="w-12 h-12 text-gray-700 mb-2"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="9" y1="15" x2="15" y2="15"></line></svg></div>
+                        <div class="font-medium text-gray-700">Clear All Activity Logs</div>
+                    </button>
+                    <button onclick="executeSystemAction('remove-all-devices')" class="card p-6 hover:border-red-400 transition-all text-center flex flex-col items-center justify-center space-y-2">
+                        <div class="w-12 h-12 text-gray-700 mb-2"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg></div>
+                        <div class="font-medium text-gray-700">Remove All Devices</div>
+                    </button>
+                    <button onclick="executeSystemAction('remove-all-rooms')" class="card p-6 hover:border-red-400 transition-all text-center flex flex-col items-center justify-center space-y-2">
+                        <div class="w-12 h-12 text-gray-700 mb-2"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 6.5A2.5 2.5 0 0 1 5 4h14a2.5 2.5 0 0 1 2.5 2.5v11A2.5 2.5 0 0 1 19 20H5a2.5 2.5 0 0 1-2.5-2.5v-11Z"/><path d="m14 10-4 4"/><path d="m10 10 4 4"/></svg></div>
+                        <div class="font-medium text-gray-700">Remove All Rooms</div>
+                    </button>
+                    <button onclick="executeSystemAction('remove-all-schedules')" class="card p-6 hover:border-red-400 transition-all text-center flex flex-col items-center justify-center space-y-2">
+                        <div class="w-12 h-12 text-gray-700 mb-2"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line><line x1="10" y1="14" x2="14" y2="18"></line><line x1="14" y1="14" x2="10" y2="18"></line></svg></div>
+                        <div class="font-medium text-gray-700">Clear All Schedules</div>
+                    </button>
+                    <button onclick="executeSystemAction('remove-all-groups')" class="card p-6 hover:border-red-400 transition-all text-center flex flex-col items-center justify-center space-y-2">
+                        <div class="w-12 h-12 text-gray-700 mb-2"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.72"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.72-1.72"></path><line x1="2" y1="22" x2="22" y2="2"></line></svg></div>
+                        <div class="font-medium text-gray-700">Clear All Groups</div>
+                    </button>
+                    <button onclick="window.location.href='support.html'" class="card p-6 hover:border-blue-400 transition-all text-center flex flex-col items-center justify-center space-y-2">
+                        <div class="w-12 h-12 text-gray-700 mb-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+                                <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                            </svg>
+                        </div>
+                        <div class="font-medium text-gray-700">Contact Support</div>
+                    </button>
+                    <button id="sign-out-btn" class="card p-6 hover:border-red-400 transition-all text-center flex flex-col items-center justify-center space-y-2">
+                        <div class="w-12 h-12 text-gray-700 mb-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                                <polyline points="16 17 21 12 16 7"></polyline>
+                                <line x1="21" y1="12" x2="9" y2="12"></line>
+                            </svg>
+                        </div>
+                        <div class="font-medium text-gray-700">Sign Out</div>
+                    </button>
+                    <button onclick="executeSystemAction('reset-all-data')" class="card p-6 hover:border-red-400 transition-all col-span-full bg-red-50 hover:bg-red-100 flex items-center justify-center gap-4">
+                        <div class="w-12 h-12 text-red-600">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+                        </div>
+                        <div class="font-medium text-red-600">Reset All Data</div>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div id="content-wifi" class="tab-content hidden fade-in">
+            <div class="max-w-md mx-auto">
+                <div class="card p-8">
+                    <h2 class="text-2xl font-bold mb-6 text-gray-800 text-center">Configure Wi-Fi Network</h2>
+                  <form id="wifi-form" method="POST" action="http://192.168.4.1/save">
+                     <div class="mb-4">
+                        <label for="ssid" class="block text-sm font-medium mb-2 text-gray-600">Wi-Fi Name (SSID)</label>
+                        <input type="text" id="ssid" name="ssid" class="form-input" placeholder="Enter your Wi-Fi name" required>
+                    </div>
+                    <div class="mb-6">
+                        <label for="password" class="block text-sm font-medium mb-2 text-gray-600">Wi-Fi Password</label>
+                        <input type="password" id="password" name="password" class="form-input" placeholder="Enter your Wi-Fi password">
+                    </div>
+                    <button type="submit" class="btn btn-primary w-full">Save and Connect</button>
+                </form>
+                    <div id="wifi-status-message" class="status-message"></div>
+                </div>
+            </div>
+        </div>
+
+       <div id="content-energy" class="tab-content hidden fade-in">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <div class="card p-6">
+            <div class="flex items-center justify-between">
+                <div>
+                    <div class="text-3xl font-bold text-yellow-500" id="energy-live-power">0W</div>
+                    <div class="text-sm text-gray-500 mt-1">Live Power Usage</div>
+                </div>
+                <div class="w-16 h-16 bg-yellow-100 rounded-full text-yellow-500 flex items-center justify-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.21 15.89A10 10 0 1 1 8 2.83"></path><path d="M22 12A10 10 0 0 0 12 2v10z"></path></svg>
+                </div>
+            </div>
+        </div>
+        <div class="card p-6">
+            <div class="flex items-center justify-between">
+                <div>
+                    <div class="text-3xl font-bold" id="energy-today">0 kWh</div>
+                    <div class="text-sm text-gray-500 mt-1" id="energy-today-label">Today's Consumption</div>
+                </div>
+                 <div class="w-16 h-16 bg-blue-100 rounded-full text-blue-500 flex items-center justify-center">
+                   <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a5 5 0 0 0-5 5v6.5a3.5 3.5 0 0 0 7 0V7a5 5 0 0 0-5-5z"></path><path d="M12 2v20"></path></svg>
+                </div>
+            </div>
+        </div>
+        <div class="card p-6">
+            <div class="flex items-center justify-between">
+                <div>
+                    <div class="text-3xl font-bold" id="energy-this-month">0 kWh</div>
+                    <div class="text-sm text-gray-500 mt-1" id="energy-this-month-label">This Month's Consumption</div>
+                </div>
+                 <div class="w-16 h-16 bg-indigo-100 rounded-full text-indigo-500 flex items-center justify-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+                </div>
+            </div>
+        </div>
+         <div class="card p-6">
+            <div class="flex items-center justify-between">
+                <div>
+                    <div class="text-3xl font-bold text-green-500" id="energy-estimated-bill">$0.00</div>
+                    <div class="text-sm text-gray-500 mt-1">Estimated Monthly Bill</div>
+                </div>
+                 <div class="w-16 h-16 bg-green-100 rounded-full text-green-500 flex items-center justify-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card p-6 mb-8">
+        <h3 class="text-xl font-semibold mb-4 text-gray-700">View History</h3>
+        <div class="flex flex-col md:flex-row items-center gap-4">
+            <div class="w-full md:w-2/3">
+                <label for="energy-history-select" class="block text-sm font-medium mb-2 text-gray-600">Select a date to view summary</label>
+                <select id="energy-history-select" onchange="displayHistoricalEnergyData(this.value)" class="form-select"></select>
+            </div>
+            <div class="w-full md:w-1/3 pt-0 md:pt-7">
+                <button onclick="renderEnergyPage()" class="btn btn-secondary w-full">View Live Data</button>
+            </div>
+        </div>
+    </div>
+    <div class="grid grid-cols-1 lg:grid-cols-5 gap-6 mb-8">
+        <div class="card p-6 lg:col-span-3">
+            <h3 class="text-xl font-semibold mb-4 text-gray-700">Live Power Usage (Watts)</h3>
+            <div id="realtime-chart-container" style="height: 300px;"></div>
+        </div>
+        <div class="card p-6 lg:col-span-2">
+            <h3 class="text-xl font-semibold mb-4 text-gray-700">Consumption by Room</h3>
+            <div id="consumption-by-room" class="space-y-3"></div>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-5 gap-6">
+         <div class="card p-6 lg:col-span-3">
+            <h3 class="text-xl font-semibold mb-4 text-gray-700">Daily Consumption - Last 7 Days (kWh)</h3>
+            <div id="daily-chart-container" style="height: 300px;"></div>
+        </div>
+         <div class="card p-6 lg:col-span-2">
+             <h3 class="text-xl font-semibold mb-4 text-gray-700">Top Consuming Devices</h3>
+             <div id="consumption-by-device" class="space-y-3"></div>
+             <h3 class="text-xl font-semibold mt-6 mb-4 pt-6 border-t border-gray-200 text-gray-700">Settings</h3>
+             <div>
+                <label for="electricity-price" class="block text-sm font-medium mb-2 text-gray-600">Price per kWh ($)</label>
+                <div class="flex items-center space-x-2">
+                     <input type="number" id="electricity-price" step="0.01" class="form-input" placeholder="e.g., 0.15">
+                     <button onclick="updateElectricityPrice()" class="btn btn-primary">Save</button>
+                </div>
+             </div>
+        </div>
+    </div>
+</div>
+
+    <div id="device-control-modal" class="fixed inset-0 bg-black bg-opacity-40 modal-backdrop hidden items-center justify-center z-50 p-4">
+        <div class="control-modal-content p-6 relative">
+            <div class="flex justify-between items-center mb-4">
+                <button onclick="hideDeviceControlModal()" class="text-gray-500 hover:text-gray-800 text-2xl p-2 -ml-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+                </button>
+                <div class="text-center">
+                    <h3 class="text-xl font-semibold text-gray-800" id="device-control-title">Device Name</h3>
+                    <p class="text-sm text-gray-500" id="device-control-room">Room Name</p>
+                </div>
+                <div class="w-10"></div> </div>
+            <div id="device-controls-container" class="mt-4"></div>
+        </div>
+    </div>
+    
+    <div id="confirmation-modal" class="fixed inset-0 bg-black bg-opacity-40 modal-backdrop hidden items-center justify-center z-50"><div class="modal-content p-8 max-w-md w-full mx-4"><h3 class="text-xl font-bold mb-4">Are you sure?</h3><p id="confirmation-message" class="text-gray-600 mb-6">This action cannot be undone.</p><div class="flex space-x-4 mt-6"><button id="confirm-action-btn" class="btn btn-danger flex-1">Confirm</button><button onclick="hideConfirmationModal()" class="btn btn-secondary flex-1">Cancel</button></div></div></div>
+    <div id="add-device-modal" class="fixed inset-0 bg-black bg-opacity-40 modal-backdrop hidden items-center justify-center z-50"><div class="modal-content p-8 max-w-md w-full mx-4"><h3 class="text-2xl font-bold mb-6 text-gray-800">Add New Device</h3><form onsubmit="event.preventDefault(); addDevice(event)"><div class="space-y-4"><div><label class="block text-sm font-medium mb-2 text-gray-600">Device Name</label><input type="text" id="device-name" class="form-input" placeholder="e.g., Bedroom Light" required></div><div><label class="block text-sm font-medium mb-2 text-gray-600">Device Type</label><select id="device-type" class="form-select" onchange="toggleDeviceSpecificFields()"><option value="lights">Smart Light</option><option value="climate">Climate Control</option><option value="security">Security Device</option><option value="appliances">Smart Speaker</option><option value="fan">Smart Fan</option><option value="cleaner">Smart Cleaner</option><option value="switch">Smart Switch</option><option value="router">Router</option></select></div><div><label class="block text-sm font-medium mb-2 text-gray-600">Room</label><select id="device-room" class="form-select"></select></div><div><label class="block text-sm font-medium mb-2 text-gray-600">Device IP Address</label><input type="text" id="device-ip" class="form-input" placeholder="e.g., 192.168.1.100" required pattern="\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}"></div><div id="device-specific-add-fields" class="space-y-4"></div></div><div class="flex space-x-4 mt-6"><button type="submit" class="btn btn-primary flex-1">Add Device</button><button type="button" onclick="hideAddDeviceModal()" class="btn btn-secondary flex-1">Cancel</button></div></form></div></div>
+    <div id="add-room-modal" class="fixed inset-0 bg-black bg-opacity-40 modal-backdrop hidden items-center justify-center z-50"><div class="modal-content p-8 max-w-md w-full mx-4"><h3 class="text-2xl font-bold mb-6 text-gray-800">Add New Room</h3><form onsubmit="addRoom(event)"><div class="space-y-4"><div><label class="block text-sm font-medium mb-2 text-gray-600">Room Name</label><input type="text" id="room-name" class="form-input" placeholder="e.g., Home Office" required></div><div><label class="block text-sm font-medium mb-2 text-gray-600">Room Icon</label><div class="grid grid-cols-6 gap-2" id="room-icons">
+        <button type="button" onclick="selectRoomIcon(this)" class="room-icon-btn p-3 bg-gray-100 rounded-lg hover:bg-gray-200 text-2xl border-2 border-transparent flex justify-center items-center"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 2h20v10H2zm0 14h20v-4H2zM7 8v4"></path><rect x="5" y="6" width="4" height="4" rx="1"></rect><rect x="15" y="6" width="4" height="4" rx="1"></rect></svg></button>
+        <button type="button" onclick="selectRoomIcon(this)" class="room-icon-btn p-3 bg-gray-100 rounded-lg hover:bg-gray-200 text-2xl border-2 border-transparent flex justify-center items-center"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 7v10h20V7H2zm18 8H4v-6h16v6z"></path><path d="M4 7V5c0-1.1.9-2 2-2h12c1.1 0 2 .9 2 2v2"></path></svg></button>
+        <button type="button" onclick="selectRoomIcon(this)" class="room-icon-btn p-3 bg-gray-100 rounded-lg hover:bg-gray-200 text-2xl border-2 border-transparent flex justify-center items-center"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 2H9.5a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h5a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2z"></path><path d="M12 18h.01"></path></svg></button>
+        <button type="button" onclick="selectRoomIcon(this)" class="room-icon-btn p-3 bg-gray-100 rounded-lg hover:bg-gray-200 text-2xl border-2 border-transparent flex justify-center items-center"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H6a2 2 0 00-2 2v2"></path><path d="M18 3h2a2 2 0 012 2v2"></path><path d="M12 4a8 8 0 00-8 8v1h16v-1a8 8 0 00-8-8z"></path><path d="M12 16v4"></path><path d="M10 20h4"></path></svg></button>
+        <button type="button" onclick="selectRoomIcon(this)" class="room-icon-btn p-3 bg-gray-100 rounded-lg hover:bg-gray-200 text-2xl border-2 border-transparent flex justify-center items-center"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg></button>
+        <button type="button" onclick="selectRoomIcon(this)" class="room-icon-btn p-3 bg-gray-100 rounded-lg text-2xl border-2 border-primary-color flex justify-center items-center"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg></button>
+    </div><input type="hidden" id="selected-room-icon" value='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>'></div></div><div class="flex space-x-4 mt-6"><button type="submit" class="btn btn-accent flex-1">Add Room</button><button type="button" onclick="hideAddRoomModal()" class="btn btn-secondary flex-1">Cancel</button></div></form></div></div>
+    
+    <div id="edit-room-modal" class="fixed inset-0 bg-black bg-opacity-40 modal-backdrop hidden items-center justify-center z-50"><div class="modal-content p-8 max-w-md w-full mx-4"><h3 class="text-2xl font-bold mb-6 text-gray-800">Edit Room</h3><form onsubmit="updateRoom(event)"><input type="hidden" id="edit-room-id"><div class="space-y-4"><div><label class="block text-sm font-medium mb-2 text-gray-600">Room Name</label><input type="text" id="edit-room-name" class="form-input" placeholder="e.g., Home Office" required></div><div><label class="block text-sm font-medium mb-2 text-gray-600">Room Icon</label><div class="grid grid-cols-6 gap-2" id="edit-room-icons">
+        <button type="button" onclick="selectEditRoomIcon(this)" class="room-icon-btn p-3 bg-gray-100 rounded-lg hover:bg-gray-200 text-2xl border-2 border-transparent flex justify-center items-center"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 2h20v10H2zm0 14h20v-4H2zM7 8v4"></path><rect x="5" y="6" width="4" height="4" rx="1"></rect><rect x="15" y="6" width="4" height="4" rx="1"></rect></svg></button>
+        <button type="button" onclick="selectEditRoomIcon(this)" class="room-icon-btn p-3 bg-gray-100 rounded-lg hover:bg-gray-200 text-2xl border-2 border-transparent flex justify-center items-center"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 7v10h20V7H2zm18 8H4v-6h16v6z"></path><path d="M4 7V5c0-1.1.9-2 2-2h12c1.1 0 2 .9 2 2v2"></path></svg></button>
+        <button type="button" onclick="selectEditRoomIcon(this)" class="room-icon-btn p-3 bg-gray-100 rounded-lg hover:bg-gray-200 text-2xl border-2 border-transparent flex justify-center items-center"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 2H9.5a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h5a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2z"></path><path d="M12 18h.01"></path></svg></button>
+        <button type="button" onclick="selectEditRoomIcon(this)" class="room-icon-btn p-3 bg-gray-100 rounded-lg hover:bg-gray-200 text-2xl border-2 border-transparent flex justify-center items-center"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H6a2 2 0 00-2 2v2"></path><path d="M18 3h2a2 2 0 012 2v2"></path><path d="M12 4a8 8 0 00-8 8v1h16v-1a8 8 0 00-8-8z"></path><path d="M12 16v4"></path><path d="M10 20h4"></path></svg></button>
+        <button type="button" onclick="selectEditRoomIcon(this)" class="room-icon-btn p-3 bg-gray-100 rounded-lg hover:bg-gray-200 text-2xl border-2 border-transparent flex justify-center items-center"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg></button>
+        <button type="button" onclick="selectEditRoomIcon(this)" class="room-icon-btn p-3 bg-gray-100 rounded-lg text-2xl border-2 border-transparent flex justify-center items-center"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg></button>
+    </div><input type="hidden" id="edit-selected-room-icon"></div></div><div class="flex space-x-4 mt-6"><button type="submit" class="btn btn-primary flex-1">Save Changes</button><button type="button" onclick="hideEditRoomModal()" class="btn btn-secondary flex-1">Cancel</button></div></form></div></div>
+
+    <div id="schedule-device-modal" class="fixed inset-0 bg-black bg-opacity-40 modal-backdrop hidden items-center justify-center z-50"><div class="modal-content p-8 max-w-md w-full mx-4"><h3 class="text-2xl font-bold mb-6 text-gray-800">Schedule Device</h3><form onsubmit="addSchedule(event)"><input type="hidden" id="schedule-device-id"><div class="space-y-4"><div><label class="block text-sm font-medium mb-2 text-gray-600">Action</label><select id="schedule-action" class="form-select"><option value="on">Turn On</option><option value="off">Turn Off</option></select></div><div id="schedule-value-container"></div><div><label class="block text-sm font-medium mb-2 text-gray-600">Time</label><input type="time" id="schedule-time" class="form-input" required></div><div><label class="block text-sm font-medium mb-2 text-gray-600">Days</label><div class="grid grid-cols-4 md:grid-cols-7 gap-2 text-center text-gray-600"><label class="flex items-center space-x-2 p-2 rounded-md hover:bg-gray-100 cursor-pointer"><input type="checkbox" name="schedule-day" value="Sun"><span>Sun</span></label><label class="flex items-center space-x-2 p-2 rounded-md hover:bg-gray-100 cursor-pointer"><input type="checkbox" name="schedule-day" value="Mon"><span>Mon</span></label><label class="flex items-center space-x-2 p-2 rounded-md hover:bg-gray-100 cursor-pointer"><input type="checkbox" name="schedule-day" value="Tue"><span>Tue</span></label><label class="flex items-center space-x-2 p-2 rounded-md hover:bg-gray-100 cursor-pointer"><input type="checkbox" name="schedule-day" value="Wed"><span>Wed</span></label><label class="flex items-center space-x-2 p-2 rounded-md hover:bg-gray-100 cursor-pointer"><input type="checkbox" name="schedule-day" value="Thu"><span>Thu</span></label><label class="flex items-center space-x-2 p-2 rounded-md hover:bg-gray-100 cursor-pointer"><input type="checkbox" name="schedule-day" value="Fri"><span>Fri</span></label><label class="flex items-center space-x-2 p-2 rounded-md hover:bg-gray-100 cursor-pointer"><input type="checkbox" name="schedule-day" value="Sat"><span>Sat</span></label></div></div></div><div class="flex space-x-4 mt-6"><button type="submit" class="btn btn-primary flex-1 btn-add-schedule">Add Schedule</button><button type="button" onclick="hideScheduleDeviceModal()" class="btn btn-secondary flex-1">Cancel</button></div></form></div></div>
+    <div id="view-schedules-modal" class="fixed inset-0 bg-black bg-opacity-40 modal-backdrop hidden items-center justify-center z-50"><div class="modal-content p-8 max-w-md w-full mx-4 max-h-[90vh] overflow-y-auto"><div class="flex justify-between items-center mb-6"><h3 class="text-2xl font-bold text-gray-800" id="view-schedules-title">Schedules</h3><button onclick="hideViewSchedulesModal()" class="text-gray-400 hover:text-gray-800 text-3xl">&times;</button></div><div id="device-specific-schedules" class="space-y-3"></div><div class="flex space-x-4 mt-6"><button onclick="hideViewSchedulesModal()" class="btn btn-secondary flex-1">Close</button></div></div></div>
+    <div id="create-group-modal" class="fixed inset-0 bg-black bg-opacity-40 modal-backdrop hidden items-center justify-center z-50"><div class="modal-content p-8 max-w-md w-full mx-4"><h3 class="text-2xl font-bold mb-6 text-gray-800">Create New Device Group</h3><form onsubmit="createDeviceGroup(event)"><div class="space-y-4"><div><label class="block text-sm font-medium mb-2 text-gray-600">Group Name</label><input type="text" id="group-name" class="form-input" placeholder="e.g., Living Room Lights" required></div><div><label class="block text-sm font-medium mb-2 text-gray-600">Select Devices</label><div id="group-device-list" class="max-h-48 overflow-y-auto bg-gray-50 border border-gray-200 rounded-lg p-2 space-y-1"></div></div></div><div class="flex space-x-4 mt-6"><button type="submit" class="btn bg-purple-500 hover:bg-purple-600 text-white flex-1">Create Group</button><button type="button" onclick="hideCreateGroupModal()" class="btn btn-secondary flex-1">Cancel</button></div></form></div></div>
+    <div id="room-details-modal" class="fixed inset-0 bg-black bg-opacity-40 modal-backdrop hidden items-center justify-center z-50"><div class="modal-content p-8 max-w-3xl w-full mx-4 max-h-[90vh] overflow-y-auto">
+        <div class="flex justify-between items-center mb-6">
+            <div class="flex items-center space-x-3">
+                <div id="room-details-title" class="text-2xl font-bold text-gray-800 flex items-center space-x-3"></div>
+                <span id="room-power-usage" class="text-sm font-semibold text-yellow-600 bg-yellow-100 px-2 py-1 rounded-full"></span>
+            </div>
+            <div class="flex items-center space-x-2">
+                 <button id="edit-room-btn" class="btn btn-secondary !p-2"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg></button>
+                 <button id="delete-room-btn" class="btn btn-danger !p-2"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg></button>
+                 <button onclick="hideRoomDetailsModal()" class="text-gray-400 hover:text-gray-800 text-3xl ml-2">&times;</button>
+            </div>
+         </div>
+        <div id="room-devices-container" class="space-y-4"></div>
+        <div class="grid grid-cols-3 gap-4 mt-8 pt-6 border-t border-gray-200">
+            <button id="room-all-on-btn" class="btn btn-primary">All On</button>
+            <button id="room-all-off-btn" class="btn btn-secondary">All Off</button>
+            <button onclick="hideRoomDetailsModal()" class="btn btn-secondary col-start-3">Close</button>
+        </div>
+    </div></div>
+    
+    <div id="scene-modal" class="fixed inset-0 bg-black bg-opacity-40 modal-backdrop hidden items-center justify-center z-50 p-4">
+        <div class="modal-content p-8 max-w-lg w-full mx-4 max-h-[90vh] overflow-y-auto">
+            <h3 id="scene-modal-title" class="text-2xl font-bold mb-6 text-gray-800">Create New Scene</h3>
+            <form onsubmit="saveScene(event)">
+                <input type="hidden" id="scene-id">
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium mb-2 text-gray-600">Scene Name</label>
+                        <input type="text" id="scene-name" class="form-input" placeholder="e.g., Movie Night" required>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-2 text-gray-600">Scene Icon</label>
+                        <div class="grid grid-cols-6 gap-2" id="scene-icons">
+                        </div>
+                        <input type="hidden" id="selected-scene-icon">
+                    </div>
+                    <div>
+                        <h4 class="text-lg font-semibold mb-2 text-gray-700">Actions</h4>
+                        <div id="scene-actions-list" class="space-y-2 mb-3">
+                        </div>
+                        <div class="card p-4 bg-gray-50 dark:bg-gray-100">
+                            <h5 class="font-semibold mb-2">Add New Action</h5>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-600">Device</label>
+                                    <select id="action-device-select" class="form-select" onchange="updateActionCommandSelect()"></select>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-600">Command</label>
+                                    <select id="action-command-select" class="form-select" onchange="updateActionValueInput()"></select>
+                                </div>
+                            </div>
+                            <div id="action-value-container" class="mt-4"></div>
+                            <button type="button" onclick="addSceneAction()" class="btn btn-secondary w-full mt-4">Add Action to Scene</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex space-x-4 mt-6">
+                    <button type="submit" class="btn btn-primary flex-1">Save Scene</button>
+                    <button type="button" onclick="hideSceneModal()" class="btn btn-secondary flex-1">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="toast-container" class="fixed bottom-4 right-4 z-[100] w-full max-w-xs space-y-3"></div>
+
+<script type="module">
+    // --- FIREBASE SDK IMPORTS ---
+    import { firebaseConfig } from './firebase-config.js';
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-app.js";
+    import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-auth.js";
+    import { getFirestore, collection, onSnapshot, doc, setDoc, deleteDoc, writeBatch, updateDoc } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-firestore.js";
+
+    // --- FIREBASE CONFIGURATION ---
+    
+
+    // --- FIREBASE INITIALIZATION & GLOBAL VARIABLES ---
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+    let userId;
+
+    // --- DATA STORE & GLOBAL VARIABLES ---
+    let devices = []; let rooms = []; let deviceGroups = []; let schedules = []; let scenes = [];
+    let currentNotifications = []; let historicalNotifications = []; let currentDeviceId = null;
+    let userProfile = null; // This will hold our custom profile data from Firestore
+    let currentSceneActions = [];
+    let energyLog = [];
+    let electricityPrice = 0.15;
+    let realtimePowerData = Array(30).fill(0);
+    let realtimePowerLabels = Array(30).fill('');
+    let energyHistory = {};
+    let lastArchiveDate = null;
+    let initialDataLoaded = false;
+
+    const themeIcons = {
+        moon: `<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>`,
+        sun: `<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M12 6a6 6 0 100 12 6 6 0 000-12z"></path></svg>`
+    };
+    
+    const sceneIcons = [
+        `<svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18.36 6.64a9 9 0 1 1-12.73 0"></path><line x1="12" y1="2" x2="12" y2="12"></line></svg>`,
+        `<svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>`,
+        `<svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="2.18" ry="2.18"></rect><line x1="7" y1="2" x2="7" y2="22"></line><line x1="17" y1="2" x2="17" y2="22"></line><line x1="2" y1="12" x2="22" y2="12"></line><line x1="2" y1="7" x2="7" y2="7"></line><line x1="2" y1="17" x2="7" y2="17"></line><line x1="17" y1="17" x2="22" y2="17"></line><line x1="17" y1="7" x2="22" y2="7"></line></svg>`,
+        `<svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>`,
+        `<svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>`,
+        `<svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>`
+    ];
+
+    let networkTimeInterval, scheduleInterval;
+
+    // --- CORE INITIALIZATION & AUTHENTICATION ---
+    document.addEventListener('DOMContentLoaded', () => {
+        applyTheme();
+        loadDataFromLocalStorage();
+        archiveDailyEnergyData();
+        initializeClockAndSchedules();
+        initializeEnergyMonitoring();
+        setupEventListeners();
+        showNotification('Connecting to your dashboard...', 'info');
+    });
+
+    onAuthStateChanged(auth, (user) => {
+        if (user) {
+            userId = user.uid;
+            console.log('User is logged in:', userId);
+            setupFirestoreListeners();
+        } else {
+            console.log('User is not logged in. Redirecting...');
+            window.location.href = 'login.html';
+        }
+    });
+
+    // --- SETUP FIRESTORE LISTENERS ---
+    function setupFirestoreListeners() {
+        if (!userId) return;
+        const collectionsToSync = {
+            'devices': (data) => { devices = data; },
+            'rooms': (data) => { rooms = data; },
+            'schedules': (data) => { schedules = data; },
+            'deviceGroups': (data) => { deviceGroups = data; },
+            'scenes': (data) => { scenes = data; }
+        };
+        let loadedCount = 0;
+        const totalCollections = Object.keys(collectionsToSync).length + 1; // +1 for user profile
+
+        // Listener for the user profile
+        onSnapshot(doc(db, 'users', userId, 'profile', 'details'), (doc) => {
+            userProfile = doc.exists() ? doc.data() : null;
+            if (!initialDataLoaded) checkInitialLoad();
+            else renderAll();
+        }, (error) => {
+            console.error("Error fetching user profile:", error);
+            if (!initialDataLoaded) checkInitialLoad();
+        });
+
+        Object.keys(collectionsToSync).forEach(colName => {
+            onSnapshot(collection(db, 'users', userId, colName), (snapshot) => {
+                const dataArray = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                collectionsToSync[colName](dataArray);
+                if (!initialDataLoaded) checkInitialLoad();
+                else renderAll();
+            }, (error) => {
+                console.error(`Error fetching ${colName}:`, error);
+                if (!initialDataLoaded) checkInitialLoad();
+            });
+        });
+        
+        function checkInitialLoad() {
+            loadedCount++;
+            if (loadedCount === totalCollections) {
+                initialDataLoaded = true;
+                console.log("All initial data loaded. Rendering UI.");
+                showNotification('Dashboard loaded successfully!', 'success');
+                renderAll();
+            }
+        }
+    }
+
+    // --- MAKE FUNCTIONS GLOBALLY ACCESSIBLE ---
+    Object.assign(window, {
+        showTab, toggleTheme, showAddDeviceModal, hideAddDeviceModal, addDevice,
+        showAddRoomModal, hideAddRoomModal, addRoom, filterDevices, toggleDevice,
+        openDeviceControl, hideDeviceControlModal, confirmRemoveDevice, confirmRemoveRoom,
+        updateDeviceProperty, showScheduleDeviceModal, hideScheduleDeviceModal,
+        addSchedule, viewDeviceSchedules, hideViewSchedulesModal, confirmRemoveSchedule,
+        createDeviceGroup, showCreateGroupModal, hideCreateGroupModal, controlDeviceGroup,
+        confirmRemoveDeviceGroup, openRoomDetailsModal, hideRoomDetailsModal,
+        showEditRoomModal, hideEditRoomModal, updateRoom, showSceneModal, hideSceneModal,
+        saveScene, executeScene, confirmRemoveScene, addSceneAction, removeSceneAction,
+        selectSceneIcon, updateActionCommandSelect, updateActionValueInput,
+        displayHistoricalNotifications, clearAllActivityData, executeSystemAction,
+        selectRoomIcon, selectEditRoomIcon, renderEnergyPage, displayHistoricalEnergyData,
+        updateElectricityPrice, toggleDeviceSpecificFields, saveUserProfile, deleteUserProfile
+    });
+
+    // --- EVENT LISTENERS ---
+    // This correctly handles the sign-out functionality
+document.getElementById('sign-out-btn').addEventListener('click', () => {
+    // Provide immediate feedback to the user
+    showNotification('Signing out...', 'info');
+    signOut(auth).then(() => {
+        // The onAuthStateChanged listener will automatically handle the redirect.
+        console.log("Sign out successful. Waiting for redirect.");
+    }).catch(error => {
+        // Handle any errors during sign out and notify the user.
+        console.error('Sign out error:', error);
+        showNotification(`Failed to sign out: ${error.message}`, 'error');
+    });
+});
+
+    window.addEventListener('beforeunload', () => {
+        if (currentNotifications.length > 0) {
+            historicalNotifications.unshift({
+                timestamp: new Date().toLocaleString(),
+                notifications: [...currentNotifications]
+            });
+            if (historicalNotifications.length > 10) historicalNotifications.pop();
+            currentNotifications = [];
+            saveDataToLocalStorage();
+        }
+    });
+
+    // --- THEME & LOCAL DATA ---
+    function applyTheme() {
+        const theme = localStorage.getItem('smartHomeTheme') || 'light';
+        document.documentElement.classList.toggle('dark', theme === 'dark');
+        document.getElementById('theme-toggle-btn').innerHTML = theme === 'dark' ? themeIcons.sun : themeIcons.moon;
+    }
+
+    function toggleTheme() {
+        const newTheme = document.documentElement.classList.contains('dark') ? 'light' : 'dark';
+        localStorage.setItem('smartHomeTheme', newTheme);
+        applyTheme();
+    }
+
+    function saveDataToLocalStorage() {
+        try {
+            localStorage.setItem('smartHomeCurrentNotifications', JSON.stringify(currentNotifications));
+            localStorage.setItem('smartHomeHistoricalNotifications', JSON.stringify(historicalNotifications));
+            localStorage.setItem('smartHomeEnergyLog', JSON.stringify(energyLog));
+            localStorage.setItem('smartHomeEnergyHistory', JSON.stringify(energyHistory));
+            localStorage.setItem('smartHomeElectricityPrice', electricityPrice);
+            localStorage.setItem('smartHomeLastArchiveDate', lastArchiveDate);
+        } catch (e) { console.error("Could not save to local storage:", e); }
+    }
+
+    function loadDataFromLocalStorage() {
+        try {
+            currentNotifications = JSON.parse(localStorage.getItem('smartHomeCurrentNotifications')) || [];
+            historicalNotifications = JSON.parse(localStorage.getItem('smartHomeHistoricalNotifications')) || [];
+            energyLog = JSON.parse(localStorage.getItem('smartHomeEnergyLog')) || [];
+            energyHistory = JSON.parse(localStorage.getItem('smartHomeEnergyHistory')) || {};
+            electricityPrice = parseFloat(localStorage.getItem('smartHomeElectricityPrice')) || 0.15;
+            lastArchiveDate = localStorage.getItem('smartHomeLastArchiveDate') || null;
+        } catch (e) { console.error("Could not load from local storage:", e); }
+    }
+
+    // --- RENDER & UI FUNCTIONS ---
+    function renderAll() {
+        if (!initialDataLoaded) return;
+        saveDataToLocalStorage();
+        updateHeaderProfile();
+        updateStats();
+        renderAllDevices();
+        renderDetailedRooms();
+        renderQuickAccess();
+        populateRoomOptions();
+        renderActiveSchedules();
+        renderDeviceGroups();
+        renderCurrentNotifications();
+        renderHistoricalNotificationDropdown();
+        renderOverviewScenes();
+        renderAutomationScenes();
+        renderUserProfile();
+    }
+    
+   // --- REAL DEVICE CONTROL (FROM BACKUP) ---
+async function sendDeviceCommand(device, command, params = {}) {
+    if (!device || !device.ip) {
+        showNotification(`Device ${device?.name || ''} has no IP address.`, 'error');
+        return false;
+    }
+    try {
+        const ipRegex = /^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$/;
+        if (!ipRegex.test(device.ip)) {
+            showNotification(`Invalid IP address for ${device.name}.`, 'error');
+            return false;
+        }
+        let actualCommand = command;
+        let commandParams = { ...params };
+        if (command === 'on' || command === 'off') commandParams.device = device.type;
+        
+        switch (device.type) {
+            case 'lights':
+                if (command === 'on' || command === 'off') actualCommand = command;
+                else if (command === 'brightness') { actualCommand = 'setBrightness'; commandParams.value = params.value; }
+                else if (command === 'color') { actualCommand = 'setColor'; commandParams.value = String(params.value).replace('#', ''); }
+                else return false;
+                break;
+            case 'climate':
+                if (command === 'on' || command === 'off') actualCommand = command;
+                else if (command === 'temperature') { actualCommand = 'setTemperature'; commandParams.value = params.value; }
+                else if (command === 'mode') { actualCommand = 'setMode'; commandParams.value = params.value; }
+                else return false;
+                break;
+            case 'security':
+                if (command === 'on' || command === 'off') actualCommand = command === 'on' ? 'arm' : 'disarm';
+                else if (command === 'armed') actualCommand = params.value ? 'arm' : 'disarm';
+                else if (command === 'securityMode') { actualCommand = 'setSecurityMode'; commandParams.value = params.value; }
+                else return false;
+                break;
+            case 'appliances':
+                if (command === 'on' || command === 'off') actualCommand = command;
+                else if (command === 'mode') { actualCommand = 'setMode'; commandParams.value = params.value; }
+                else if (command === 'volume') { actualCommand = 'setVolume'; commandParams.value = params.value; }
+                else return false;
+                break;
+            case 'fan':
+                if (command === 'on' || command === 'off') actualCommand = command;
+                else if (command === 'speed') { actualCommand = 'setSpeed'; commandParams.value = params.value; }
+                else return false;
+                break;
+            case 'cleaner':
+                if (command === 'on' || command === 'off') actualCommand = command;
+                else if (command === 'mode') { actualCommand = 'setCleaningMode'; commandParams.value = params.value; }
+                else return false;
+                break;
+            case 'switch': case 'router':
+                if (command === 'on' || command === 'off') actualCommand = command;
+                else return false;
+                break;
+            default: return false;
+        }
+        const queryParams = new URLSearchParams({ cmd: actualCommand, ...commandParams });
+        const url = `http://${device.ip}/command?${queryParams.toString()}`;
+        const response = await Promise.race([
+            fetch(url, { method: 'GET' }),
+            new Promise((_, reject) => setTimeout(() => reject(new Error('Request timeout')), 5000))
+        ]);
+        if (!response.ok) throw new Error(`Device responded with status: ${response.status}`);
+        return true;
+    } catch (error) {
+        console.error(`Error controlling device ${device.name} (${device.ip}):`, error);
+        showNotification(`Failed to control ${device.name}. Error: ${error.message}`, 'error');
+        return false;
+    }
+}
+    async function toggleDevice(deviceId, context = false) {
+        if (!userId) return;
+        const device = devices.find(d => d.id === deviceId);
+        if (!device) return;
+
+        const newStatus = !device.status;
+        const success = await sendDeviceCommand(device, newStatus ? 'on' : 'off');
+        
+        if (success) {
+            try {
+                await updateDoc(doc(db, 'users', userId, 'devices', deviceId), { status: newStatus });
+                showNotification(`${device.name} turned ${newStatus ? 'on' : 'off'}.`, 'info');
+                if (context === true || currentDeviceId === deviceId) openDeviceControl(deviceId);
+            } catch (e) {
+                console.error("Error updating device status:", e);
+                showNotification('Failed to sync device status.', 'error');
+            }
+        }
+    }
+    
+    async function updateDeviceProperty(deviceId, property, value, context = null) {
+        if (!userId) return;
+        const device = devices.find(d => d.id === deviceId);
+        if (!device) return;
+
+        const success = await sendDeviceCommand(device, property, { value });
+
+        if (success) {
+            try {
+                const updateData = { [property]: value };
+                await updateDoc(doc(db, 'users', userId, 'devices', deviceId), updateData);
+                showNotification(`${device.name} ${property} updated.`, 'info');
+                if(context === 'room' && device.room) {
+                    openRoomDetailsModal(device.room);
+                } else if(context === 'control') {
+                    openDeviceControl(deviceId);
+                }
+            } catch (e) {
+                console.error("Error updating device property:", e);
+                showNotification('Failed to sync device update.', 'error');
+            }
+        }
+    }
+
+    // --- USER PROFILE FUNCTIONS (FIXED) ---
+    function renderUserProfile() {
+    const container = document.getElementById('user-profile-container');
+    const user = auth.currentUser;
+    if (!container || !user) return;
+
+    // Use Firestore profile data if available, otherwise fallback to auth data
+    const displayName = userProfile?.name || user.displayName || 'No Name';
+    const displayEmail = userProfile?.email || user.email;
+    const picUrl = userProfile?.picUrl;
+
+    const avatarContent = picUrl
+        ? `<img src="${picUrl}" alt="User Avatar" class="w-24 h-24 rounded-full object-cover border-4 border-gray-200">`
+        : `<div class="w-24 h-24 rounded-full bg-gradient-to-br from-primary-color to-accent-color flex items-center justify-center text-4xl text-white shadow-lg">${displayName.charAt(0).toUpperCase()}</div>`;
+
+    container.innerHTML = `
+        <div class="flex items-center space-x-6 mb-6">
+            ${avatarContent}
+            <div>
+                <h4 class="text-2xl font-bold text-gray-800">${displayName}</h4>
+                <p class="text-gray-500">${displayEmail}</p>
+            </div>
+        </div>
+        <form onsubmit="saveUserProfile(event)">
+            <div class="space-y-4">
+                <div>
+                    <label for="user-profile-pic" class="block text-sm font-medium mb-2 text-gray-600">Update Profile Picture</label>
+                    <input type="file" id="user-profile-pic" class="form-input" accept="image/*" required>
+                </div>
+            </div>
+            <div class="flex space-x-4 mt-6">
+                <button type="submit" class="btn btn-primary flex-1">Save Picture</button>
+                ${userProfile ? '<button type="button" onclick="deleteUserProfile()" class="btn btn-danger flex-1">Delete Profile</button>' : ''}
+            </div>
+        </form>
+    `;
+}
+
+    async function saveUserProfile(event) {
+    event.preventDefault();
+    const user = auth.currentUser;
+    if (!userId || !user) return showNotification('User not logged in.', 'error');
+    
+    const fileInput = document.getElementById('user-profile-pic');
+    const file = fileInput.files[0];
+    if (!file) return showNotification('Please select a picture file.', 'warning');
+
+    const reader = new FileReader();
+    reader.onloadend = async () => {
+        const picUrl = reader.result;
+        // Get name and email from auth, ensuring they exist
+        const profileData = { 
+            name: user.displayName || 'User', 
+            email: user.email, 
+            picUrl: picUrl 
+        };
+        try {
+            // Use setDoc to create or overwrite the profile
+            await setDoc(doc(db, 'users', userId, 'profile', 'details'), profileData);
+            showNotification('User profile picture saved!', 'success');
+        } catch (e) {
+            console.error("Error saving profile:", e);
+            showNotification('Failed to save profile picture.', 'error');
+        }
+    };
+    reader.readAsDataURL(file);
+}
+    function deleteUserProfile() {
+        showConfirmationModal('Are you sure you want to delete your profile?', async () => {
+            if (!userId) return;
+            try {
+                await deleteDoc(doc(db, 'users', userId, 'profile', 'details'));
+                showNotification('Profile deleted.', 'info');
+            } catch (e) {
+                showNotification('Failed to delete profile.', 'error');
+            }
+        });
+    }
+
+    function updateHeaderProfile() {
+        const user = auth.currentUser;
+        if (!user) return;
+        const userNameDisplay = document.getElementById('display-user-name');
+        const userAvatarContainer = document.getElementById('user-avatar-container');
+        
+        if (userProfile) {
+            userNameDisplay.textContent = userProfile.name;
+            userAvatarContainer.innerHTML = `<img src="${userProfile.picUrl}" alt="User Avatar" class="w-full h-full object-cover">`;
+        } else {
+            const displayName = user.displayName || user.email;
+            userNameDisplay.textContent = displayName;
+            userAvatarContainer.innerHTML = `<span>${displayName ? displayName.charAt(0).toUpperCase() : ''}</span>`;
+        }
+    }
+
+    // --- ALL OTHER FUNCTIONS (UNCHANGED LOGIC) ---
+    // (The rest of the functions from the previous version are included here)
+    function showTab(tabName) {
+        document.querySelectorAll('.tab-content').forEach(c => c.classList.add('hidden'));
+        document.querySelectorAll('.tab').forEach(t => t.classList.remove('tab-active'));
+        document.getElementById(`content-${tabName}`).classList.remove('hidden');
+        document.getElementById(`tab-${tabName}`).classList.add('tab-active');
+        if (tabName === 'energy') renderEnergyPage();
+    }
+
+    function updateStats() {
+        document.getElementById('total-devices').textContent = devices.length;
+        document.getElementById('active-devices').textContent = devices.filter(d => d.status).length;
+        document.getElementById('total-rooms').textContent = rooms.length;
+        const livePower = devices.reduce((sum, device) => sum + (device.status ? (device.power || 50) : 0), 0);
+        document.getElementById('power-usage').textContent = `${livePower}W`;
+    }
+
+    function showNotification(message, type = 'info') {
+        const now = new Date();
+        const timestamp = now.toLocaleString('en-US');
+        const notificationData = { message, type, timestamp };
+        currentNotifications.unshift(notificationData);
+        renderCurrentNotifications();
+        const toastContainer = document.getElementById('toast-container');
+        if (!toastContainer) return;
+        const toast = document.createElement('div');
+        const typeMap = { 
+            'success': { icon: '<svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>', color: 'border-green-400' }, 
+            'error': { icon: '<svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="7.86 2 16.14 2 22 7.86 22 16.14 16.14 22 7.86 22 2 16.14 2 7.86 7.86 2"></polygon><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>', color: 'border-red-400' }, 
+            'warning': { icon: '<svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>', color: 'border-yellow-400' }, 
+            'info': { icon: '<svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>', color: 'border-blue-400' } 
+        };
+        toast.className = `toast-notification card p-4 border-l-4 flex items-start space-x-3`;
+        toast.classList.add(typeMap[type].color);
+        toast.innerHTML = `<span class="text-xl mt-1">${typeMap[type].icon}</span><div><p class="font-semibold text-gray-800">${message}</p><p class="text-xs text-gray-500">${now.toLocaleTimeString('en-US', {hour: '2-digit', minute:'2-digit'})}</p></div>`;
+        toastContainer.appendChild(toast);
+        setTimeout(() => { toast.remove(); }, 5000);
+    }
+
+    async function addDevice(event) {
+        event.preventDefault();
+        if (!userId) return showNotification('User not logged in.', 'error');
+        const name = document.getElementById('device-name').value.trim();
+        const ip = document.getElementById('device-ip').value.trim();
+        const room = document.getElementById('device-room').value;
+        const type = document.getElementById('device-type').value;
+
+        if (!name || !ip || !room || !/^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$/.test(ip)) {
+            return showNotification('Please fill all fields correctly.', 'warning');
+        }
+
+        const newDevice = { name, type, room, ip, status: false, power: 50 };
+        
+        switch (type) {
+            case 'lights': newDevice.brightness = 100; newDevice.color = '#ffffff'; break;
+            case 'climate': newDevice.temperature = 22; newDevice.mode = 'cold'; break;
+            case 'security': newDevice.armed = false; newDevice.securityMode = 'disarmed'; break;
+            case 'appliances': newDevice.mode = 'normal'; newDevice.volume = 60; break;
+            case 'fan': newDevice.speed = 0; break;
+            case 'cleaner': newDevice.mode = 'auto'; break;
+            case 'router': newDevice.users = Math.floor(Math.random() * 10) + 1; break;
+        }
+
+        try {
+            await setDoc(doc(collection(db, 'users', userId, 'devices')), newDevice);
+            showNotification(`${name} added successfully.`, 'success');
+            hideAddDeviceModal();
+        } catch (e) {
+            console.error("Error adding device:", e);
+            showNotification('Failed to add device.', 'error');
+        }
+    }
+
+    async function confirmRemoveDevice(deviceId) {
+        const device = devices.find(d => d.id === deviceId);
+        if (!device) return;
+        showConfirmationModal(`Remove ${device.name} and all its schedules?`, async () => {
+            if (!userId) return showNotification('User not logged in.', 'error');
+            try {
+                const batch = writeBatch(db);
+                batch.delete(doc(db, 'users', userId, 'devices', deviceId));
+                schedules.filter(s => s.deviceId === deviceId).forEach(schedule => {
+                    batch.delete(doc(db, 'users', userId, 'schedules', schedule.id));
+                });
+                await batch.commit();
+                showNotification('Device removed successfully.', 'info');
+                hideDeviceControlModal();
+            } catch (e) {
+                console.error("Error removing device:", e);
+                showNotification('Failed to remove device.', 'error');
+            }
+        });
+    }
+    
+    async function addRoom(event) {
+        event.preventDefault();
+        if (!userId) return showNotification('User not logged in.', 'error');
+        const name = document.getElementById('room-name').value.trim();
+        const icon = document.getElementById('selected-room-icon').value;
+        if (!name) return;
+        try {
+            await setDoc(doc(collection(db, 'users', userId, 'rooms')), { name, icon });
+            showNotification(`Room "${name}" added.`, 'success');
+            hideAddRoomModal();
+        } catch (e) {
+            console.error("Error adding room: ", e);
+            showNotification('Failed to add room.', 'error');
+        }
+    }
+
+    async function confirmRemoveRoom(roomId) {
+        const room = rooms.find(r => r.id === roomId);
+        if (!room) return;
+        if (devices.some(d => d.room === roomId)) {
+            return showNotification('Cannot remove room with devices. Reassign or remove them first.', 'error');
+        }
+        showConfirmationModal(`Are you sure you want to remove ${room.name}?`, async () => {
+            if (!userId) return showNotification('User not logged in.', 'error');
+            try {
+                await deleteDoc(doc(db, 'users', userId, 'rooms', roomId));
+                showNotification(`Room ${room.name} removed.`, 'info');
+            } catch (e) {
+                console.error("Error removing room:", e);
+                showNotification('Failed to remove room.', 'error');
+            }
+        });
+    }
+    
+    async function updateRoom(event) {
+        event.preventDefault();
+        if (!userId) return;
+        const roomId = document.getElementById('edit-room-id').value;
+        const newName = document.getElementById('edit-room-name').value.trim();
+        const newIcon = document.getElementById('edit-selected-room-icon').value;
+        if (!newName) return;
+        try {
+            await updateDoc(doc(db, 'users', userId, 'rooms', roomId), { name: newName, icon: newIcon });
+            showNotification(`Room updated successfully.`, 'success');
+            hideEditRoomModal();
+        } catch(e) {
+            showNotification('Error updating room.', 'error');
+        }
+    }
+
+    async function addSchedule(event) {
+        event.preventDefault();
+        if (!userId) return;
+        const selectedDays = Array.from(document.querySelectorAll('input[name="schedule-day"]:checked')).map(cb => cb.value);
+        if (selectedDays.length === 0 || !document.getElementById('schedule-time').value) {
+            return showNotification('Please select a time and at least one day.', 'warning');
+        }
+        
+        const newSchedule = {
+            deviceId: document.getElementById('schedule-device-id').value,
+            action: document.getElementById('schedule-action').value,
+            time: document.getElementById('schedule-time').value,
+            days: selectedDays,
+        };
+        const valueInput = document.getElementById('schedule-value');
+        if (valueInput) newSchedule.value = newSchedule.action === 'armed' ? valueInput.value === 'true' : valueInput.value;
+
+        try {
+            await setDoc(doc(collection(db, 'users', userId, 'schedules')), newSchedule);
+            showNotification(`Schedule added.`, 'success');
+            hideScheduleDeviceModal();
+        } catch (e) {
+            showNotification('Failed to add schedule.', 'error');
+        }
+    }
+
+    function confirmRemoveSchedule(scheduleId) {
+        showConfirmationModal(`Remove this schedule?`, async () => {
+            if (!userId) return;
+            try {
+                await deleteDoc(doc(db, 'users', userId, 'schedules', scheduleId));
+                showNotification('Schedule removed.', 'info');
+                if (!document.getElementById('view-schedules-modal').classList.contains('hidden')) {
+                     hideViewSchedulesModal();
+                }
+            } catch (e) {
+                showNotification('Failed to remove schedule.', 'error');
+            }
+        });
+    }
+
+    async function saveScene(event) {
+        event.preventDefault();
+        if (!userId) return;
+        const sceneId = document.getElementById('scene-id').value || doc(collection(db, 'users', userId, 'scenes')).id;
+        const name = document.getElementById('scene-name').value.trim();
+        const icon = document.getElementById('selected-scene-icon').value;
+        if (!name || !icon) return;
+
+        try {
+            await setDoc(doc(db, 'users', userId, 'scenes', sceneId), { name, icon, actions: currentSceneActions });
+            showNotification(`Scene "${name}" saved.`, 'success');
+            hideSceneModal();
+        } catch (e) {
+            showNotification('Failed to save scene.', 'error');
+        }
+    }
+    
+    function confirmRemoveScene(sceneId) {
+        showConfirmationModal('Remove this scene?', async () => {
+            if (!userId) return;
+            try {
+                await deleteDoc(doc(db, 'users', userId, 'scenes', sceneId));
+                showNotification('Scene removed.', 'info');
+            } catch (e) {
+                showNotification('Failed to remove scene.', 'error');
+            }
+        });
+    }
+
+    async function createDeviceGroup(event) {
+        event.preventDefault();
+        if (!userId) return;
+        const name = document.getElementById('group-name').value.trim();
+        const deviceIds = Array.from(document.querySelectorAll('input[name="group-device"]:checked')).map(cb => cb.value);
+        if (!name || deviceIds.length === 0) return;
+        try {
+            await setDoc(doc(collection(db, 'users', userId, 'deviceGroups')), { name, deviceIds });
+            showNotification(`Group "${name}" created.`, 'success');
+            hideCreateGroupModal();
+        } catch (e) {
+            showNotification('Failed to create group.', 'error');
+        }
+    }
+    
+    function confirmRemoveDeviceGroup(groupId) {
+        showConfirmationModal(`Remove this group?`, async () => {
+            if (!userId) return;
+            try {
+                await deleteDoc(doc(db, 'users', userId, 'deviceGroups', groupId));
+                showNotification(`Group removed.`, 'info');
+            } catch (e) {
+                showNotification('Failed to remove group.', 'error');
+            }
+        });
+    }
+    
+    async function executeSystemAction(action) {
+        const actionText = action.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+        showConfirmationModal(`Execute system action: ${actionText}? This is irreversible.`, async () => {
+            if (!userId) return showNotification('User not logged in.', 'error');
+            const batch = writeBatch(db);
+            try {
+                const collectionsMap = {
+                    'remove-all-devices': { collections: ['devices', 'schedules'], data: [devices, schedules], msg: 'All devices and schedules removed.' },
+                    'remove-all-rooms': { collections: ['rooms'], data: [rooms], msg: 'All rooms removed.' },
+                    'remove-all-schedules': { collections: ['schedules'], data: [schedules], msg: 'All schedules removed.' },
+                    'remove-all-groups': { collections: ['deviceGroups'], data: [deviceGroups], msg: 'All groups removed.' },
+                    'reset-all-data': { collections: ['devices', 'rooms', 'schedules', 'deviceGroups', 'scenes'], data: [devices, rooms, schedules, deviceGroups, scenes], msg: 'All user data has been reset.' },
+                };
+                
+                const actionConfig = collectionsMap[action];
+                if (action === 'remove-all-rooms' && devices.length > 0) return showNotification('Remove devices before removing rooms.', 'error');
+
+                actionConfig.collections.forEach((colName, index) => {
+                    actionConfig.data[index].forEach(item => batch.delete(doc(db, 'users', userId, colName, item.id)));
+                });
+
+                await batch.commit();
+                showNotification(actionConfig.msg, 'warning');
+            } catch (e) {
+                showNotification('An error occurred during the bulk operation.', 'error');
+            }
+        });
+    }
+    
+    function renderAllDevices() {
+        const grid = document.getElementById('all-devices-grid');
+        const filter = document.getElementById('device-filter').value;
+        if (!grid) return;
+        const devicesToRender = devices.filter(d => filter === 'all' || d.type === filter);
+        if (devicesToRender.length === 0) {
+            grid.innerHTML = `<p class="text-gray-500 col-span-full text-center py-10">No devices found for this category.</p>`;
+            return;
+        }
+        grid.innerHTML = devicesToRender.map(device => {
+            const isOn = device.status;
+            const cardClass = isOn ? 'device-card on' : 'device-card';
+            const secondaryValue = getDeviceSecondaryValue(device);
+            return `
+                <div class="${cardClass} p-6 flex flex-col justify-between" onclick="openDeviceControl('${device.id}')">
+                    <div class="flex-grow">
+                        <div class="flex justify-between items-start mb-4">
+                            <div class="device-icon">${getDeviceIcon(device.type)}</div>
+                            ${secondaryValue}
+                        </div>
+                        <div class="text-sm text-gray-500">${getRoomName(device.room)}</div>
+                        <h3 class="text-xl font-semibold mt-1">${device.name}</h3>
+                    </div>
+                    <div class="mt-6" onclick="event.stopPropagation();">
+                        <label class="toggle-switch">
+                            <input type="checkbox" ${isOn ? 'checked' : ''} onchange="toggleDevice('${device.id}')">
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                </div>`;
+        }).join('');
+    }
+
+    function renderQuickAccess() {
+        const container = document.getElementById('quick-access-container');
+        if (!container) return;
+        const quickAccessDevices = devices.slice(0, 4);
+        if (quickAccessDevices.length === 0) {
+            container.innerHTML = `<div class="card p-6 col-span-full"><p class="text-gray-500 text-center">Add devices for quick access.</p></div>`;
+            return;
+        }
+        container.innerHTML = quickAccessDevices.map(device => {
+            const isOn = device.status;
+            return `
+                <div class="card p-4 flex items-center justify-between cursor-pointer" onclick="openDeviceControl('${device.id}')">
+                    <div class="flex items-center space-x-4">
+                        <div class="device-icon !w-12 !h-12 ${isOn ? '!bg-primary-color' : ''}">${getDeviceIcon(device.type)}</div>
+                        <div>
+                            <h4 class="font-semibold text-lg text-gray-800">${device.name}</h4>
+                            <p class="text-sm text-gray-500">${getRoomName(device.room)}</p>
+                        </div>
+                    </div>
+                    <div onclick="event.stopPropagation();">
+                        <label class="toggle-switch">
+                            <input type="checkbox" ${isOn ? 'checked' : ''} onchange="toggleDevice('${device.id}')">
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                </div>`;
+        }).join('');
+    }
+
+    function renderDetailedRooms() {
+        const grid = document.getElementById('detailed-rooms-grid');
+        if (!grid) return;
+        grid.innerHTML = rooms.length === 0 ? `<p class="text-gray-500 col-span-full text-center py-10">No rooms found.</p>` : rooms.map(room => {
+            const roomDevices = devices.filter(d => d.room === room.id);
+            const activeDevices = roomDevices.filter(d => d.status).length;
+            return `
+                <div class="card p-6 cursor-pointer group" onclick="openRoomDetailsModal('${room.id}')">
+                    <div class="flex justify-between items-start">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-10 h-10 flex items-center justify-center">${room.icon}</div>
+                            <h3 class="text-xl font-semibold text-gray-800">${room.name}</h3>
+                        </div>
+                        <div class="text-3xl opacity-20 group-hover:opacity-100 transition-opacity">➔</div>
+                    </div>
+                    <p class="text-sm text-gray-500 mt-2">${activeDevices} of ${roomDevices.length} devices active</p>
+                </div>`;
+        }).join('');
+    }
+
+    function renderActiveSchedules() {
+        const container = document.getElementById('active-schedules');
+        if (!container) return;
+        const trashIcon = '<svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>';
+        if (schedules.length === 0) {
+            container.innerHTML = `<p class="text-gray-500 col-span-full text-center">No active schedules.</p>`; return;
+        }
+        container.innerHTML = schedules.map(schedule => {
+            const device = devices.find(d => d.id === schedule.deviceId);
+            if (!device) return '';
+            let actionText = `Turn ${schedule.action}`;
+            if (schedule.action !== 'on' && schedule.action !== 'off') {
+                actionText = `Set ${schedule.action} to ${schedule.value}`;
+                if (schedule.action === 'color') actionText = `Set color to <span class="inline-block w-4 h-4 rounded" style="background-color: ${schedule.value}"></span>`;
+                else if (schedule.action === 'temperature') actionText += '°C';
+                else if (schedule.action === 'brightness') actionText += '%';
+                else if (schedule.action === 'armed') actionText = `Set security to ${schedule.value ? 'Armed' : 'Disarmed'}`;
+            }
+            return `<div class="card p-4 flex justify-between items-center"><div><div class="font-semibold text-gray-800">${device.name}</div><div class="text-sm text-gray-500">${actionText} at ${schedule.time} on ${schedule.days.join(', ')}</div></div><button onclick="confirmRemoveSchedule('${schedule.id}')" class="btn !bg-red-100 !text-red-600 hover:!bg-red-200 !p-2 transition-colors">${trashIcon}</button></div>`;
+        }).join('');
+    }
+
+    function renderDeviceGroups() {
+        const groupsContainer = document.getElementById('device-groups');
+        if (!groupsContainer) return;
+        const trashIcon = '<svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>';
+        if (deviceGroups.length === 0) {
+            groupsContainer.innerHTML = `<p class="text-gray-500 col-span-full text-center">No device groups created.</p>`; return;
+        }
+        groupsContainer.innerHTML = deviceGroups.map(group => {
+            const groupDevices = group.deviceIds.map(id => devices.find(d => d.id === id)?.name).filter(Boolean);
+            return `<div class="card p-4"><div class="flex justify-between items-start mb-2"><h3 class="text-xl font-semibold text-gray-800">${group.name}</h3><button onclick="confirmRemoveDeviceGroup('${group.id}')" class="btn !bg-red-100 !text-red-600 hover:!bg-red-200 !p-2 transition-colors">${trashIcon}</button></div><p class="text-sm text-gray-500 mb-3">Devices: ${groupDevices.length > 0 ? groupDevices.join(', ') : 'None'}</p><div class="flex space-x-2"><button onclick="controlDeviceGroup('${group.id}', true)" class="btn btn-primary flex-1 text-sm">All On</button><button onclick="controlDeviceGroup('${group.id}', false)" class="btn btn-secondary flex-1 text-sm">All Off</button></div></div>`;
+        }).join('');
+    }
+
+    function renderCurrentNotifications() {
+        const container = document.getElementById('notifications-current');
+        if (!container) return;
+        container.innerHTML = '';
+        if (currentNotifications.length === 0) {
+            container.innerHTML = '<p class="text-gray-500">No recent activity in this session.</p>'; return;
+        }
+        const typeMap = { 'success': { icon: '<svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>', color: 'border-green-400' }, 'error': { icon: '<svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="7.86 2 16.14 2 22 7.86 22 16.14 16.14 22 7.86 22 2 16.14 2 7.86 7.86 2"></polygon><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>', color: 'border-red-400' }, 'warning': { icon: '<svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>', color: 'border-yellow-400' }, 'info': { icon: '<svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>', color: 'border-blue-400' } };
+        currentNotifications.forEach(n => {
+            const notification = document.createElement('div');
+            notification.className = `card p-3 border-l-4`;
+            notification.classList.add(typeMap[n.type].color);
+            notification.innerHTML = `<div class="flex items-start space-x-3"><span class="text-lg mt-0.5">${typeMap[n.type].icon}</span><div><p class="font-medium text-gray-800">${n.message}</p><p class="text-xs text-gray-500 mt-1">${n.timestamp}</p></div></div>`;
+            container.appendChild(notification);
+        });
+    }
+
+    function renderHistoricalNotificationDropdown() {
+        const select = document.getElementById('notification-history-select');
+        select.innerHTML = '<option value="">Select a previous session</option>';
+        if (historicalNotifications.length === 0) {
+            select.innerHTML += '<option value="" disabled>No historical data</option>';
+            return;
+        }
+        historicalNotifications.forEach((session, index) => {
+            const option = document.createElement('option');
+            option.value = index;
+            option.textContent = `Session from ${session.timestamp}`;
+            select.appendChild(option);
+        });
+    }
+
+    function openDeviceControl(deviceId) {
+        currentDeviceId = deviceId;
+        const device = devices.find(d => d.id === deviceId);
+        if (!device) return;
+        document.getElementById('device-control-title').textContent = device.name;
+        document.getElementById('device-control-room').textContent = getRoomName(device.room);
+        const container = document.getElementById('device-controls-container');
+        let dialHTML = '', modesHTML = '', mainProperty, min, max, value, unit, label;
+        const icons = { cold: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="2" x2="12" y2="22"></line><line x1="17" y1="5" x2="7" y2="15"></line><line x1="17" y1="19" x2="7" y2="9"></line><line x1="5" y1="7" x2="15" y2="17"></line><line x1="19" y1="7" x2="9" y2="17"></line></svg>', fan: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 12c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5z"/><path d="M12 12v6.5"/><path d="M17.41 7.59c1.63.53 3.03 1.53 4.09 2.91"/><path d="M2.5 10.5c1.06-1.38 2.46-2.38 4.09-2.91"/><path d="M19.49 19.49c-1.38 1.06-2.89 2.06-4.59 2.51"/><path d="M4.93 19.49c-1.7-1.42-2.96-3.23-3.43-5.19"/><path d="M22.5 14.31c-.47 1.96-1.73 3.77-3.43 5.19"/></svg>', heat: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>', white: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle></svg>', warm: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>', cool: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"></path></svg>', disarmed: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 9.9-1"></path></svg>', home: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>', away: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>', timer: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>' };
+        switch (device.type) {
+            case 'climate': mainProperty = 'temperature'; value = device.temperature || 22; min = 16; max = 32; unit = '°C'; label = 'Room Temperature'; modesHTML = `<div class="text-center text-sm text-gray-400 mb-2 mt-6">Mode</div><div class="mode-selector">${createModeButton(device, 'mode', 'cold', icons.cold, 'Cold')}${createModeButton(device, 'mode', 'fan', icons.fan, 'Fan')}${createModeButton(device, 'mode', 'heat', icons.heat, 'Heat')}</div>`; break;
+            case 'lights': mainProperty = 'brightness'; value = device.brightness || 100; min = 0; max = 100; unit = '%'; label = 'Brightness'; modesHTML = `<div class="text-center text-sm text-gray-400 mb-2 mt-6">Color</div><div class="mode-selector">${createModeButton(device, 'color', '#ffffff', icons.white, 'White')}${createModeButton(device, 'color', '#fff3b0', icons.warm, 'Warm')}${createModeButton(device, 'color', '#ade8f4', icons.cool, 'Cool')}</div>`; break;
+            case 'fan': mainProperty = 'speed'; value = device.speed || 0; min = 0; max = 255; unit = ''; label = 'Fan Speed'; modesHTML = `<div class="text-center text-sm text-gray-400 mb-2 mt-6">Speed Level</div><div class="mode-selector">${createModeButton(device, 'speed', '85', '1', 'Low')}${createModeButton(device, 'speed', '170', '2', 'Med')}${createModeButton(device, 'speed', '255', '3', 'High')}</div>`; break;
+            case 'appliances': mainProperty = 'volume'; value = device.volume || 60; min = 0; max = 100; unit = '%'; label = 'Volume'; break;
+            case 'security': mainProperty = null; modesHTML = `<div class="text-center text-sm text-gray-400 mb-2 mt-6">Security Mode</div><div class="mode-selector">${createModeButton(device, 'securityMode', 'disarmed', icons.disarmed, 'Disarmed')}${createModeButton(device, 'securityMode', 'home', icons.home, 'Home')}${createModeButton(device, 'securityMode', 'away', icons.away, 'Away')}</div>`; break;
+            case 'switch': mainProperty = null; modesHTML = `<div class="text-center text-sm text-gray-400 mb-2 mt-6">Quick Actions</div><div class="mode-selector">${createModeButton(device, 'timer', '15', icons.timer, '15m Timer')}</div>`; break;
+            default: mainProperty = null;
+        }
+        if (mainProperty) {
+            dialHTML = `<div class="dial-container" id="dial-container-${device.id}"><div class="dial-background"></div><div class="dial-progress" id="dial-progress-${device.id}"></div><div class="dial-center"><div class="dial-value" id="dial-value-${device.id}"></div><div class="dial-label">${label}</div></div></div>`;
+        } else {
+             dialHTML = `<div class="text-center my-8 py-4"><div class="text-lg text-gray-500">${device.type.charAt(0).toUpperCase() + device.type.slice(1)} is</div><div class="font-bold text-4xl ${device.status ? 'text-primary-color' : 'text-gray-400'}">${device.status ? 'On' : 'Off'}</div></div>`;
+        }
+        const powerButtonSVG = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18.36 6.64a9 9 0 1 1-12.73 0"></path><line x1="12" y1="2" x2="12" y2="12"></line></svg>`;
+        const powerButtonHTML = `<div class="power-button-container"><button class="power-button ${!device.status ? 'off' : ''}" onclick="toggleDevice('${device.id}', true)">${powerButtonSVG}</button></div>`;
+        const settingsHTML = `
+            <div class="mt-8 pt-4 border-t border-gray-200 grid grid-cols-3 gap-2">
+                <button onclick="hideDeviceControlModal(); showScheduleDeviceModal('${device.id}');" class="btn btn-schedule-special !text-xs !p-2">Schedule</button>
+                <button onclick="hideDeviceControlModal(); viewDeviceSchedules('${device.id}');" class="btn btn-secondary !text-xs !p-2">View Schedules</button>
+                <button onclick="hideDeviceControlModal(); confirmRemoveDevice('${device.id}');" class="btn btn-danger !text-xs !p-2">Remove</button>
+            </div>
+        `;
+        container.innerHTML = dialHTML + modesHTML + powerButtonHTML + settingsHTML;
+        if (mainProperty) {
+            updateDial(device.id, mainProperty, value);
+            setupDialInteraction(device.id, mainProperty, min, max);
+        }
+        document.getElementById('device-control-modal').classList.add('flex');
+        document.getElementById('device-control-modal').classList.remove('hidden');
+    }
+    function hideDeviceControlModal() { document.getElementById('device-control-modal').classList.add('hidden'); document.getElementById('device-control-modal').classList.remove('flex'); currentDeviceId = null; }
+    function showAddDeviceModal() { if (rooms.length === 0) { showNotification('Please add a room first.', 'warning'); showAddRoomModal(); return; } populateRoomOptions(); toggleDeviceSpecificFields(); document.getElementById('add-device-modal').classList.remove('hidden'); document.getElementById('add-device-modal').classList.add('flex'); }
+    function hideAddDeviceModal() { document.getElementById('add-device-modal').classList.add('hidden'); document.getElementById('add-device-modal').classList.remove('flex'); document.getElementById('add-device-modal').querySelector('form').reset(); }
+    function showAddRoomModal() { document.getElementById('add-room-modal').classList.remove('hidden'); document.getElementById('add-room-modal').classList.add('flex'); }
+    function hideAddRoomModal() { document.getElementById('add-room-modal').classList.add('hidden'); document.getElementById('add-room-modal').classList.remove('flex'); document.getElementById('add-room-modal').querySelector('form').reset(); }
+    function showEditRoomModal(roomId) { hideRoomDetailsModal(); const room = rooms.find(r => r.id === roomId); if (!room) return; document.getElementById('edit-room-id').value = roomId; document.getElementById('edit-room-name').value = room.name; document.getElementById('edit-selected-room-icon').value = room.icon; const iconButtons = document.querySelectorAll('#edit-room-icons .room-icon-btn'); iconButtons.forEach(btn => { btn.classList.remove('border-primary-color'); if (btn.innerHTML.trim() === room.icon.trim()) { btn.classList.add('border-primary-color'); } }); document.getElementById('edit-room-modal').classList.remove('hidden'); document.getElementById('edit-room-modal').classList.add('flex'); }
+    function hideEditRoomModal() { document.getElementById('edit-room-modal').classList.add('hidden'); document.getElementById('edit-room-modal').classList.remove('flex'); }
+    function showCreateGroupModal() { const groupDeviceList = document.getElementById('group-device-list'); groupDeviceList.innerHTML = devices.length === 0 ? `<p class="text-gray-500">No devices available.</p>` : devices.map(device => `<label class="flex items-center space-x-3 p-2 rounded-md hover:bg-gray-100 cursor-pointer"><input type="checkbox" name="group-device" value="${device.id}" class="form-checkbox h-4 w-4 text-primary-color rounded focus:ring-primary-color"><span class="text-gray-700">${device.name}</span></label>`).join(''); document.getElementById('create-group-modal').classList.remove('hidden'); document.getElementById('create-group-modal').classList.add('flex'); }
+    function hideCreateGroupModal() { document.getElementById('create-group-modal').classList.add('hidden'); document.getElementById('create-group-modal').classList.remove('flex'); document.getElementById('create-group-modal').querySelector('form').reset(); }
+    function showScheduleDeviceModal(deviceId) { const device = devices.find(d => d.id === deviceId); if (!device) return; document.getElementById('schedule-device-id').value = deviceId; const actionSelect = document.getElementById('schedule-action'); let options = `<option value="on">Turn On</option><option value="off">Turn Off</option>`; switch (device.type) { case 'lights': options += `<option value="brightness">Set Brightness</option><option value="color">Set Color</option>`; break; case 'climate': options += `<option value="temperature">Set Temperature</option>`; break; case 'security': options += `<option value="armed">Set Armed Status</option>`; break; case 'appliances': options += `<option value="mode">Set Mode</option>`; break; case 'fan': options += `<option value="speed">Set Speed</option>`; break; case 'cleaner': options += `<option value="mode">Set Mode</option>`; break; } actionSelect.innerHTML = options; actionSelect.onchange = updateScheduleValueInput; updateScheduleValueInput(); document.getElementById('schedule-device-modal').classList.remove('hidden'); document.getElementById('schedule-device-modal').classList.add('flex'); }
+    function hideScheduleDeviceModal() { document.getElementById('schedule-device-modal').classList.add('hidden'); document.getElementById('schedule-device-modal').classList.remove('flex'); document.getElementById('schedule-value-container').innerHTML = ''; document.getElementById('schedule-device-modal').querySelector('form').reset(); }
+    function showSceneModal(sceneId = null) { const modal = document.getElementById('scene-modal'); const form = modal.querySelector('form'); form.reset(); document.getElementById('scene-id').value = ''; currentSceneActions = []; const iconContainer = document.getElementById('scene-icons'); iconContainer.innerHTML = sceneIcons.map((icon) => `<button type="button" onclick="selectSceneIcon(this)" class="room-icon-btn p-3 bg-gray-100 rounded-lg hover:bg-gray-200 text-2xl border-2 border-transparent flex justify-center items-center">${icon}</button>`).join(''); const deviceSelect = document.getElementById('action-device-select'); deviceSelect.innerHTML = `<option value="">Select Device</option>` + devices.map(d => `<option value="${d.id}">${d.name}</option>`).join(''); if (sceneId) { const scene = scenes.find(s => s.id === sceneId); if (!scene) return; document.getElementById('scene-modal-title').textContent = 'Edit Scene'; document.getElementById('scene-id').value = scene.id; document.getElementById('scene-name').value = scene.name; document.getElementById('selected-scene-icon').value = scene.icon; currentSceneActions = [...scene.actions]; const allIcons = iconContainer.querySelectorAll('button'); allIcons.forEach(btn => { if (btn.innerHTML === scene.icon) { btn.classList.add('border-primary-color'); } }); } else { document.getElementById('scene-modal-title').textContent = 'Create New Scene'; iconContainer.querySelector('button')?.classList.add('border-primary-color'); document.getElementById('selected-scene-icon').value = iconContainer.querySelector('button')?.innerHTML || ''; } renderSceneActionsList(); updateActionCommandSelect(); modal.classList.remove('hidden'); modal.classList.add('flex'); }
+    function hideSceneModal() { document.getElementById('scene-modal').classList.add('hidden'); document.getElementById('scene-modal').classList.remove('flex'); }
+    function showConfirmationModal(message, onConfirm) { const modal = document.getElementById('confirmation-modal'); modal.querySelector('#confirmation-message').textContent = message; const confirmBtn = modal.querySelector('#confirm-action-btn'); const newConfirmBtn = confirmBtn.cloneNode(true); confirmBtn.parentNode.replaceChild(newConfirmBtn, confirmBtn); newConfirmBtn.addEventListener('click', () => { onConfirm(); hideConfirmationModal(); }); modal.classList.remove('hidden'); modal.classList.add('flex'); }
+    function hideConfirmationModal() { document.getElementById('confirmation-modal').classList.add('hidden'); document.getElementById('confirmation-modal').classList.remove('flex'); }
+    function hideRoomDetailsModal() { document.getElementById('room-details-modal').classList.add('hidden'); document.getElementById('room-details-modal').classList.remove('flex'); }
+    function hideViewSchedulesModal() { document.getElementById('view-schedules-modal').classList.add('hidden'); document.getElementById('view-schedules-modal').classList.remove('flex'); }
+    function initializeClockAndSchedules() { startClock(); startScheduleChecker(); }
+    function startClock() {
+        if (networkTimeInterval) clearInterval(networkTimeInterval);
+        const clockElem = document.querySelector('#network-clock .text-2xl');
+        const timezoneElem = document.querySelector('#network-clock .text-xs');
+        networkTimeInterval = setInterval(() => {
+            const now = new Date();
+            if(clockElem) clockElem.textContent = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true });
+        }, 1000);
+        if(timezoneElem) timezoneElem.textContent = 'Local Time';
+    }
+
+    function startScheduleChecker() {
+        if (scheduleInterval) clearInterval(scheduleInterval);
+        let lastCheckedMinute = -1;
+        scheduleInterval = setInterval(async () => {
+            const now = new Date();
+            const currentMinute = now.getMinutes();
+            if (currentMinute === lastCheckedMinute) return;
+            lastCheckedMinute = currentMinute;
+            const currentTimeStr = now.toTimeString().substring(0, 5);
+            const currentDayAbbr = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'][now.getDay()];
+            const schedulesToTrigger = schedules.filter(s => s.time === currentTimeStr && s.days.includes(currentDayAbbr));
+            if (schedulesToTrigger.length > 0) {
+                for (const schedule of schedulesToTrigger) {
+                    const device = devices.find(d => d.id === schedule.deviceId);
+                    if (!device) continue;
+                    if (schedule.action === 'on' || schedule.action === 'off') {
+                        if ((schedule.action === 'on' && !device.status) || (schedule.action === 'off' && device.status)) {
+                            await toggleDevice(device.id);
+                        }
+                    } else if (schedule.value !== undefined) {
+                        await updateDeviceProperty(device.id, schedule.action, schedule.value);
+                    }
+                }
+            }
+        }, 1000);
+    }
+    
+    function clearAllActivityData() {
+        showConfirmationModal('This will permanently delete all activity logs.', () => {
+            currentNotifications = [];
+            historicalNotifications = [];
+            saveDataToLocalStorage();
+            renderAll();
+            showNotification('All activity logs cleared.', 'warning');
+        });
+    }
+
+    function filterDevices() { renderAllDevices(); }
+    function displayHistoricalNotifications(selectedIndex) { const displayContainer = document.getElementById('notifications-history-display'); displayContainer.innerHTML = ''; if (selectedIndex === "" || !historicalNotifications[selectedIndex]) { displayContainer.innerHTML = '<p class="text-gray-500">Select a session to view its activity.</p>'; return; } const session = historicalNotifications[selectedIndex]; const typeMap = { 'success': { icon: '<svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>', color: 'border-green-400' }, 'error': { icon: '<svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="7.86 2 16.14 2 22 7.86 22 16.14 16.14 22 7.86 22 2 16.14 2 7.86 7.86 2"></polygon><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>', color: 'border-red-400' }, 'warning': { icon: '<svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>', color: 'border-yellow-400' }, 'info': { icon: '<svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>', color: 'border-blue-400' } }; if (session.notifications.length === 0) { displayContainer.innerHTML = '<p class="text-gray-500">No activity recorded for this session.</p>'; return; } session.notifications.forEach(n => { const notification = document.createElement('div'); notification.className = `bg-gray-50 rounded-lg p-3 border-l-4`; notification.classList.add(typeMap[n.type].color); notification.innerHTML = `<div class="flex items-start space-x-3"><span class="text-lg mt-0.5">${typeMap[n.type].icon}</span><div><p class="font-medium text-gray-700">${n.message}</p><p class="text-xs text-gray-500 mt-1">${n.timestamp}</p></div></div>`; displayContainer.appendChild(notification); }); }
+    function getDeviceIcon(type) { const icons = { 'lights': `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 14c.2-1 .7-1.7 1.5-2.5C17.7 10.2 18 9 18 7c0-2.2-1.8-4-4-4S10 4.8 10 7c0 2 .3 3.2 1.5 4.5.8.8 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg>`, 'climate': `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a5 5 0 0 0-5 5v6.5a3.5 3.5 0 0 0 7 0V7a5 5 0 0 0-5-5z"/><path d="M12 2v20"/><path d="M4 11H2"/><path d="M20 11h2"/><path d="M6.34 19.66 4.93 18.25"/><path d="M19.07 18.25 17.66 19.66"/><path d="M6.34 4.34 4.93 5.75"/><path d="M19.07 5.75 17.66 4.34"/></svg>`, 'security': `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>`, 'appliances': `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>`, 'switch': `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="12" y1="8" x2="12" y2="16"></line><line x1="8" y1="12" x2="16" y2="12"></line></svg>`, 'fan': `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 12c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5z"/><path d="M12 12v6.5"/><path d="M17.41 7.59c1.63.53 3.03 1.53 4.09 2.91"/><path d="M2.5 10.5c1.06-1.38 2.46-2.38 4.09-2.91"/><path d="M19.49 19.49c-1.38 1.06-2.89 2.06-4.59 2.51"/><path d="M4.93 19.49c-1.7-1.42-2.96-3.23-3.43-5.19"/><path d="M22.5 14.31c-.47 1.96-1.73 3.77-3.43 5.19"/></svg>`, 'cleaner': `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 8.5V6a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v12.5"/><path d="M12 12V3"/><path d="M8 3v1.5"/><path d="M16 3v1.5"/><path d="M21 15.5c0 2.49-4.03 4.5-9 4.5s-9-2.01-9-4.5S7.03 11 12 11s9 2.01 9 4.5Z"/><path d="M21 15.5H3"/></svg>`, 'router': `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13a7 7 0 0 1 14 0"/><path d="M9 17a3 3 0 0 1 6 0"/><path d="M12 21v0"/><line x1="12" y1="3" x2="12" y2="7"/><line x1="6.34" y1="5.34" x2="9.17" y2="8.17"/><line x1="17.66" y1="5.34" x2="14.83" y2="8.17"/></svg>` }; return icons[type] || icons['switch']; }
+    function getRoomName(roomId) { return rooms.find(r => r.id === roomId)?.name || 'Unassigned'; }
+    function getDeviceSecondaryValue(device) { if (!device.status) return ''; switch (device.type) { case 'climate': return `<div class="text-2xl font-semibold">${device.temperature || 22}°C</div>`; case 'appliances': return `<div class="text-right"><div class="text-2xl font-semibold">${device.volume || 60}%</div><div class="text-xs -mt-1 opacity-80">Volume</div></div>`; case 'router': return `<div class="text-right"><div class="text-2xl font-semibold">${device.users || 0}</div><div class="text-xs -mt-1 opacity-80">Users</div></div>`; default: return ''; } }
+    function createModeButton(device, property, value, icon, label) { const isActive = device[property] == value; const iconContent = (icon.startsWith('<svg')) ? icon : `<span class="text-2xl font-bold">${icon}</span>`; return `<button class="mode-button ${isActive ? 'active' : ''}" onclick="updateDeviceProperty('${device.id}', '${property}', '${value}', 'control')">${iconContent}<span class="text-xs mt-1">${label}</span></button>`; }
+    function setupDialInteraction(deviceId, property, min, max) { const dial = document.getElementById(`dial-container-${deviceId}`); if (!dial) return; let isDragging = false; const updateValueFromEvent = (e) => { const rect = dial.getBoundingClientRect(); const centerX = rect.left + rect.width / 2; const centerY = rect.top + rect.height / 2; const clientX = e.touches ? e.touches[0].clientX : e.clientX; const clientY = e.touches ? e.touches[0].clientY : e.clientY; let angleRad = Math.atan2(clientY - centerY, clientX - centerX); let angleDeg = (angleRad * 180 / Math.PI + 225) % 360; if (angleDeg > 270) return; const percentage = angleDeg / 270; const newValue = min + percentage * (max - min); updateDial(deviceId, property, newValue); return newValue; }; const onDragStart = (e) => { isDragging = true; dial.style.cursor = 'grabbing'; updateValueFromEvent(e); }; const onDragMove = (e) => { if (!isDragging) return; e.preventDefault(); updateValueFromEvent(e); }; const onDragEnd = (e) => { if (!isDragging) return; isDragging = false; dial.style.cursor = 'pointer'; const finalValue = Math.round(min + ( ( (Math.atan2((e.changedTouches ? e.changedTouches[0].clientY : e.clientY) - (dial.getBoundingClientRect().top + dial.getBoundingClientRect().height / 2), (e.changedTouches ? e.changedTouches[0].clientX : e.clientX) - (dial.getBoundingClientRect().left + dial.getBoundingClientRect().width / 2)) * 180 / Math.PI + 225) % 360) / 270 * (max - min) )); updateDeviceProperty(deviceId, property, finalValue, 'control'); }; dial.addEventListener('mousedown', onDragStart); document.addEventListener('mousemove', onDragMove); document.addEventListener('mouseup', onDragEnd); dial.addEventListener('touchstart', onDragStart); document.addEventListener('touchmove', onDragMove, { passive: false }); document.addEventListener('touchend', onDragEnd); }
+    function updateDial(deviceId, property, value) { const device = devices.find(d => d.id === deviceId); if (!device) return; const dialProgress = document.getElementById(`dial-progress-${device.id}`); const dialValueEl = document.getElementById(`dial-value-${device.id}`); let min, max, unit, startColor, endColor; const isDark = document.documentElement.classList.contains('dark'); switch(property) { case 'temperature': min = 16; max = 32; unit = '°C'; startColor = '#48cae4'; endColor = '#f87171'; break; case 'brightness': min = 0; max = 100; unit = '%'; startColor = isDark ? '#adb5bd' : '#6c757d'; endColor = '#fca311'; break; case 'speed': min = 0; max = 255; unit = ''; startColor = '#adb5bd'; endColor = '#0096c7'; break; case 'volume': min = 0; max = 100; unit = '%'; startColor = '#adb5bd'; endColor = '#4ade80'; break; default: return; } const percentage = Math.max(0, Math.min(1, (value - min) / (max - min))); const angle = percentage * 270; const dialBGColor = isDark ? '#1e1e1e' : '#e9ecef'; if (dialProgress) { dialProgress.style.background = `conic-gradient(from -135deg, ${startColor} 0deg, ${endColor} ${angle}deg, ${dialBGColor} ${angle}deg, ${dialBGColor} 270deg)`; } if (dialValueEl) { dialValueEl.innerHTML = `${Math.round(value)}${unit ? `<sup>${unit}</sup>` : ''}`; } }
+    function getYYYYMMDD(date) { return new Date(date.getTime() - (date.getTimezoneOffset() * 60000)).toISOString().split('T')[0]; }
+    async function archiveDailyEnergyData() {
+        const today = new Date();
+        const todayStr = getYYYYMMDD(today);
+        if (lastArchiveDate === todayStr) return;
+        const yesterday = new Date(today);
+        yesterday.setDate(today.getDate() - 1);
+        const yesterdayStr = getYYYYMMDD(yesterday);
+        if (energyHistory[yesterdayStr]) {
+            lastArchiveDate = todayStr;
+            saveDataToLocalStorage();
+            return;
+        }
+        const startOfDay = new Date(yesterday.getFullYear(), yesterday.getMonth(), yesterday.getDate()).getTime();
+        const endOfDay = new Date(today.getFullYear(), today.getMonth(), today.getDate()).getTime();
+        const logsForDay = energyLog.filter(log => log.timestamp >= startOfDay && log.timestamp < endOfDay);
+        if (logsForDay.length === 0) return; 
+        let totalConsumption = 0;
+        const consumptionByDevice = {};
+        devices.forEach(d => consumptionByDevice[d.id] = 0);
+        logsForDay.forEach(log => { totalConsumption += log.power; if (consumptionByDevice[log.deviceId] !== undefined) consumptionByDevice[log.deviceId] += log.power; });
+        const totalKWh = (totalConsumption * 10) / 3600000;
+        energyHistory[yesterdayStr] = { totalKWh: totalKWh.toFixed(2), consumptionByDevice: consumptionByDevice };
+        energyLog = energyLog.filter(log => log.timestamp >= endOfDay);
+        lastArchiveDate = todayStr;
+        saveDataToLocalStorage();
+        showNotification(`Daily energy summary for ${yesterdayStr} saved.`, 'success');
+        renderEnergyHistoryDropdown();
+    }
+    function renderEnergyHistoryDropdown() {
+        const select = document.getElementById('energy-history-select');
+        if (!select) return;
+        const availableDates = Object.keys(energyHistory).sort().reverse();
+        select.innerHTML = '<option value="">Select a date to view</option>';
+        if (availableDates.length === 0) {
+            select.innerHTML += '<option disabled>No history available</option>';
+        } else {
+            availableDates.forEach(date => { select.innerHTML += `<option value="${date}">${date}</option>`; });
+        }
+    }
+    function displayHistoricalEnergyData(dateString) {
+        if (!dateString) {
+            renderEnergyPage(); 
+            return;
+        }
+        const data = energyHistory[dateString];
+        if (!data) return showNotification(`No data found for ${dateString}.`, 'error');
+        document.getElementById('energy-live-power').parentElement.parentElement.parentElement.style.display = 'none';
+        document.getElementById('energy-estimated-bill').parentElement.parentElement.parentElement.style.display = 'none';
+        document.getElementById('realtime-chart-container').style.display = 'none';
+        document.getElementById('daily-chart-container').style.display = 'none';
+        document.getElementById('energy-today-label').textContent = `Consumption on ${dateString}`;
+        document.getElementById('energy-today').textContent = `${data.totalKWh} kWh`;
+        document.getElementById('energy-this-month-label').textContent = `Total Bill on ${dateString}`;
+        document.getElementById('energy-this-month').textContent = `$${(data.totalKWh * electricityPrice).toFixed(2)}`;
+        renderConsumptionBreakdowns({ consumptionByDevice: data.consumptionByDevice });
+    }
+    function toggleDeviceSpecificFields() {
+        const deviceType = document.getElementById('device-type').value;
+        const container = document.getElementById('device-specific-add-fields');
+        let html = '';
+        container.innerHTML = html;
+    }
+    function populateRoomOptions() {
+        const roomSelect = document.getElementById('device-room');
+        if(!roomSelect) return;
+        roomSelect.innerHTML = rooms.length > 0 ? `<option value="" disabled selected>Select a room</option>${rooms.map(r => `<option value="${r.id}">${r.name}</option>`).join('')}` : `<option value="" disabled selected>Create a room first</option>`;
+    }
+    function initializeEnergyMonitoring() {
+        if (energyLoggingInterval) clearInterval(energyLoggingInterval);
+        if (realtimeChartUpdateInterval) clearInterval(realtimeChartUpdateInterval);
+        energyLoggingInterval = setInterval(logEnergyUsage, 10000);
+        realtimeChartUpdateInterval = setInterval(() => {
+            const livePower = devices.reduce((sum, device) => sum + (device.status ? (device.power || 50) : 0), 0);
+            realtimePowerLabels.shift();
+            realtimePowerData.shift();
+            realtimePowerLabels.push(new Date().toLocaleTimeString());
+            realtimePowerData.push(livePower);
+            if (document.getElementById('content-energy') && !document.getElementById('content-energy').classList.contains('hidden')) {
+                renderRealtimeChart();
+            }
+        }, 2000);
+    }
+    function logEnergyUsage() {
+        const now = Date.now();
+        devices.forEach(device => {
+            if (device.status) {
+                energyLog.push({ timestamp: now, deviceId: device.id, power: device.power || 50 });
+            }
+        });
+        const maxLogSize = 10000;
+        if (energyLog.length > maxLogSize) {
+            energyLog = energyLog.slice(energyLog.length - maxLogSize);
+        }
+        saveDataToLocalStorage();
+    }
+    function renderEnergyPage() {
+        document.getElementById('energy-live-power').parentElement.parentElement.parentElement.style.display = 'flex';
+        document.getElementById('energy-estimated-bill').parentElement.parentElement.parentElement.style.display = 'flex';
+        document.getElementById('realtime-chart-container').style.display = 'block';
+        document.getElementById('daily-chart-container').style.display = 'block';
+        document.getElementById('energy-today-label').textContent = "Today's Consumption";
+        document.getElementById('energy-this-month-label').textContent = "This Month's Consumption";
+        const stats = calculateEnergyStats();
+        document.getElementById('energy-live-power').textContent = `${stats.livePower}W`;
+        document.getElementById('energy-today').textContent = `${stats.todayKWh.toFixed(2)} kWh`;
+        document.getElementById('energy-this-month').textContent = `${stats.thisMonthKWh.toFixed(2)} kWh`;
+        document.getElementById('energy-estimated-bill').textContent = `$${stats.estimatedBill.toFixed(2)}`;
+        document.getElementById('electricity-price').value = electricityPrice;
+        renderConsumptionBreakdowns(stats);
+        renderRealtimeChart();
+        renderDailyUsageChart(stats.last7DaysKWh);
+        renderEnergyHistoryDropdown();
+    }
+    function renderRealtimeChart() {
+        const container = document.getElementById('realtime-chart-container');
+        if (!container) return;
+        container.innerHTML = '<canvas id="realtime-power-chart"></canvas>';
+        const ctx = container.querySelector('canvas').getContext('2d');
+        const gradient = ctx.createLinearGradient(0, 0, 0, 300);
+        gradient.addColorStop(0, 'rgba(0, 150, 199, 0.5)');
+        gradient.addColorStop(1, 'rgba(0, 150, 199, 0)');
+        new Chart(ctx, { type: 'line', data: { labels: realtimePowerLabels, datasets: [{ label: 'Watts', data: realtimePowerData, borderColor: 'var(--primary-color)', backgroundColor: gradient, fill: true, tension: 0.4, pointRadius: 0 }] }, options: { responsive: true, maintainAspectRatio: false, animation: { duration: 0 }, scales: { y: { beginAtZero: true } } } });
+    }
+    function renderDailyUsageChart(last7DaysData) {
+        const container = document.getElementById('daily-chart-container');
+        if (!container) return;
+        container.innerHTML = '<canvas id="daily-usage-chart"></canvas>';
+        const ctx = container.querySelector('canvas').getContext('2d');
+        const labels = Array(7).fill('').map((_, i) => { const d = new Date(); d.setDate(d.getDate() - (6 - i)); return d.toLocaleDateString('en-US', { weekday: 'short' }); });
+        new Chart(ctx, { type: 'bar', data: { labels: labels, datasets: [{ label: 'kWh', data: last7DaysData, backgroundColor: 'var(--accent-color)', borderRadius: 4 }] }, options: { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true } } } });
+    }
+    function calculateEnergyStats() {
+        const now = new Date();
+        const startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime();
+        const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1).getTime();
+        let todayConsumption = 0, monthConsumption = 0;
+        const consumptionByDevice = {};
+        devices.forEach(d => consumptionByDevice[d.id] = 0);
+        energyLog.forEach(log => {
+            if (log.timestamp >= startOfToday) todayConsumption += log.power;
+            if (log.timestamp >= startOfMonth) {
+                monthConsumption += log.power;
+                if(consumptionByDevice[log.deviceId] !== undefined) consumptionByDevice[log.deviceId] += log.power;
+            }
+        });
+        const todayKWh = (todayConsumption * 10) / 3600000;
+        const thisMonthKWh = (monthConsumption * 10) / 3600000;
+        const last7DaysKWh = Array(7).fill(0);
+        for (let i = 0; i < 7; i++) {
+            const dayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate() - i).getTime();
+            const dayEnd = new Date(now.getFullYear(), now.getMonth(), now.getDate() - i + 1).getTime();
+            let dayConsumption = 0;
+            energyLog.forEach(log => {
+                if (log.timestamp >= dayStart && log.timestamp < dayEnd) dayConsumption += log.power;
+            });
+            last7DaysKWh[6 - i] = (dayConsumption * 10) / 3600000;
+        }
+        return { livePower: devices.reduce((sum, d) => sum + (d.status ? (d.power || 50) : 0), 0), todayKWh, thisMonthKWh, estimatedBill: thisMonthKWh * electricityPrice, consumptionByDevice, last7DaysKWh };
+    }
+    function renderConsumptionBreakdowns(stats) {
+        const roomContainer = document.getElementById('consumption-by-room');
+        const deviceContainer = document.getElementById('consumption-by-device');
+        const consumptionByRoom = {};
+        rooms.forEach(r => consumptionByRoom[r.id] = { name: r.name, value: 0 });
+        for (const deviceId in stats.consumptionByDevice) {
+            const device = devices.find(d => d.id === deviceId);
+            if (device && consumptionByRoom[device.room]) consumptionByRoom[device.room].value += stats.consumptionByDevice[deviceId];
+        }
+        const totalRoomConsumption = Object.values(consumptionByRoom).reduce((s, r) => s + r.value, 0);
+        roomContainer.innerHTML = Object.values(consumptionByRoom).sort((a,b) => b.value - a.value).map(r => {
+            const p = totalRoomConsumption > 0 ? (r.value/totalRoomConsumption*100).toFixed(1) : 0;
+            const kWh = ((r.value*10)/3600000).toFixed(2);
+            return `<div><div class="flex justify-between text-sm font-medium mb-1"><span class="text-gray-700">${r.name}</span><span class="text-gray-500">${kWh} kWh</span></div><div class="progress-bar-container"><div class="progress-bar" style="width: ${p}%;">${p > 10 ? p + '%' : ''}</div></div></div>`;
+        }).join('');
+        const totalDeviceConsumption = Object.values(stats.consumptionByDevice).reduce((s, v) => s + v, 0);
+        const topDevices = Object.entries(stats.consumptionByDevice).sort(([,a],[,b]) => b-a).slice(0, 5).map(([id, value]) => ({ device: devices.find(d => d.id === id), value }));
+        deviceContainer.innerHTML = topDevices.map(({ device, value }) => {
+            if (!device) return '';
+            const p = totalDeviceConsumption > 0 ? (value/totalDeviceConsumption*100).toFixed(1) : 0;
+            const kWh = ((value*10)/3600000).toFixed(2);
+            return `<div><div class="flex justify-between text-sm font-medium mb-1"><span class="text-gray-700">${device.name}</span><span class="text-gray-500">${kWh} kWh</span></div><div class="progress-bar-container"><div class="progress-bar" style="width: ${p}%;">${p > 10 ? p + '%' : ''}</div></div></div>`;
+        }).join('');
+    }
+    function updateElectricityPrice() {
+        const priceInput = document.getElementById('electricity-price');
+        const newPrice = parseFloat(priceInput.value);
+        if (!isNaN(newPrice) && newPrice >= 0) {
+            electricityPrice = newPrice;
+            saveDataToLocalStorage();
+            showNotification('Electricity price updated!', 'success');
+            renderEnergyPage();
+        } else {
+            showNotification('Please enter a valid price.', 'error');
+        }
+    }
+    function updateLivePowerDisplay() {
+        const livePower = devices.reduce((sum, device) => sum + (device.status ? (device.power || 50) : 0), 0);
+        document.getElementById('power-usage').textContent = `${livePower}W`;
+        realtimePowerLabels.shift();
+        realtimePowerData.shift();
+        realtimePowerLabels.push(new Date().toLocaleTimeString());
+        realtimePowerData.push(livePower);
+        if (document.getElementById('content-energy') && !document.getElementById('content-energy').classList.contains('hidden')) {
+            document.getElementById('energy-live-power').textContent = `${livePower}W`;
+            renderRealtimeChart();
+        }
+    }
+    async function executeScene(sceneId) {
+        const scene = scenes.find(s => s.id === sceneId);
+        if (!scene) return;
+        showConfirmationModal(`Are you sure you want to execute the "${scene.name}" scene?`, async () => {
+            showNotification(`Executing scene: ${scene.name}...`, 'info');
+            for (const action of scene.actions) {
+                const device = devices.find(d => d.id === action.deviceId);
+                if (!device) continue;
+                if (action.command === 'on' || action.command === 'off') {
+                    const newStatus = action.command === 'on';
+                    if (device.status !== newStatus) {
+                        await toggleDevice(device.id);
+                    }
+                } else {
+                    await updateDeviceProperty(device.id, action.command, action.value);
+                }
+            }
+            showNotification(`Scene "${scene.name}" executed.`, 'success');
+        });
+    }
+    function renderOverviewScenes() {
+        const container = document.getElementById('overview-scenes-container');
+        if (!container) return;
+        if (scenes.length === 0) {
+            container.innerHTML = `<p class="text-gray-500 col-span-full text-center">No scenes created.</p>`;
+            return;
+        }
+        container.innerHTML = scenes.map(scene => `
+            <button onclick="executeScene('${scene.id}')" class="card p-4 hover:border-primary-color transition-all text-center flex flex-col items-center justify-center space-y-2">
+                <div class="w-10 h-10 text-gray-700">${scene.icon}</div>
+                <div class="font-medium text-gray-700">${scene.name}</div>
+            </button>
+        `).join('');
+    }
+    function renderAutomationScenes() {
+        const container = document.getElementById('automation-scenes-grid');
+        if (!container) return;
+        const editIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>`;
+        const trashIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>`;
+        if (scenes.length === 0) {
+            container.innerHTML = `<p class="text-gray-500 col-span-full text-center">No scenes found.</p>`;
+            return;
+        }
+        container.innerHTML = scenes.map(scene => {
+            const actionDescriptions = scene.actions.map(a => {
+                const deviceName = devices.find(d => d.id === a.deviceId)?.name || 'Unknown Device';
+                return `<li>${deviceName}: ${a.command} ${a.value || ''}</li>`;
+            }).join('');
+            return `
+                <div class="card p-4 flex flex-col justify-between">
+                    <div>
+                        <div class="flex justify-between items-start mb-2">
+                            <div class="flex items-center space-x-3">
+                                <div class="w-8 h-8">${scene.icon}</div>
+                                <h4 class="text-lg font-semibold">${scene.name}</h4>
+                            </div>
+                            <div class="flex space-x-2">
+                                <button onclick="showSceneModal('${scene.id}')" class="btn btn-secondary !p-2">${editIcon}</button>
+                                <button onclick="confirmRemoveScene('${scene.id}')" class="btn btn-danger !p-2">${trashIcon}</button>
+                            </div>
+                        </div>
+                        <ul class="text-xs text-gray-500 list-disc list-inside space-y-1">${actionDescriptions}</ul>
+                    </div>
+                    <button class="btn btn-primary w-full mt-4" onclick="executeScene('${scene.id}')">Run Scene</button>
+                </div>`;
+        }).join('');
+    }
+    function selectSceneIcon(btn) {
+        document.getElementById('selected-scene-icon').value = btn.innerHTML;
+        document.querySelectorAll('#scene-modal .room-icon-btn').forEach(b => b.classList.remove('border-primary-color'));
+        btn.classList.add('border-primary-color');
+    }
+    function updateActionCommandSelect() {
+        const deviceId = document.getElementById('action-device-select').value;
+        const commandSelect = document.getElementById('action-command-select');
+        if (!deviceId) {
+            commandSelect.innerHTML = `<option value="">Select device first</option>`;
+            updateActionValueInput();
+            return;
+        }
+        const device = devices.find(d => d.id === deviceId);
+        let options = `<option value="on">Turn On</option><option value="off">Turn Off</option>`;
+        switch (device.type) {
+            case 'lights': options += `<option value="brightness">Set Brightness</option><option value="color">Set Color</option>`; break;
+            case 'climate': options += `<option value="temperature">Set Temperature</option>`; break;
+            case 'security': options += `<option value="armed">Set Armed Status</option>`; break;
+            case 'fan': options += `<option value="speed">Set Speed</option>`; break;
+        }
+        commandSelect.innerHTML = options;
+        updateActionValueInput();
+    }
+    function updateActionValueInput() {
+        const command = document.getElementById('action-command-select').value;
+        const container = document.getElementById('action-value-container');
+        let inputHTML = '';
+        switch (command) {
+            case 'brightness': inputHTML = `<div><label class="block text-sm font-medium text-gray-600">Brightness (0-100)</label><input type="range" id="action-value" class="w-full" min="0" max="100" value="100"></div>`; break;
+            case 'color': inputHTML = `<div><label class="block text-sm font-medium text-gray-600">Color</label><input type="color" id="action-value" value="#ffffff" class="w-full h-10 p-0 rounded-lg border-gray-300"></div>`; break;
+            case 'temperature': inputHTML = `<div><label class="block text-sm font-medium text-gray-600">Temperature (°C)</label><input type="number" id="action-value" value="22" min="16" max="30" class="form-input"></div>`; break;
+            case 'speed': inputHTML = `<div><label class="block text-sm font-medium text-gray-600">Fan Speed</label><select id="action-value" class="form-select"><option value="85">Low</option><option value="170">Medium</option><option value="255">High</option></select></div>`; break;
+            case 'armed': inputHTML = `<div><label class="block text-sm font-medium text-gray-600">Security Status</label><select id="action-value" class="form-select"><option value="true">Armed</option><option value="false">Disarmed</option></select></div>`; break;
+        }
+        container.innerHTML = inputHTML;
+    }
+    function addSceneAction() {
+        const deviceId = document.getElementById('action-device-select').value;
+        const command = document.getElementById('action-command-select').value;
+        const valueInput = document.getElementById('action-value');
+        if (!deviceId || !command) return showNotification('Please select a device and command.', 'warning');
+        const newAction = { deviceId, command };
+        if (valueInput) newAction.value = (command === 'armed') ? (valueInput.value === 'true') : valueInput.value;
+        currentSceneActions.push(newAction);
+        renderSceneActionsList();
+    }
+    function removeSceneAction(index) {
+        currentSceneActions.splice(index, 1);
+        renderSceneActionsList();
+    }
+    function renderSceneActionsList() {
+        const listContainer = document.getElementById('scene-actions-list');
+        if (currentSceneActions.length === 0) {
+            listContainer.innerHTML = '<p class="text-sm text-gray-500 text-center">No actions added yet.</p>';
+            return;
+        }
+        listContainer.innerHTML = currentSceneActions.map((action, index) => {
+            const device = devices.find(d => d.id === action.deviceId);
+            let valueDisplay = action.value || '';
+            if (action.command === 'color') valueDisplay = `<span class="inline-block w-4 h-4 rounded border" style="background-color: ${action.value}"></span> ${action.value}`;
+            return `<div class="bg-gray-100 dark:bg-gray-500/20 p-2 rounded-lg flex justify-between items-center text-sm"><span><strong>${device?.name || 'N/A'}:</strong> ${action.command} ${valueDisplay}</span><button type="button" onclick="removeSceneAction(${index})" class="text-red-500 font-bold text-lg">&times;</button></div>`;
+        }).join('');
+    }
+    async function controlDeviceGroup(groupId, turnOn) {
+        const group = deviceGroups.find(g => g.id === groupId);
+        if (!group) return;
+        const command = turnOn ? 'on' : 'off';
+        for (const deviceId of group.deviceIds) {
+            const device = devices.find(d => d.id === deviceId);
+            if (device && device.status !== turnOn) {
+                await toggleDevice(deviceId);
+            }
+        }
+        showNotification(`Group "${group.name}" commanded.`, 'info');
+    }
+    function openRoomDetailsModal(roomId) {
+        const room = rooms.find(r => r.id === roomId);
+        if (!room) return;
+        const roomDevices = devices.filter(d => d.room === roomId);
+        const roomPower = roomDevices.reduce((sum, device) => sum + (device.status ? (device.power || 50) : 0), 0);
+        document.getElementById('room-details-title').innerHTML = `<div class="w-10 h-10 flex items-center justify-center">${room.icon}</div> <span>${room.name}</span>`;
+        document.getElementById('room-power-usage').textContent = `${roomPower}W`;
+        document.getElementById('room-devices-container').innerHTML = roomDevices.length === 0 ? '<p class="text-gray-500 text-center py-4">No devices in this room.</p>' : roomDevices.map(device => generateDeviceControlHTML(device, roomId)).join('');
+        document.getElementById('room-all-on-btn').onclick = () => controlRoomDevices(roomId, true);
+        document.getElementById('room-all-off-btn').onclick = () => controlRoomDevices(roomId, false);
+        document.getElementById('edit-room-btn').onclick = () => showEditRoomModal(roomId);
+        document.getElementById('delete-room-btn').onclick = () => { hideRoomDetailsModal(); confirmRemoveRoom(roomId); };
+        document.getElementById('room-details-modal').classList.remove('hidden');
+        document.getElementById('room-details-modal').classList.add('flex');
+    }
+    function generateDeviceControlHTML(device, roomId) {
+        let controls = '';
+        const updateSliderBG = (val, min, max) => { const percentage = (val - min) * 100 / (max - min); return `background: linear-gradient(to right, var(--accent-color) 0%, var(--accent-color) ${percentage}%, #e9ecef ${percentage}%, #e9ecef 100%)`; };
+        switch (device.type) {
+            case 'lights': controls += `<div class="space-y-3"><label class="block text-sm font-medium text-gray-600">Brightness: ${device.brightness || 100}%</label><input type="range" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer" style="${updateSliderBG(device.brightness || 100, 0, 100)}" value="${device.brightness || 100}" oninput="this.previousElementSibling.textContent = 'Brightness: ' + this.value + '%'" onchange="updateDeviceProperty('${device.id}', 'brightness', parseInt(this.value), 'room')"></div>`; controls += `<div class="mt-3"><label class="block text-sm font-medium mb-1 text-gray-600">Color Presets</label><div class="flex space-x-2">${createRoomControlButton(device, 'color', '#ffffff', 'White', roomId)}${createRoomControlButton(device, 'color', '#fff3b0', 'Warm', roomId)}${createRoomControlButton(device, 'color', '#ade8f4', 'Cool', roomId)}</div></div>`; controls += `<div class="mt-3"><label class="block text-sm font-medium mb-1 text-gray-600">Custom Color</label><input type="color" value="${device.color || '#ffffff'}" class="w-full h-10 rounded-lg border-gray-300 cursor-pointer p-0" onchange="updateDeviceProperty('${device.id}', 'color', this.value, 'room')"></div>`; break;
+            case 'climate': controls += `<div><label class="block text-sm font-medium mb-1 text-gray-600">Temperature: ${device.temperature || 22}°C</label><input type="range" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer" style="${updateSliderBG(device.temperature || 22, 16, 30)}" min="16" max="30" value="${device.temperature || 22}" oninput="this.previousElementSibling.textContent = 'Temperature: ' + this.value + '°C'" onchange="updateDeviceProperty('${device.id}', 'temperature', parseInt(this.value), 'room')"></div>`; controls += `<div class="mt-3"><label class="block text-sm font-medium mb-1 text-gray-600">Mode</label><div class="flex space-x-2">${createRoomControlButton(device, 'mode', 'cold', 'Cold', roomId)}${createRoomControlButton(device, 'mode', 'fan', 'Fan', roomId)}${createRoomControlButton(device, 'mode', 'heat', 'Heat', roomId)}</div></div>`; break;
+            case 'fan': controls += `<div><label class="block text-sm font-medium mb-1 text-gray-600">Speed: ${device.speed || 0}</label><input type="range" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer" style="${updateSliderBG(device.speed || 0, 0, 255)}" min="0" max="255" value="${device.speed || 0}" oninput="this.previousElementSibling.textContent = 'Speed: ' + this.value" onchange="updateDeviceProperty('${device.id}', 'speed', parseInt(this.value), 'room')"></div>`; break;
+            case 'appliances': controls += `<div><label class="block text-sm font-medium mb-1 text-gray-600">Volume: ${device.volume || 60}%</label><input type="range" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer" style="${updateSliderBG(device.volume || 60, 0, 100)}" value="${device.volume || 60}" oninput="this.previousElementSibling.textContent = 'Volume: ' + this.value + '%'" onchange="updateDeviceProperty('${device.id}', 'volume', parseInt(this.value), 'room')"></div>`; break;
+        }
+        let securityControl = '';
+        if (device.type === 'security') { securityControl = `<div class="flex flex-col items-center"><span class="text-xs mb-1">${device.armed ? 'Armed' : 'Disarmed'}</span><label class="toggle-switch"><input type="checkbox" ${device.armed ? 'checked' : ''} onchange="updateDeviceProperty('${device.id}', 'armed', this.checked, 'room')"><span class="toggle-slider"></span></label></div>`; }
+        return `<div class="card p-4"><div class="flex items-center justify-between"><div class="flex items-center space-x-3"><div class="device-icon !w-10 !h-10 ${device.status ? '!bg-primary-color' : ''}">${getDeviceIcon(device.type)}</div><div><h4 class="font-semibold text-gray-800">${device.name}</h4><p class="text-xs text-gray-500">${device.type.charAt(0).toUpperCase() + device.type.slice(1)}</p></div></div><div class="flex items-center space-x-4">${securityControl}<label class="toggle-switch"><input type="checkbox" ${device.status ? 'checked' : ''} onchange="toggleDevice('${device.id}')"><span class="toggle-slider"></span></label></div></div>${device.status && controls ? `<div class="mt-4 pt-4 border-t border-gray-200 space-y-3">${controls}</div>` : ''}</div>`;
+    }
+    function createRoomControlButton(device, property, value, label, roomId) { const isActive = device[property] == value; const activeClass = '!bg-primary-color text-white'; const baseClass = 'bg-gray-200 text-gray-700 hover:bg-gray-300'; return `<button onclick="updateDeviceProperty('${device.id}', '${property}', '${value}', 'room')" class="px-3 py-1 text-sm rounded-md transition-colors flex-1 ${isActive ? activeClass : baseClass}">${label}</button>`; }
+    async function controlRoomDevices(roomId, turnOn) {
+        const roomDevices = devices.filter(d => d.room === roomId);
+        for (const device of roomDevices) {
+            if (device.status !== turnOn) {
+                await toggleDevice(device.id);
+            }
+        }
+        showNotification(`${turnOn ? 'Activated' : 'Deactivated'} all devices in ${getRoomName(roomId)}.`, 'info');
+    }
+    function viewDeviceSchedules(deviceId) {
+        const device = devices.find(d => d.id === deviceId);
+        if (!device) return;
+        currentDeviceId = deviceId;
+        const container = document.getElementById('device-specific-schedules');
+        const deviceSchedules = schedules.filter(s => s.deviceId === deviceId);
+        const trashIcon = '<svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>';
+        document.getElementById('view-schedules-title').textContent = `Schedules for ${device.name}`;
+        if (deviceSchedules.length === 0) {
+            container.innerHTML = '<p class="text-gray-500">No schedules set for this device.</p>';
+        } else {
+            container.innerHTML = deviceSchedules.map(schedule => {
+                let actionDisplay = `${schedule.action === 'on' ? 'Turn On' : 'Turn Off'}`;
+                if (schedule.action !== 'on' && schedule.action !== 'off') {
+                    actionDisplay = `Set ${schedule.action} to ${schedule.value}`;
+                    if (schedule.action === 'color') actionDisplay = `Set color to <span class="inline-block w-4 h-4 rounded" style="background-color: ${schedule.value}"></span>`;
+                    if (schedule.action === 'temperature') actionDisplay += '°C';
+                    if (schedule.action === 'brightness') actionDisplay += '%';
+                    if (schedule.action === 'armed') actionDisplay = `Set security to ${schedule.value ? 'Armed' : 'Disarmed'}`;
+                }
+                return `<div class="bg-gray-100 rounded-xl p-3 border border-gray-200 flex justify-between items-center"><div><div class="font-semibold text-gray-800">${actionDisplay} at ${schedule.time}</div><div class="text-sm text-gray-500">Days: ${schedule.days.join(', ')}</div></div><button onclick="confirmRemoveSchedule('${schedule.id}')" class="btn !bg-red-100 !text-red-600 hover:!bg-red-200 !p-2 transition-colors">${trashIcon}</button></div>`;
+            }).join('');
+        }
+        document.getElementById('view-schedules-modal').classList.remove('hidden');
+        document.getElementById('view-schedules-modal').classList.add('flex');
+    }
+    function updateScheduleValueInput() {
+        const action = document.getElementById('schedule-action').value;
+        const container = document.getElementById('schedule-value-container');
+        let inputHTML = '';
+        switch (action) {
+            case 'brightness': inputHTML = `<div><label class="block text-sm font-medium mb-2 text-gray-600">Brightness (0-100)</label><input type="range" id="schedule-value" min="0" max="100" value="100"></div>`; break;
+            case 'color': inputHTML = `<div><label class="block text-sm font-medium mb-2 text-gray-600">Color</label><input type="color" id="schedule-value" value="#ffffff" class="w-full h-12 rounded-lg bg-gray-100 border-gray-300"></div>`; break;
+            case 'temperature': inputHTML = `<div><label class="block text-sm font-medium mb-2 text-gray-600">Temperature (°C)</label><input type="number" id="schedule-value" value="22" min="16" max="30" class="form-input"></div>`; break;
+            case 'speed': inputHTML = `<div><label class="block text-sm font-medium mb-2 text-gray-600">Fan Speed</label><select id="schedule-value" class="form-select"><option value="0">Off</option><option value="85">Low</option><option value="170">Medium</option><option value="255">High</option></select></div>`; break;
+            case 'mode': inputHTML = `<div><label class="block text-sm font-medium mb-2 text-gray-600">Mode</label><select id="schedule-value" class="form-select"><option value="auto">Auto</option><option value="spot">Spot</option><option value="edge">Edge</option><option value="normal">Normal</option><option value="eco">Eco</option><option value="turbo">Turbo</option></select></div>`; break;
+            case 'armed': inputHTML = `<div><label class="block text-sm font-medium mb-2 text-gray-600">Security Status</label><select id="schedule-value" class="form-select"><option value="true">Armed</option><option value="false">Disarmed</option></select></div>`; break;
+        }
+        container.innerHTML = inputHTML;
+    }
+    function selectRoomIcon(btn) { document.getElementById('selected-room-icon').value = btn.innerHTML; document.querySelectorAll('#add-room-modal .room-icon-btn').forEach(b => b.classList.remove('border-primary-color')); btn.classList.add('border-primary-color'); }
+    function selectEditRoomIcon(btn) { document.getElementById('edit-selected-room-icon').value = btn.innerHTML; document.querySelectorAll('#edit-room-modal .room-icon-btn').forEach(b => b.classList.remove('border-primary-color')); btn.classList.add('border-primary-color'); }
+    
+</script>
+</body>
+</html>

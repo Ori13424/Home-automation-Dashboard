@@ -1,0 +1,810 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SmartSwitch Pro - Advanced Smart Home Control</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+        .fade-in {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+.fade-in.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f1f7fb; /* Light blue-gray background */
+        }
+        
+        .bangla-text {
+            font-family: 'Noto Sans Bengali', sans-serif;
+        }
+        
+        .feature-card {
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            backdrop-filter: blur(10px);
+            border-radius: 12px; /* Soft rounded corners */
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        .smart-gradient {
+            background: linear-gradient(135deg, #3a77ff 0%, #2a5eff 100%);
+        }
+        
+        .switch-demo {
+            animation: switchGlow 3s ease-in-out infinite;
+        }
+        
+        @keyframes switchGlow {
+            0%, 100% { 
+                box-shadow: 0 0 20px rgba(58, 119, 255, 0.3);
+            }
+            50% { 
+                box-shadow: 0 0 40px rgba(58, 119, 255, 0.6);
+            }
+        }
+        
+        .price-highlight {
+            animation: priceGlow 2s ease-in-out infinite alternate;
+        }
+        
+        @keyframes priceGlow {
+            0% { transform: scale(1); }
+            100% { transform: scale(1.05); }
+        }
+        
+        .zigbee-pulse {
+            animation: zigbeePulse 2s ease-in-out infinite;
+        }
+        
+        @keyframes zigbeePulse {
+            0%, 100% { opacity: 0.4; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.1); }
+        }
+        
+        .energy-meter {
+            animation: energyFlow 3s linear infinite;
+        }
+        
+        @keyframes energyFlow {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+        
+        .modular-animation {
+            animation: modularMove 4s ease-in-out infinite;
+        }
+        
+        @keyframes modularMove {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        .eco-leaf {
+            animation: leafFloat 5s ease-in-out infinite;
+        }
+        
+        @keyframes leafFloat {
+            0%, 100% { transform: rotate(0deg) translateY(0px); }
+            25% { transform: rotate(5deg) translateY(-5px); }
+            75% { transform: rotate(-5deg) translateY(5px); }
+        }
+        
+        .installation-step {
+            opacity: 0;
+            transform: translateX(50px);
+            animation: slideInStep 0.8s ease forwards;
+        }
+        
+        @keyframes slideInStep {
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+
+            
+
+        }
+    </style>
+</head>
+<body>
+     <div class="fade-in" id="mainContent"></div>
+   <!-- Header Section -->
+<header class="flex justify-between items-center px-6 md:px-20 py-4 bg-white shadow-md sticky top-0 z-50">
+  <div class="text-2xl font-bold text-blue-700">ByteBot</div>
+  <nav class="space-x-6 text-sm font-medium hidden md:block">
+    <a class="hover:text-blue-600" data-i18n="home" href="index.html">Home</a>
+    <a class="hover:text-blue-600" data-i18n="about_us" href="about_us_updated.html">About Us</a>
+    <a class="hover:text-blue-600" data-i18n="products" href="about.html">Products</a>
+    <a data-i18n="smarthome_dashboard" class="hover:text-blue-600" href="dashboard.html">Dashboard</a>
+    <a href="support.html" class="hover:text-[#0B1229] transition font-semibold text-blue-700" data-i18n="support">Support</a>
+
+      
+  </nav>
+
+  <div class="flex items-center space-x-4">
+    <a data-i18n="get_started" href="sign_in_up.html"
+       class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition text-sm font-semibold">
+      Get Started
+    </a>
+    <select id="languageToggle" class="border border-gray-300 rounded-md text-sm px-2 py-1 focus:outline-none">
+      <option value="en">EN</option>
+      <option value="bn">বাংলা</option>
+    </select>
+  </div>
+</header>
+
+
+    <!-- Hero Section -->
+    <section class="smart-gradient text-white py-24 relative overflow-hidden">
+        <div class="absolute inset-0 bg-black opacity-30"></div>
+        
+        <!-- Floating Elements -->
+        <div class="absolute top-20 left-10 text-4xl opacity-30 eco-leaf">🍃</div>
+        <div class="absolute top-40 right-20 text-3xl opacity-40 zigbee-pulse">📡</div>
+        <div class="absolute bottom-32 left-1/4 text-3xl opacity-35">⚡</div>
+        <div class="absolute top-60 right-1/3 text-2xl opacity-40">🏠</div>
+        
+        <div class="container mx-auto px-6 relative z-10">
+            <div class="grid lg:grid-cols-2 gap-16 items-center">
+                <div>
+                    <h1 class="text-6xl font-bold mb-4">SmartSwitch Pro</h1>
+                    <h2 class="text-3xl mb-8 opacity-90">Advanced Smart Home Control</h2>
+                    <p class="text-xl mb-8 opacity-90">Complete smart home control with intuitive interface, offline functionality, and energy monitoring. Modern technology for the connected home.</p>
+                    <div class="flex items-center mb-10">
+                        <div class="price-highlight bg-white text-[#3a77ff] px-8 py-4 rounded-full mr-6">
+                            <span class="text-3xl font-bold">$49 - $99</span>
+                        </div>
+                        <div class="text-lg opacity-80">Starting Price</div>
+                    </div>
+                    <div class="flex gap-6">
+                        <button class="bg-white text-[#3a77ff] px-10 py-4 rounded-full font-semibold text-lg hover:bg-gray-100 transition-all duration-300 transform hover:scale-105 shadow-xl" onclick="exploreFeatures()">
+                            Explore Features
+                        </button>
+                        <button class="border-2 border-white text-white px-10 py-4 rounded-full font-semibold text-lg hover:bg-white hover:text-[#3a77ff] transition-all duration-300" onclick="orderNow()">
+                            Order Now
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Smart Switch Demo -->
+                <div class="relative">
+                    <div class="relative w-80 h-96 mx-auto">
+                        <!-- Switch Panel -->
+                        <div class="absolute inset-0 bg-white rounded-3xl shadow-2xl switch-demo">
+                            <div class="absolute inset-6 bg-gray-900 rounded-2xl p-6">
+                                <!-- Status Display -->
+                                <div class="text-center mb-6">
+                                    <div class="text-green-400 text-sm mb-2">Living Room</div>
+                                    <div id="switchStatus" class="text-white text-lg">ON</div>
+                                </div>
+                                
+                                <!-- Main Switch -->
+                                <div class="text-center mb-8">
+                                    <div id="mainSwitch" class="w-20 h-20 mx-auto rounded-full bg-green-500 cursor-pointer flex items-center justify-center shadow-lg" onclick="toggleSwitch()">
+                                        <div class="w-6 h-6 bg-white rounded-full"></div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Energy Display -->
+                                <div class="mb-6">
+                                    <div class="text-white text-xs mb-2 opacity-70">Energy Usage</div>
+                                    <div class="bg-gray-800 rounded-lg p-3">
+                                        <div class="text-yellow-400 text-lg font-bold">$2.45</div>
+                                        <div class="text-white text-xs opacity-50">Today's Cost</div>
+                                        <div class="relative mt-2 h-1 bg-gray-700 rounded-full overflow-hidden">
+                                            <div class="absolute inset-0 bg-gradient-to-r from-green-400 to-yellow-400 energy-meter"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Connection Status -->
+                                <div class="grid grid-cols-3 gap-2 text-center">
+                                    <div>
+                                        <div class="w-3 h-3 bg-blue-400 rounded-full mx-auto mb-1 zigbee-pulse"></div>
+                                        <div class="text-white text-xs opacity-50">Zigbee</div>
+                                    </div>
+                                    <div>
+                                        <div class="w-3 h-3 bg-green-400 rounded-full mx-auto mb-1"></div>
+                                        <div class="text-white text-xs opacity-50">Offline</div>
+                                    </div>
+                                    <div>
+                                        <div class="w-3 h-3 bg-purple-400 rounded-full mx-auto mb-1"></div>
+                                        <div class="text-white text-xs opacity-50">Smart</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Key Features -->
+    <section id="features" class="py-24 bg-white">
+        <div class="container mx-auto px-6">
+            <div class="text-center mb-20">
+                <h2 class="text-5xl font-bold text-[#2a3a56] mb-6">Smart Features</h2>
+                <h3 class="text-2xl text-[#65758b] mb-8">Advanced Home Automation</h3>
+                <p class="text-xl text-[#65758b] max-w-4xl mx-auto">Designed for modern homes with intuitive interface, offline functionality, and affordable pricing</p>
+            </div>
+
+            <div class="grid lg:grid-cols-3 gap-10">
+                <!-- Smart Scheduling -->
+                <div class="feature-card bg-gradient-to-br from-blue-50 to-cyan-100 rounded-3xl p-8 border border-blue-200">
+                    <div class="w-24 h-24 bg-blue-500 rounded-3xl flex items-center justify-center mb-6 mx-auto">
+                        <svg class="w-12 h-12 text-white" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"/>
+                            <path d="M12.5 7H11v6l5.25 3.15.75-1.23-4.5-2.67z"/>
+                        </svg>
+                    </div>
+                    <h3 class="text-2xl font-bold text-[#2a3a56] mb-4 text-center">Smart Scheduling</h3>
+                    <h4 class="text-lg text-[#3a77ff] mb-6 text-center font-semibold">Time-based Automation</h4>
+                    
+                    <!-- Schedule Demo -->
+                    <div class="bg-white rounded-2xl p-6 mb-6 shadow-inner">
+                        <div class="text-center mb-4">
+                            <span class="text-sm font-semibold text-gray-500">Today's Schedule</span>
+                        </div>
+                        
+                        <div class="space-y-4">
+                            <div class="flex items-center justify-between p-3 bg-yellow-50 rounded-lg">
+                                <div>
+                                    <div class="text-sm font-semibold">6:00 AM</div>
+                                    <div class="text-xs text-gray-500">Morning Light</div>
+                                </div>
+                                <div class="w-8 h-4 bg-yellow-400 rounded-full"></div>
+                            </div>
+                            
+                            <div class="flex items-center justify-between p-3 bg-blue-50 rounded-lg">
+                                <div>
+                                    <div class="text-sm font-semibold">7:30 AM</div>
+                                    <div class="text-xs text-gray-500">Full Brightness</div>
+                                </div>
+                                <div class="w-8 h-4 bg-blue-400 rounded-full"></div>
+                            </div>
+                            
+                            <div class="flex items-center justify-between p-3 bg-orange-50 rounded-lg">
+                                <div>
+                                    <div class="text-sm font-semibold">6:00 PM</div>
+                                    <div class="text-xs text-gray-500">Evening Light</div>
+                                </div>
+                                <div class="w-8 h-4 bg-orange-400 rounded-full"></div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <ul class="text-[#65758b] space-y-3">
+                        <li class="flex items-center">
+                            <div class="w-2 h-2 bg-blue-500 rounded-full mr-3"></div>
+                            <span>Sunrise/sunset automation</span>
+                        </li>
+                        <li class="flex items-center">
+                            <div class="w-2 h-2 bg-blue-500 rounded-full mr-3"></div>
+                            <span>Custom time schedules</span>
+                        </li>
+                        <li class="flex items-center">
+                            <div class="w-2 h-2 bg-blue-500 rounded-full mr-3"></div>
+                            <span>Weekly routines</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Manual & App Control -->
+                <div class="feature-card bg-gradient-to-br from-green-50 to-emerald-100 rounded-3xl p-8 border border-green-200">
+                    <div class="w-24 h-24 bg-green-500 rounded-3xl flex items-center justify-center mb-6 mx-auto">
+                        <svg class="w-12 h-12 text-white" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M17 7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h10c2.76 0 5-2.24 5-5s-2.24-5-5-5zM7 15c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3z"/>
+                        </svg>
+                    </div>
+                    <h3 class="text-2xl font-bold text-[#2a3a56] mb-4 text-center">Manual & App Control</h3>
+                    <h4 class="text-lg text-green-600 mb-6 text-center font-semibold">Physical & Remote Control</h4>
+                    
+                    <!-- Control Demo -->
+                    <div class="bg-white rounded-2xl p-6 mb-6 shadow-inner">
+                        <div class="grid grid-cols-2 gap-4">
+                            <!-- Physical Switch -->
+                            <div class="text-center p-4 bg-gray-50 rounded-lg">
+                                <div class="text-2xl mb-2">🔘</div>
+                                <div class="text-sm font-semibold">Physical Switch</div>
+                                <div class="text-xs text-gray-500 mt-1">Touch & Press</div>
+                            </div>
+                            
+                            <!-- App Control -->
+                            <div class="text-center p-4 bg-green-50 rounded-lg">
+                                <div class="text-2xl mb-2">📱</div>
+                                <div class="text-sm font-semibold">Mobile App</div>
+                                <div class="text-xs text-gray-500 mt-1">Remote Control</div>
+                            </div>
+                        </div>
+                        
+                        <!-- App Interface Preview -->
+                        <div class="mt-4 p-3 bg-green-100 rounded-lg">
+                            <div class="text-center">
+                                <div class="text-sm font-semibold mb-2">App Interface</div>
+                                <div class="flex justify-center space-x-2">
+                                    <button class="px-3 py-1 bg-green-500 text-white text-xs rounded">ON</button>
+                                    <button class="px-3 py-1 bg-gray-400 text-white text-xs rounded">OFF</button>
+                                    <button class="px-3 py-1 bg-blue-500 text-white text-xs rounded">TIMER</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <ul class="text-[#65758b] space-y-3">
+                        <li class="flex items-center">
+                            <div class="w-2 h-2 bg-green-500 rounded-full mr-3"></div>
+                            <span>Touch & press controls</span>
+                        </li>
+                        <li class="flex items-center">
+                            <div class="w-2 h-2 bg-green-500 rounded-full mr-3"></div>
+                            <span>Android & iOS app</span>
+                        </li>
+                        <li class="flex items-center">
+                            <div class="w-2 h-2 bg-green-500 rounded-full mr-3"></div>
+                            <span>Remote control access</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Voice Control -->
+                <div class="feature-card bg-gradient-to-br from-purple-50 to-pink-100 rounded-3xl p-8 border border-purple-200">
+                    <div class="w-24 h-24 bg-purple-500 rounded-3xl flex items-center justify-center mb-6 mx-auto">
+                        <svg class="w-12 h-12 text-white" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M12 14c1.66 0 2.99-1.34 2.99-3L15 5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3zm5.3-3c0 3-2.54 5.1-5.3 5.1S6.7 14 6.7 11H5c0 3.41 2.72 6.23 6 6.72V21h2v-3.28c3.28-.48 6-3.3 6-6.72h-1.7z"/>
+                        </svg>
+                    </div>
+                    <h3 class="text-2xl font-bold text-[#2a3a56] mb-4 text-center">Voice Control</h3>
+                    <h4 class="text-lg text-purple-600 mb-6 text-center font-semibold">Smart Voice Commands</h4>
+                    
+                    <!-- Voice Demo -->
+                    <div class="bg-white rounded-2xl p-6 mb-6 shadow-inner">
+                        <div class="text-center mb-4">
+                            <span class="text-sm font-semibold text-gray-500">Voice Commands</span>
+                        </div>
+                        
+                        <div class="space-y-3">
+                            <div class="p-3 bg-purple-50 rounded-lg text-center">
+                                <div class="text-sm font-semibold">"Turn on the lights"</div>
+                                <div class="text-xs text-green-600 mt-1">✓ Command executed</div>
+                            </div>
+                            
+                            <div class="p-3 bg-purple-50 rounded-lg text-center">
+                                <div class="text-sm font-semibold">"Turn off the fan"</div>
+                                <div class="text-xs text-green-600 mt-1">✓ Command executed</div>
+                            </div>
+                            
+                            <div class="p-3 bg-purple-50 rounded-lg text-center">
+                                <div class="text-sm font-semibold">"Turn off in 10 minutes"</div>
+                                <div class="text-xs text-orange-600 mt-1">⏱ Timer set</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <ul class="text-[#65758b] space-y-3">
+                        <li class="flex items-center">
+                            <div class="w-2 h-2 bg-purple-500 rounded-full mr-3"></div>
+                            <span>Natural language processing</span>
+                        </li>
+                        <li class="flex items-center">
+                            <div class="w-2 h-2 bg-purple-500 rounded-full mr-3"></div>
+                            <span>Multi-language support</span>
+                        </li>
+                        <li class="flex items-center">
+                            <div class="w-2 h-2 bg-purple-500 rounded-full mr-3"></div>
+                            <span>Alexa & Google Assistant</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Advanced Features -->
+    <section class="py-24 bg-gray-50">
+        <div class="container mx-auto px-6">
+            <div class="text-center mb-20">
+                <h2 class="text-4xl font-bold text-[#2a3a56] mb-6">Advanced Features</h2>
+                <h3 class="text-xl text-[#65758b]">Premium Smart Home Technology</h3>
+            </div>
+
+            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+                <!-- Offline Functionality -->
+                <div class="bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-300">
+                    <div class="w-16 h-16 bg-blue-100 rounded-xl flex items-center justify-center mb-4">
+                        <div class="text-2xl">📡</div>
+                    </div>
+                    <h3 class="text-lg font-bold text-[#2a3a56] mb-2">Offline Functionality</h3>
+                    <h4 class="text-sm text-[#3a77ff] mb-3 font-semibold">Works Without Internet</h4>
+                    <p class="text-[#65758b] text-sm mb-4">Works without internet using Zigbee & Bluetooth. Perfect for areas with connectivity challenges.</p>
+                    <div class="bg-blue-50 rounded-lg p-3">
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs text-gray-500">Connection Status</span>
+                            <div class="flex items-center space-x-1">
+                                <div class="w-2 h-2 bg-green-400 rounded-full"></div>
+                                <span class="text-xs font-semibold text-green-600">Offline Active</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Energy Monitoring -->
+                <div class="bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-300">
+                    <div class="w-16 h-16 bg-yellow-100 rounded-xl flex items-center justify-center mb-4">
+                        <div class="text-2xl">⚡</div>
+                    </div>
+                    <h3 class="text-lg font-bold text-[#2a3a56] mb-2">Energy Monitoring</h3>
+                    <h4 class="text-sm text-yellow-600 mb-3 font-semibold">Real-time Power Tracking</h4>
+                    <p class="text-[#65758b] text-sm mb-4">Real-time power consumption tracking. Monitor your electricity usage daily.</p>
+                    <div class="bg-yellow-50 rounded-lg p-3">
+                        <div class="text-center">
+                            <div class="text-lg font-bold text-yellow-600">$8.45</div>
+                            <div class="text-xs text-gray-500">This month's cost</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Modular Design -->
+                <div class="bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-300">
+                    <div class="w-16 h-16 bg-green-100 rounded-xl flex items-center justify-center mb-4">
+                        <div class="text-2xl modular-animation">🔧</div>
+                    </div>
+                    <h3 class="text-lg font-bold text-[#2a3a56] mb-2">Modular Design</h3>
+                    <h4 class="text-sm text-green-600 mb-3 font-semibold">Expandable Components</h4>
+                    <p class="text-[#65758b] text-sm mb-4">Replaceable modules and expandable setup. Upgrade without replacing entire switch.</p>
+                    <div class="bg-green-50 rounded-lg p-3">
+                        <div class="grid grid-cols-3 gap-1">
+                            <div class="w-full h-2 bg-green-300 rounded"></div>
+                            <div class="w-full h-2 bg-green-400 rounded"></div>
+                            <div class="w-full h-2 bg-green-500 rounded"></div>
+                        </div>
+                        <div class="text-xs text-center text-gray-500 mt-1">Expandable</div>
+                    </div>
+                </div>
+
+                <!-- Eco-Friendly -->
+                <div class="bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-300">
+                    <div class="w-16 h-16 bg-emerald-100 rounded-xl flex items-center justify-center mb-4">
+                        <div class="text-2xl eco-leaf">🌱</div>
+                    </div>
+                    <h3 class="text-lg font-bold text-[#2a3a56] mb-2">Eco-Friendly</h3>
+                    <h4 class="text-sm text-emerald-600 mb-3 font-semibold">Sustainable Materials</h4>
+                    <p class="text-[#65758b] text-sm mb-4">Made from recycled plastic materials. Sustainable technology for modern homes.</p>
+                    <div class="bg-emerald-50 rounded-lg p-3">
+                        <div class="text-center">
+                            <div class="text-sm font-semibold text-emerald-600">95%</div>
+                            <div class="text-xs text-gray-500">Recycled materials</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Easy Installation -->
+    <section class="py-24 bg-white">
+        <div class="container mx-auto px-6">
+            <div class="text-center mb-20">
+                <h2 class="text-4xl font-bold text-[#2a3a56] mb-6">Easy Installation</h2>
+                <h3 class="text-xl text-[#65758b] mb-8">Simple 3-Step Setup</h3>
+                <p class="text-lg text-[#65758b] max-w-3xl mx-auto">Install in 3 simple steps. No electrician needed for basic setup.</p>
+            </div>
+
+            <div class="grid lg:grid-cols-2 gap-16 items-center">
+                <div>
+                    <div class="space-y-8">
+                        <div class="flex items-start space-x-6 installation-step" style="animation-delay: 0.2s;">
+                            <div class="w-12 h-12 bg-green-500 rounded-full flex items-center justify-center text-white font-bold text-xl flex-shrink-0">1</div>
+                            <div>
+                                <h4 class="text-xl font-bold text-[#2a3a56] mb-2">🔌 Remove Old Switch</h4>
+                                <h5 class="text-lg text-green-600 mb-3">Power Off & Disconnect</h5>
+                                <p class="text-[#65758b]">Turn off main power and carefully remove your existing switch. Keep the wires safe.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-start space-x-6 installation-step" style="animation-delay: 0.4s;">
+                            <div class="w-12 h-12 bg-blue-500 rounded-full flex items-center justify-center text-white font-bold text-xl flex-shrink-0">2</div>
+                            <div>
+                                <h4 class="text-xl font-bold text-[#2a3a56] mb-2">🔧 Install Smart Switch</h4>
+                                <h5 class="text-lg text-blue-600 mb-3">Connect & Mount</h5>
+                                <p class="text-[#65758b]">Connect the wires to SmartSwitch Pro following the color-coded guide. Secure in wall box.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-start space-x-6 installation-step" style="animation-delay: 0.6s;">
+                            <div class="w-12 h-12 bg-purple-500 rounded-full flex items-center justify-center text-white font-bold text-xl flex-shrink-0">3</div>
+                            <div>
+                                <h4 class="text-xl font-bold text-[#2a3a56] mb-2">📱 Setup App</h4>
+                                <h5 class="text-lg text-purple-600 mb-3">Configure & Connect</h5>
+                                <p class="text-[#65758b]">Download SmartSwitch Pro app, scan QR code, and follow the setup instructions.</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-12 p-6 bg-green-50 rounded-2xl border border-green-200">
+                        <h4 class="text-lg font-bold text-green-800 mb-3">✅ Compatibility Check</h4>
+                        <ul class="text-green-700 space-y-2">
+                            <li>• Works with all types of bulbs and fans</li>
+                            <li>• Works with existing wiring (no neutral needed)</li>
+                            <li>• 220V AC support</li>
+                            <li>• Power surge protection</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <!-- Installation Visual -->
+                <div class="relative">
+                    <div class="bg-gray-100 rounded-3xl p-12 relative overflow-hidden">
+                        <!-- Wall -->
+                        <div class="w-64 h-80 bg-white rounded-2xl shadow-xl mx-auto relative">
+                            <!-- Switch Plate -->
+                            <div class="absolute inset-4 bg-gray-900 rounded-xl">
+                                <!-- Display -->
+                                <div class="absolute top-4 left-4 right-4 h-8 bg-green-500 rounded flex items-center justify-center">
+                                    <span class="text-white text-sm">Smart Switch</span>
+                                </div>
+                                
+                                <!-- Main Button -->
+                                <div class="absolute inset-x-8 top-16 bottom-16 bg-gradient-to-br from-green-400 to-blue-500 rounded-lg flex items-center justify-center">
+                                    <div class="w-12 h-12 bg-white rounded-full shadow-lg"></div>
+                                </div>
+                                
+                                <!-- Status LEDs -->
+                                <div class="absolute bottom-4 left-4 flex space-x-2">
+                                    <div class="w-2 h-2 bg-green-400 rounded-full zigbee-pulse"></div>
+                                    <div class="w-2 h-2 bg-blue-400 rounded-full"></div>
+                                    <div class="w-2 h-2 bg-yellow-400 rounded-full"></div>
+                                </div>
+                                
+                                <!-- Brand -->
+                                <div class="absolute bottom-4 right-4 text-white text-xs opacity-50">PRO</div>
+                            </div>
+                        </div>
+                        
+                        <!-- Installation Tools -->
+                        <div class="absolute top-8 left-8 text-4xl opacity-30">🔧</div>
+                        <div class="absolute top-8 right-8 text-4xl opacity-30">📱</div>
+                        <div class="absolute bottom-8 left-8 text-4xl opacity-30">⚡</div>
+                        <div class="absolute bottom-8 right-8 text-4xl opacity-30">🏠</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Product Models & Pricing -->
+    <section class="py-24 bg-gray-900 text-white">
+        <div class="container mx-auto px-6">
+            <div class="text-center mb-20">
+                <h2 class="text-4xl font-bold mb-6">Choose Your SmartSwitch</h2>
+                <h3 class="text-xl text-gray-300 mb-8">Select Your Perfect Model</h3>
+                <p class="text-lg text-gray-300 max-w-3xl mx-auto">Affordable smart home technology for every modern household</p>
+            </div>
+
+            <div class="grid lg:grid-cols-3 gap-8 max-w-5xl mx-auto">
+                <!-- Basic Model -->
+                <div class="bg-gray-800 rounded-3xl p-8 border border-gray-700 hover:border-green-500 transition-all duration-300">
+                    <div class="text-center mb-8">
+                        <h3 class="text-2xl font-bold mb-2">SmartSwitch Basic</h3>
+                        <h4 class="text-lg text-green-400 mb-4">Essential Model</h4>
+                        <div class="text-4xl font-bold text-green-400 mb-2">$49</div>
+                        <p class="text-gray-400">Basic smart control</p>
+                    </div>
+                    
+                    <ul class="space-y-4 mb-8">
+                        <li class="flex items-center">
+                            <div class="w-2 h-2 bg-green-400 rounded-full mr-3"></div>
+                            <span>Manual & app control</span>
+                        </li>
+                        <li class="flex items-center">
+                            <div class="w-2 h-2 bg-green-400 rounded-full mr-3"></div>
+                            <span>Basic scheduling</span>
+                        </li>
+                        <li class="flex items-center">
+                            <div class="w-2 h-2 bg-green-400 rounded-full mr-3"></div>
+                            <span>Touch interface</span>
+                        </li>
+                        <li class="flex items-center">
+                            <div class="w-2 h-2 bg-green-400 rounded-full mr-3"></div>
+                            <span>Bluetooth connectivity</span>
+                        </li>
+                        <li class="flex items-center">
+                            <div class="w-2 h-2 bg-gray-500 rounded-full mr-3"></div>
+                            <span class="text-gray-500">No energy monitoring</span>
+                        </li>
+                    </ul>
+                    
+                    <button class="w-full bg-green-600 hover:bg-green-700 text-white py-4 rounded-full font-semibold transition-all duration-300" onclick="orderProduct('basic')">
+                        Order Now
+                    </button>
+                </div>
+
+                <!-- Pro Model (Featured) -->
+                <div class="bg-gradient-to-br from-green-600 to-blue-600 rounded-3xl p-8 border-2 border-green-400 transform scale-105 relative">
+                    <div class="absolute -top-4 left-1/2 transform -translate-x-1/2 bg-yellow-400 text-black px-4 py-1 rounded-full text-sm font-bold">
+                        Best Value
+                    </div>
+                    
+                    <div class="text-center mb-8">
+                        <h3 class="text-2xl font-bold mb-2">SmartSwitch Pro</h3>
+                        <h4 class="text-lg text-white mb-4">Professional Model</h4>
+                        <div class="text-4xl font-bold text-white mb-2">$69</div>
+                        <p class="text-green-100">Complete smart solution</p>
+                    </div>
+                    
+                    <ul class="space-y-4 mb-8">
+                        <li class="flex items-center">
+                            <div class="w-2 h-2 bg-white rounded-full mr-3"></div>
+                            <span>All basic features</span>
+                        </li>
+                                                <li class="flex items-center">
+                            <div class="w-2 h-2 bg-white rounded-full mr-3"></div>
+                            <span>Energy monitoring</span>
+                        </li>
+                        <li class="flex items-center">
+                            <div class="w-2 h-2 bg-white rounded-full mr-3"></div>
+                            <span>Zigbee + Bluetooth</span>
+                        </li>
+                        <li class="flex items-center">
+                            <div class="w-2 h-2 bg-white rounded-full mr-3"></div>
+                            <span>Voice commands</span>
+                        </li>
+                        <li class="flex items-center">
+                            <div class="w-2 h-2 bg-white rounded-full mr-3"></div>
+                            <span>Offline functionality</span>
+                        </li>
+                    </ul>
+                    
+                    <button class="w-full bg-white text-green-600 py-4 rounded-full font-semibold hover:bg-gray-100 transition-all duration-300" onclick="orderProduct('pro')">
+                        Order Now
+                    </button>
+                </div>
+
+                <!-- Elite Model -->
+                <div class="bg-gray-800 rounded-3xl p-8 border border-gray-700 hover:border-blue-500 transition-all duration-300">
+                    <div class="text-center mb-8">
+                        <h3 class="text-2xl font-bold mb-2">SmartSwitch Elite</h3>
+                        <h4 class="text-lg text-blue-400 mb-4">Premium Model</h4>
+                        <div class="text-4xl font-bold text-blue-400 mb-2">$99</div>
+                        <p class="text-gray-400">Premium features</p>
+                    </div>
+                    
+                    <ul class="space-y-4 mb-8">
+                        <li class="flex items-center">
+                            <div class="w-2 h-2 bg-blue-400 rounded-full mr-3"></div>
+                            <span>All Pro features</span>
+                        </li>
+                        <li class="flex items-center">
+                            <div class="w-2 h-2 bg-blue-400 rounded-full mr-3"></div>
+                            <span>Modular design</span>
+                        </li>
+                        <li class="flex items-center">
+                            <div class="w-2 h-2 bg-blue-400 rounded-full mr-3"></div>
+                            <span>Advanced security</span>
+                        </li>
+                        <li class="flex items-center">
+                            <div class="w-2 h-2 bg-blue-400 rounded-full mr-3"></div>
+                            <span>Premium support</span>
+                        </li>
+                        <li class="flex items-center">
+                            <div class="w-2 h-2 bg-blue-400 rounded-full mr-3"></div>
+                            <span>5-year warranty</span>
+                        </li>
+                    </ul>
+                    
+                    <button class="w-full bg-blue-600 hover:bg-blue-700 text-white py-4 rounded-full font-semibold transition-all duration-300" onclick="orderProduct('elite')">
+                        Order Now
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+      <!-- CTA Section -->
+    <section class="smart-gradient py-24">
+        <div class="container mx-auto px-6 text-center">
+            <h2 class="text-5xl font-bold text-white mb-6">Make Your Home Smart</h2>
+            <h3 class="text-3xl text-white mb-8 opacity-90">Transform Your Living Space</h3>
+            <p class="text-xl text-white mb-12 max-w-4xl mx-auto opacity-90">Join the smart home revolution. Control your lights with voice commands, save on electricity bills, and enjoy modern convenience with advanced automation.</p>
+            <div class="flex flex-col sm:flex-row gap-6 justify-center">
+                <button class="bg-white text-[#3a77ff] px-12 py-5 rounded-full font-semibold text-xl hover:bg-gray-100 transition-all duration-300 transform hover:scale-105 shadow-xl" onclick="orderNow()">
+                    Order Now
+                </button>
+                <button class="bg-blue-600 hover:bg-blue-700 text-white px-12 py-5 rounded-full font-semibold text-xl transition-all duration-300" onclick="bookDemo()">
+                    Book a Demo Now
+                </button>
+            </div>
+            <div class="mt-8 text-white opacity-75">
+                <p>✓ 7-day return policy  ✓ 2-year warranty  ✓ Free shipping nationwide</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+<footer class="bg-blue-50 text-center text-sm text-gray-500 py-8">
+<div class="mb-4 font-semibold text-blue-700 text-xl">ByteBot</div>
+<nav class="space-x-4 mb-4"><a class="hover:text-blue-600" data-i18n="home" href="index.html">Home</a><a class="hover:text-blue-600" data-i18n="about_us" href="about_us_updated.html">About Us</a><a class="hover:text-blue-600" data-i18n="products" href="about.html">Products</a><a class="hover:text-blue-600" data-i18n="support" href="support.html">Support</a> <a data-i18n="dashboard" href="dashboard.html">Dashboard</a>
+</nav>
+<p data-i18n="©_2025_bytebot_inc_all_rights_reserved">© 2025 ByteBot Inc. All rights reserved.</p>
+</footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+        const mainContent = document.getElementById('mainContent');
+        mainContent.classList.add('visible');
+    });
+        let switchOn = true;
+
+        function toggleSwitch() {
+            const switchElement = document.getElementById('mainSwitch');
+            const statusElement = document.getElementById('switchStatus');
+            switchOn = !switchOn;
+            
+            if (switchOn) {
+                switchElement.className = 'w-20 h-20 mx-auto rounded-full bg-green-500 cursor-pointer flex items-center justify-center shadow-lg';
+                statusElement.textContent = 'ON';
+                statusElement.className = 'text-white text-lg';
+            } else {
+                switchElement.className = 'w-20 h-20 mx-auto rounded-full bg-gray-500 cursor-pointer flex items-center justify-center shadow-lg';
+                statusElement.textContent = 'OFF';
+                statusElement.className = 'text-gray-400 text-lg';
+            }
+        }
+
+        function exploreFeatures() {
+            document.getElementById('features').scrollIntoView({ 
+                behavior: 'smooth' 
+            });
+        }
+
+        function orderProduct(model) {
+            const models = {
+                basic: 'SmartSwitch Basic ($49)',
+                pro: 'SmartSwitch Pro ($69)',
+                elite: 'SmartSwitch Elite ($99)'
+            };
+            alert(`🛒 ${models[model]} Selected!\n\nYou have chosen ${models[model]}.\n\n✓ Free installation guide\n✓ 2-year warranty\n✓ 24/7 customer support\n✓ Free shipping nationwide`);
+        }
+
+        function orderNow() {
+            alert('🛒 SmartSwitch Pro Order\n\nProceeding to checkout...\n\n✓ Cash on delivery\n✓ Credit card payment\n✓ Free installation support\n✓ 7-day return policy\n✓ Nationwide delivery');
+        }
+
+       function bookDemo() {
+            alert('📅 Book a Demo\n\nSchedule a demo for SmartSwitch Pro at your convenience.\n\n✓ Our representative will contact you shortly to confirm your booking.\n✓ Experience the features live in your home.\n✓ Free consultation and setup advice.');
+        }
+        // Initialize animations on scroll
+        document.addEventListener('DOMContentLoaded', () => {
+            const cards = document.querySelectorAll('.feature-card');
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0)';
+                    }
+                });
+            }, { threshold: 0.1 });
+
+            cards.forEach((card, index) => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(30px)';
+                card.style.transition = `opacity 0.6s ease ${index * 0.1}s, transform 0.6s ease ${index * 0.1}s`;
+                observer.observe(card);
+            });
+        });
+    </script>
+</body>
+</html>

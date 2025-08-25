@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title data-i18n="welcome">ByteBot - Product Details</title>
+
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet"/>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet"/>
+
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #f1f7fb;
+    }
+    .section-heading {
+      font-size: 2.5rem;
+      font-weight: bold;
+      color: #2a3a56;
+    }
+    .product-card {
+      background-color: white;
+      border-radius: 12px;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+      padding: 20px;
+      margin: 10px;
+      max-width: 450px;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .product-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+    }
+    .product-details-section {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+    .button-primary {
+      background-color: #3a77ff;
+      color: white;
+      padding: 12px 36px;
+      border-radius: 50px;
+      font-weight: 600;
+      transition: all 0.3s ease;
+    }
+    .button-primary:hover {
+      background-color: #2a5eff;
+      transform: scale(1.05);
+    }
+    /* Chart style for description list */
+    .desc-chart {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px 24px;
+      text-align: left;
+      margin-top: 16px;
+      color: #4a5568; /* Tailwind gray-700 */
+    }
+    .desc-chart li {
+      position: relative;
+      padding-left: 20px;
+      opacity: 0;
+      transform: translateY(15px);
+      animation: fadeUp 0.5s forwards;
+    }
+    .desc-chart li:nth-child(odd) {
+      animation-delay: 0.1s;
+    }
+    .desc-chart li:nth-child(even) {
+      animation-delay: 0.25s;
+    }
+    .desc-chart li::before {
+      content: "•";
+      position: absolute;
+      left: 0;
+      color: #3a77ff;
+      font-weight: bold;
+      font-size: 1.25rem;
+      line-height: 1;
+    }
+    @keyframes fadeUp {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    /* Active nav link style */
+    nav a.active {
+      color: #1d4ed8; /* Tailwind blue-700 */
+      font-weight: 700;
+      border-bottom: 2px solid #3a77ff;
+      padding-bottom: 2px;
+    }
+  </style>
+</head>
+<body>
+
+<!-- Header -->
+<header class="flex justify-between items-center px-6 md:px-20 py-4 bg-white shadow-md sticky top-0 z-50">
+  <div class="text-2xl font-bold text-blue-700">ByteBot</div>
+  <nav class="space-x-6 text-sm font-medium hidden md:block">
+    <a class="hover:text-blue-600" data-i18n="home" href="index.html">Home</a>
+    <a class="hover:text-blue-600" data-i18n="about_us" href="about_us_updated.html">About Us</a>
+    <a class="hover:text-blue-600" data-i18n="products" href="about.html">Products</a>
+    <a data-i18n="smarthome_dashboard" class="hover:text-blue-600" href="dashboard.html">Dashboard</a>
+    <a href="support.html" class="hover:text-[#0B1229] transition font-semibold text-blue-700" data-i18n="support">Support</a>
+  </nav>
+
+  <div class="flex items-center space-x-4">
+    <a data-i18n="get_started" href="sign_in_up.html"
+       class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition text-sm font-semibold">
+      Get Started
+    </a>
+    <select id="languageToggle" class="border border-gray-300 rounded-md text-sm px-2 py-1 focus:outline-none">
+      <option value="en">EN</option>
+      <option value="bn">বাংলা</option>
+    </select>
+  </div>
+</header>
+
+<!-- Product Details Section -->
+<section class="py-16 px-6 md:px-20 text-center">
+  <h1 class="section-heading mb-10" data-i18n="product_details">Product Details</h1>
+
+  <div class="product-details-section">
+    <!-- Product 1 -->
+    <div class="product-card">
+      <h2 class="font-semibold text-2xl mb-2" data-i18n="smart_cleaner">Smart Cleaner</h2>
+      <p class="text-gray-600 mb-4" data-i18n="products">Effortless cleaning with advanced smart sensors.</p>
+      <p class="font-semibold text-2xl text-blue-700" data-i18n="8000-15000_tk">8000-15000 TK</p>
+      <ul class="desc-chart">
+        <li data-i18n="modular_design_–_swappable_cleaning_and_disinfection_units_for_easy_upgrades_and_repairs"></li>
+        <li data-i18n="recycled_build_materials_–_eco-friendly_casing_made_from_recycled_polypropylene_and_abs_plastics"></li>
+        <li data-i18n="gyroscope-based_navigation_–_efficient_room_coverage_tailored_for_tight_cluttered_floor_plans"></li>
+        <li data-i18n="ir_obstacle_avoidance_–_smooth_maneuvering_around_furniture_and_floor-level_barriers"></li>
+        <li data-i18n="controlled_spray_system_–_precision_dispensing_of_water_and_disinfectant_for_resource_efficiency"></li>
+        <li data-i18n="offline_operation_–_core_functions_run_without_internet;_ideal_for_unstable_connectivity_regions"></li>
+        <li data-i18n="accessible_-_bangla_interface_offline_zigbee_hub_sms_control"></li>
+      </ul>
+    </div>
+
+    <!-- Product 2 -->
+    <div class="product-card">
+      <h2 class="font-semibold text-2xl mb-2" data-i18n="smart_switch">Smart Switch</h2>
+      <p class="text-gray-600 mb-4" data-i18n="products">Control any electrical device with ease.</p>
+      <p class="font-semibold text-2xl text-blue-700" data-i18n="1500-3000_tk">1500-3000 TK</p>
+      <ul class="desc-chart">
+        <li data-i18n="smart_scheduling:_time-based_automated_switching"></li>
+        <li data-i18n="manual_&amp;_app_control:_physical_switch_and_mobile_app_operation"></li>
+        <li data-i18n="bangla_interface:_app_ui_and_voice_commands_in_bangla"></li>
+        <li data-i18n="offline_functionality:_works_without_internet_using_local_zigbee_or_bluetooth"></li>
+        <li data-i18n="energy_monitoring:_real-time_power_consumption_display"></li>
+        <li data-i18n="modular_design:_replaceable_switch_modules_and_expandable_setup"></li>
+        <li data-i18n="eco-friendly_enclosure:_made_from_recycled_plastic_materials"></li>
+        <li data-i18n="easy_installation"></li>
+      </ul>
+    </div>
+  </div>
+
+</section>
+
+<!-- Footer -->
+<footer class="bg-blue-50 text-center text-sm text-gray-500 py-8">
+  <div class="mb-4 font-semibold text-blue-700 text-xl">ByteBot</div>
+  <nav class="space-x-4 mb-4">
+    <a class="hover:text-blue-600" data-i18n="home" href="index.html">Home</a>
+    <a class="hover:text-blue-600" data-i18n="about_us" href="about_us_updated.html">About Us</a>
+    <a class="hover:text-blue-600" data-i18n="products" href="about.html">Products</a>
+    <a class="hover:text-blue-600" data-i18n="support" href="support.html">Support</a>
+    <a class="hover:text-blue-600" data-i18n="dashboard" href="dashboard.html">Dashboard</a>
+  </nav>
+  <p data-i18n="©_2025_bytebot_inc_all_rights_reserved">© 2025 ByteBot Inc. All rights reserved.</p>
+</footer>
+
+<!-- Language Selector Script -->
+<script>
+  const langSelect = document.getElementById("languageToggle");
+  const currentLang = localStorage.getItem("language") || "en";
+  langSelect.value = currentLang;
+
+  langSelect.addEventListener("change", function () {
+    localStorage.setItem("language", this.value);
+    location.reload();
+  });
+
+  // Highlight current nav link
+  document.addEventListener('DOMContentLoaded', () => {
+    const currentPath = window.location.pathname.split('/').pop();
+    document.querySelectorAll('nav a').forEach(link => {
+      if (link.getAttribute('href') === currentPath) {
+        link.classList.add('active');
+      }
+    });
+  });
+</script>
+
+<script src="lang.js"></script>
+</body>
+</html>

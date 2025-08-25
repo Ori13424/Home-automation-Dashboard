@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+  <title data-i18n="signup_title">Sign Up - ByteBot</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #f1f7fb;
+    }
+
+    .form-input {
+      padding: 12px;
+      border-radius: 8px;
+      border: 1px solid #e2e8f0;
+      margin-bottom: 1.5rem;
+      width: 100%;
+    }
+
+    .button-primary {
+      background-color: #3a77ff;
+      color: white;
+      padding: 12px 36px;
+      border-radius: 50px;
+      font-weight: 600;
+      transition: all 0.3s ease;
+    }
+
+    .button-primary:hover {
+      background-color: #2a5eff;
+      transform: scale(1.05);
+    }
+  </style>
+</head>
+<body>
+
+<!-- Header Section -->
+<header class="flex justify-between items-center px-6 md:px-20 py-4 bg-white shadow-md sticky top-0 z-50">
+  <div class="text-2xl font-bold text-blue-700">ByteBot</div>
+  <nav class="space-x-6 text-sm font-medium hidden md:block">
+    <a class="hover:text-blue-600" data-i18n="home" href="index.html">Home</a>
+    <a class="hover:text-blue-600" data-i18n="about_us" href="about_us_updated.html">About Us</a>
+    <a class="hover:text-blue-600" data-i18n="products" href="about.html">Products</a>
+    <a class="hover:text-blue-600" data-i18n="smarthome_dashboard" href="dashboard.html">Dashboard</a>
+    <a class="hover:text-[#0B1229] font-semibold text-blue-700" data-i18n="support" href="support.html">Support</a>
+  </nav>
+  <div class="flex items-center space-x-4">
+    <a data-i18n="get_started" href="sign_in_up.html"
+       class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition text-sm font-semibold">
+      Get Started
+    </a>
+    <select id="languageToggle" class="border border-gray-300 rounded-md text-sm px-2 py-1 focus:outline-none">
+      <option value="en">EN</option>
+      <option value="bn">বাংলা</option>
+    </select>
+  </div>
+</header>
+
+<!-- Sign-Up Form Section -->
+<section class="max-w-md mx-auto py-16 px-6">
+  <h2 class="text-center text-3xl font-bold mb-6" data-i18n="sign_up_title">Sign Up</h2>
+  <form id="signup-form">
+    <input id="full_name" type="text" name="full_name" placeholder="Full Name" required class="form-input" data-i18n-placeholder="full_name" />
+    <input id="email" type="email" name="email" placeholder="Email Address" required class="form-input" data-i18n-placeholder="email_address" />
+    <input id="password" type="password" name="password" placeholder="Password" required class="form-input" data-i18n-placeholder="password" />
+    <input id="confirm_password" type="password" name="confirm_password" placeholder="Confirm Password" required class="form-input" data-i18n-placeholder="confirm_password" />
+    
+    <label class="flex items-center mb-4 text-sm">
+      <input type="checkbox" required class="mr-2" />
+      <span data-i18n="agree_terms">
+        I agree to the <a href="/terms" class="text-blue-600" data-i18n="terms_link">Terms & Conditions</a>
+      </span>
+    </label>
+
+    <p id="error-message" class="text-center text-red-600 mb-4 h-4"></p>
+
+    <button type="submit" class="button-primary w-full" data-i18n="signup_btn">Sign Up</button>
+  </form>
+  
+
+  <div class="text-center mt-6">
+    <a href="login.html" class="text-blue-600" data-i18n="already_have_account">Already have an account? Log In</a>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer class="bg-blue-50 text-center text-sm text-gray-500 py-8">
+<div class="mb-4 font-semibold text-blue-700 text-xl">ByteBot</div>
+<nav class="space-x-4 mb-4"><a class="hover:text-blue-600" data-i18n="home" href="index.html">Home</a><a class="hover:text-blue-600" data-i18n="about_us" href="about_us_updated.html">About Us</a><a class="hover:text-blue-600" data-i18n="products" href="about.html">Products</a><a class="hover:text-blue-600" data-i18n="support" href="support.html">Support</a> <a data-i18n="dashboard" href="dashboard.html">Dashboard</a>
+</nav>
+<p data-i18n="©_2025_bytebot_inc_all_rights_reserved">© 2025 ByteBot Inc. All rights reserved.</p>
+</footer>
+<!-- Language Script -->
+<script src="lang.js"></script>
+<script>
+  const langSelect = document.getElementById("languageToggle");
+  const currentLang = localStorage.getItem("language") || "en";
+  langSelect.value = currentLang;
+
+  langSelect.addEventListener("change", function () {
+    localStorage.setItem("language", this.value);
+    location.reload();
+  });
+</script>
+
+    <script type="module">
+        // Import the functions you need from the SDKs you need
+        import { firebaseConfig } from './firebase-config.js';
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-app.js";
+        import { getAuth, createUserWithEmailAndPassword, updateProfile } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-auth.js";
+
+        
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+
+        const signupForm = document.getElementById('signup-form');
+        const errorMessage = document.getElementById('error-message');
+
+        signupForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const fullName = document.getElementById('full_name').value;
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirm_password').value;
+
+            if (password !== confirmPassword) {
+                errorMessage.textContent = "Passwords do not match.";
+                return;
+            }
+
+            createUserWithEmailAndPassword(auth, email, password)
+                .then((userCredential) => {
+                    // Signed in 
+                    const user = userCredential.user;
+                    // Now, update the profile with the display name
+                    return updateProfile(user, {
+                        displayName: fullName
+                    });
+                })
+                .then(() => {
+                    // Profile updated!
+                    console.log('User created and profile updated');
+                    window.location.href = 'dashboard.html';
+                })
+                .catch((error) => {
+                    errorMessage.textContent = error.message;
+                });
+        });
+    </script>
+    
+   
+</body>
+</html>

@@ -1,0 +1,359 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta name="description" content="Explore ByteBot's range of smart home products designed to enhance your living experience with cutting-edge technology."/>
+    <meta name="keywords" content="smart home, technology, ByteBot, products"/>
+    <title>ByteBot - Product Listing</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet"/>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet"/>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f1f7fb; /* Soft background color */
+        }
+        .fade-in {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.6s ease-in-out;
+        }
+        .fade-in.visible {
+            opacity: 1;
+            transform: none;
+        }
+        .section-heading {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #2a3a56; /* Soft blue color for headings */
+        }
+        .section-subheading {
+            font-size: 1.125rem;
+            color: #65758b; /* Slightly muted gray-blue for subheadings */
+        }
+        .button-primary {
+            background-color: #3a77ff; /* Original color */
+            color: white;
+            padding: 12px 24px;
+            border-radius: 50px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        .button-primary:hover {
+            background-color: #2a5eff; /* Darker shade on hover */
+            transform: scale(1.05);
+            box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.2); /* Shadow effect on hover */
+        }
+        .filter-btn {
+            padding: 8px 16px;
+            border-radius: 9999px; /* Fully rounded */
+            text-sm ;
+            font-medium ;
+            background-color: #f3f4f6; /* Light gray background */
+            color: #4b5563; /* Gray text */
+            transition: background-color 0.3s, color 0.3s; /* Transition for hover effect */
+        }
+        .filter-btn:hover {
+            background-color: #3b82f6; /* Blue background on hover */
+            color: white; /* White text on hover */
+        }
+        .filter-btn.active {
+            background-color: #3b82f6; /* Active blue background */
+            color: white; /* Active white text */
+        }
+        .product-card {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0px 6px 20px rgba(0, 0, 0, 0.1);
+            padding: 20px; /* Original padding for larger cards */
+            text-align: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease; /* Added transition for animations */
+            width: 300px; /* Set a fixed width for original card size */
+            margin: 0 auto; /* Center the product card */
+        }
+        .product-card:hover {
+            transform: translateY(-5px); /* Lift effect on hover */
+            box-shadow: 0px 12px 30px rgba(0, 0, 0, 0.2); /* Enhanced shadow on hover */
+        }
+        .product-image {
+            width: 100%;
+            height: auto;
+            border-radius: 12px;
+        }
+        nav a.active {
+            color: #1d4ed8;
+            font-weight: 700;
+            border-bottom: 2px solid #3a77ff;
+            padding-bottom: 2px;
+        }
+        .search-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px; /* Set a max width for the search bar */
+            margin: 0 auto; /* Center the search bar */
+        }
+        .search-input {
+            width: 100%;
+            padding: 12px 40px 12px 40px; /* Add padding for the icon */
+            border: 1px solid #d1d5db; /* Tailwind gray-300 */
+            border-radius: 50px;
+            transition: border-color 0.3s;
+        }
+        .search-input:focus {
+            outline: none;
+            border-color: #3a77ff; /* Change border color on focus */
+        }
+        .search-icon {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #a1a1a1; /* Tailwind gray-500 */
+        }
+        .cart-button {
+            position: absolute;
+            top: 15px; /* Adjusted position */
+            right: 15px; /* Adjusted position */
+            background-color: #3a77ff; /* Cart button color */
+            color: white;
+            padding: 8px 10px; /* Smaller padding for a smaller button */
+            border-radius: 50%;
+            transition: background-color 0.3s, transform 0.3s;
+            font-size: 1rem; /* Adjusted font size */
+        }
+        .cart-button:hover {
+            background-color: #2a5eff; /* Darker shade on hover */
+            transform: scale(1.1); /* Scale effect on hover */
+        }
+        .cart-count {
+            position: absolute;
+            top: -5px;
+            right: -10px;
+            background-color: red;
+            color: white;
+            border-radius: 50%;
+            padding: 2px 6px;
+            font-size: 0.75rem;
+        }
+    </style>
+</head>
+<body class="scroll-smooth">
+
+    <!-- Header Section -->
+    <header class="flex justify-between items-center px-6 md:px-20 py-4 bg-white shadow-md sticky top-0 z-50">
+        <div class="text-2xl font-bold text-blue-700">ByteBot</div>
+        <nav class="space-x-6 text-sm font-medium hidden md:block">
+            <a class="hover:text-blue-600" href="index.html">Home</a>
+            <a class="hover:text-blue-600" href="about_us_updated.html">About Us</a>
+            <a class="hover:text-blue-600 active" href="products.html">Products</a>
+            <a class="hover:text-blue-600" href="dashboard.html">Dashboard</a>
+            <a class="hover:text-[#0B1229] transition font-semibold text-blue-700" href="support.html">Support</a>
+        </nav>
+        <div class="flex items-center space-x-4">
+            <a href="sign_in_up.html" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition text-sm font-semibold">Get Started</a>
+            <select id="languageToggle" class="border border-gray-300 rounded-md text-sm px-2 py-1 focus:outline-none">
+                <option value="en">EN</option>
+                <option value="bn">বাংলা</option>
+            </select>
+            <button class="cart-button" onclick="viewCart()">
+                <i class="fas fa-shopping-cart"></i>
+                <span class="cart-count" id="cartCount">0</span>
+            </button>
+        </div>
+    </header>
+
+    <!-- Search Bar -->
+    <section class="py-4 px-6 md:px-20">
+        <div class="search-container">
+            <i class="fas fa-search search-icon"></i>
+            <input type="text" id="searchInput" placeholder="Search products..." class="search-input" onkeyup="searchProducts()" />
+        </div>
+    </section>
+
+    <!-- Filters -->
+    <section class="bg-white py-6 border-b">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-wrap items-center justify-between gap-4">
+                <div class="flex flex-wrap gap-2">
+                    <button class="filter-btn active" onclick="filterProducts('all')">All Products</button>
+                    <button class="filter-btn" onclick="filterProducts('electronics')">Electronics</button>
+                    <button class="filter-btn" onclick="filterProducts('cleaning')">Cleaning</button>
+                </div>
+                <div class="flex items-center gap-4">
+                    <span class="text-sm text-gray-600">Sort by:</span>
+                    <select class="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500" onchange="sortProducts(this.value)">
+                        <option value="featured">Featured</option>
+                        <option value="price-low">Price: Low to High</option>
+                        <option value="price-high">Price: High to Low</option>
+                        <option value="rating">Highest Rated</option>
+                        <option value="newest">Newest</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Product Listing Section -->
+    <section class="py-16 px-6 md:px-20 text-center bg-white fade-in">
+        <h2 class="section-heading mb-10">Our Products</h2>
+        <p class="section-subheading mb-6">Explore our wide range of smart home products, crafted to enhance your home with cutting-edge technology.</p>
+        <div id="productList" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 gap-12 mb-12 justify-center">
+
+            <!-- Product Card: Smart Switch -->
+            <div class="product-card cursor-pointer" onclick="window.location.href='smart_switch.html'" data-name="Smart Switch" data-category="electronics" data-price="29.99">
+                <img alt="Smart Switch" class="product-image" src="images/demo1 (1).jpg"/>
+                <h3 class="text-2xl font-semibold mb-2">Smart Switch</h3>
+                <p class="text-gray-500 mb-4">$29.99</p>
+                <p class="text-gray-500 mb-4">Control your lights with a simple touch or voice command.</p>
+                <div class="flex justify-center space-x-4">
+                    <button class="button-primary" onclick="addToCart('Smart Switch')">Buy Now</button>
+                    <button class="button-primary" onclick="addToCart('Smart Switch')">Add to Cart</button>
+                </div>
+            </div>
+
+            <!-- Product Card: Smart Cleaner -->
+            <div class="product-card cursor-pointer" onclick="window.location.href='smart_cleaner.html'" data-name="Smart Cleaner" data-category="cleaning" data-price="49.99">
+                <img alt="Smart Cleaner" class="product-image" src="images/demo1 (2).jpg"/>
+                <h3 class="text-2xl font-semibold mb-2">Smart Cleaner</h3>
+                <p class="text-gray-500 mb-4">$49.99</p>
+                <p class="text-gray-500 mb-4">Automate your cleaning routine with ease.</p>
+                <div class="flex justify-center space-x-4">
+                    <button class="button-primary" onclick="addToCart('Smart Cleaner')">Buy Now</button>
+                    <button class="button-primary" onclick="addToCart('Smart Cleaner')">Add to Cart</button>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-blue-50 text-center text-sm text-gray-500 py-8">
+        <div class="mb-4 font-semibold text-blue-700 text-xl">ByteBot</div>
+        <nav class="space-x-4 mb-4">
+            <a class="hover:text-blue-600" href="index.html">Home</a>
+            <a class="hover:text-blue-600" href="about_us_updated.html">About Us</a>
+            <a class="hover:text-blue-600 active" href="products.html">Products</a>
+            <a class="hover:text-blue-600" href="support.html">Support</a>
+            <a href="dashboard.html">Dashboard</a>
+        </nav>
+        <p>© 2025 ByteBot Inc. All rights reserved.</p>
+    </footer>
+
+    <script>
+        let cartCount = 0; // Initialize cart count
+
+        // Language toggle functionality
+        const langSelect = document.getElementById("languageToggle");
+        const currentLang = localStorage.getItem("language") || "en";
+        langSelect.value = currentLang;
+
+        langSelect.addEventListener("change", function () {
+            const selectedLang = this.value;
+            localStorage.setItem("language", selectedLang);
+            location.reload();
+        });
+
+        // Intersection Observer for fade-in effect
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, {
+            threshold: 0.1
+        });
+
+        document.querySelectorAll('.fade-in').forEach(el => {
+            observer.observe(el);
+        });
+
+        // Highlight current page link
+        document.addEventListener('DOMContentLoaded', () => {
+            const currentPath = window.location.pathname.split('/').pop(); // e.g. 'index.html'
+            document.querySelectorAll('nav a').forEach(link => {
+                if (link.getAttribute('href') === currentPath) {
+                    link.classList.add('active');
+                }
+            });
+        });
+
+        // Search functionality
+        function searchProducts() {
+            const input = document.getElementById('searchInput');
+            const filter = input.value.toLowerCase();
+            const productList = document.getElementById('productList');
+            const products = productList.getElementsByClassName('product-card');
+
+            for (let i = 0; i < products.length; i++) {
+                const productName = products[i].getAttribute('data-name').toLowerCase();
+                if (productName.includes(filter)) {
+                    products[i].style.display = ""; // Show product
+                } else {
+                    products[i].style.display = "none"; // Hide product
+                }
+            }
+        }
+
+        // Category filter functionality
+        function filterProducts(category) {
+            const productList = document.getElementById('productList');
+            const products = productList.getElementsByClassName('product-card');
+            const filterButtons = document.querySelectorAll('.filter-btn');
+
+            // Remove active class from all buttons
+            filterButtons.forEach(button => button.classList.remove('active'));
+
+            for (let i = 0; i < products.length; i++) {
+                const productCategory = products[i].getAttribute('data-category');
+                if (category === 'all' || productCategory === category) {
+                    products[i].style.display = ""; // Show product
+                } else {
+                    products[i].style.display = "none"; // Hide product
+                }
+            }
+
+            // Add active class to the clicked button
+            const activeButton = Array.from(filterButtons).find(button => button.textContent.toLowerCase() === category);
+            if (activeButton) {
+                activeButton.classList.add('active');
+            }
+        }
+
+        // Sort products functionality
+        function sortProducts(sortBy) {
+            const productList = document.getElementById('productList');
+            const products = Array.from(productList.getElementsByClassName('product-card'));
+
+            products.sort((a, b) => {
+                const aValue = parseFloat(a.getAttribute('data-price'));
+                const bValue = parseFloat(b.getAttribute('data-price'));
+                if (sortBy === 'price-low') {
+                    return aValue - bValue;
+                } else if (sortBy === 'price-high') {
+                    return bValue - aValue;
+                } else {
+                    return 0; // Default case
+                }
+            });
+
+            // Clear the product list and append sorted products
+            productList.innerHTML = '';
+            products.forEach(product => productList.appendChild(product));
+        }
+
+        // Add to cart functionality
+        function addToCart(productName) {
+            cartCount++; // Increment cart count
+            document.getElementById('cartCount').innerText = cartCount; // Update cart count display
+            alert(`${productName} has been added to your cart!`); // Alert user
+        }
+
+        // View cart functionality
+        function viewCart() {
+            alert(`You have ${cartCount} items in your cart.`); // Display cart count
+        }
+    </script>
+</body>
+</html>
