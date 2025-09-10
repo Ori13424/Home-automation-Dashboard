@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login & Sign Up - ByteBot</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Sourced from dashboard.html for theme consistency */
+        :root {
+            --primary-color: #0096c7;
+            --primary-hover: #0077b6;
+            --accent-color: #48cae4;
+            --text-dark: #212529;
+            --text-light: #6c757d;
+            --bg-main: #f0f7ff;
+            --bg-card: #ffffff;
+            --border-color: #e9ecef;
+            --shadow: 0 8px 24px rgba(149, 157, 165, 0.1);
+        }
+
+        body {
+            background-color: var(--bg-main);
+            font-family: 'Poppins', -apple-system, BlinkMacSystemFont, sans-serif;
+            color: var(--text-dark);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        
+        main {
+            flex-grow: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .auth-container {
+            position: relative;
+            width: 100%;
+            max-width: 850px;
+            height: 500px;
+            background-color: var(--bg-card);
+            border-radius: 1rem;
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            margin: 2rem;
+        }
+
+        .form-container {
+            position: absolute;
+            top: 0;
+            height: 100%;
+            transition: all 0.6s ease-in-out;
+        }
+
+        .sign-in-container {
+            left: 0;
+            width: 50%;
+            z-index: 2;
+        }
+
+        .sign-up-container {
+            left: 0;
+            width: 50%;
+            opacity: 0;
+            z-index: 1;
+        }
+        
+        .auth-container.right-panel-active .sign-in-container {
+            transform: translateX(100%);
+        }
+
+        .auth-container.right-panel-active .sign-up-container {
+            transform: translateX(100%);
+            opacity: 1;
+            z-index: 5;
+            animation: show 0.6s;
+        }
+
+        @keyframes show {
+            0%, 49.99% {
+                opacity: 0;
+                z-index: 1;
+            }
+            50%, 100% {
+                opacity: 1;
+                z-index: 5;
+            }
+        }
+        
+        form {
+            background-color: var(--bg-card);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            padding: 0 50px;
+            height: 100%;
+            text-align: center;
+        }
+
+        .form-input {
+            width: 100%;
+            background-color: #f1f3f5;
+            border: 1px solid var(--border-color);
+            border-radius: 0.5rem;
+            padding: 0.75rem 1rem;
+            margin: 8px 0;
+            color: var(--text-dark);
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(0, 119, 182, 0.3);
+        }
+        
+        .btn { 
+            padding: 0.75rem 2.5rem; 
+            border-radius: 0.5rem; 
+            font-weight: 600; 
+            transition: all 0.2s ease; 
+            text-align: center;
+            border: 1px solid transparent;
+            cursor: pointer;
+        }
+        .btn-primary { 
+            background-color: var(--primary-color); 
+            color: white; 
+            box-shadow: 0 4px 12px rgba(0, 119, 182, 0.4); 
+        }
+        .btn-primary:hover { 
+            background-color: var(--primary-hover); 
+            transform: translateY(-2px);
+        }
+        .btn-ghost {
+            background-color: transparent;
+            border-color: var(--bg-card);
+            color: var(--bg-card);
+        }
+
+
+        .overlay-container {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            width: 50%;
+            height: 100%;
+            overflow: hidden;
+            transition: transform 0.6s ease-in-out;
+            z-index: 100;
+        }
+        
+        .auth-container.right-panel-active .overlay-container {
+            transform: translateX(-100%);
+        }
+
+        .overlay {
+            background: linear-gradient(to right, var(--accent-color), var(--primary-color));
+            color: #FFFFFF;
+            position: relative;
+            left: -100%;
+            height: 100%;
+            width: 200%;
+            transform: translateX(0);
+            transition: transform 0.6s ease-in-out;
+        }
+
+        .auth-container.right-panel-active .overlay {
+            transform: translateX(50%);
+        }
+
+        .overlay-panel {
+            position: absolute;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            padding: 0 40px;
+            text-align: center;
+            top: 0;
+            height: 100%;
+            width: 50%;
+            transform: translateX(0);
+            transition: transform 0.6s ease-in-out;
+        }
+
+        .overlay-left {
+            transform: translateX(-20%);
+        }
+
+        .auth-container.right-panel-active .overlay-left {
+            transform: translateX(0);
+        }
+
+        .overlay-right {
+            right: 0;
+            transform: translateX(0);
+        }
+        
+        .auth-container.right-panel-active .overlay-right {
+            transform: translateX(20%);
+        }
+    </style>
+</head>
+<body>
+    <header class="bg-card/80 backdrop-blur-sm border-b border-gray-200 sticky top-0 z-40">
+        <div class="max-w-screen-xl mx-auto p-4 flex justify-between items-center">
+             <h1 class="text-3xl font-bold" style="background: linear-gradient(45deg, var(--primary-color), var(--accent-color));-webkit-background-clip: text;-webkit-text-fill-color: transparent;">ByteBot</h1>
+            <nav class="space-x-6 text-sm font-medium hidden md:block">
+                 <a class="text-gray-600 hover:text-primary-color" href="index.html">Home</a>
+                 <a class="text-gray-600 hover:text-primary-color" href="dashboard.html">Dashboard</a>
+                 <a class="text-gray-600 hover:text-primary-color" href="support.html">Support</a>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <div class="auth-container" id="authContainer">
+            <div class="form-container sign-up-container">
+                <form id="signup-form">
+                    <h1 class="text-3xl font-bold mb-4">Create Account</h1>
+                    <input id="full_name" type="text" placeholder="Full Name" required class="form-input" />
+                    <input id="email-signup" type="email" placeholder="Email" required class="form-input" />
+                    <input id="password-signup" type="password" placeholder="Password" required class="form-input" />
+                    <p id="error-message-signup" class="text-center text-red-600 mb-4 h-4 text-sm"></p>
+                    <button type="submit" class="btn btn-primary mt-2">Sign Up</button>
+                </form>
+            </div>
+            <div class="form-container sign-in-container">
+                <form id="login-form">
+                    <h1 class="text-3xl font-bold mb-4">Sign in</h1>
+                    <input id="email-login" type="email" placeholder="Email" required class="form-input" />
+                    <input id="password-login" type="password" placeholder="Password" required class="form-input" />
+                     <p id="error-message-login" class="text-center text-red-600 mb-4 h-4 text-sm"></p>
+                    <a href="#" class="text-sm text-gray-500 hover:text-primary-color mb-4">Forgot your password?</a>
+                    <button type="submit" class="btn btn-primary">Sign In</button>
+                </form>
+            </div>
+            <div class="overlay-container">
+                <div class="overlay">
+                    <div class="overlay-panel overlay-left">
+                        <h1 class="text-3xl font-bold">Welcome Back!</h1>
+                        <p class="text-sm font-light my-4">To keep connected with us please login with your personal info</p>
+                        <button class="btn btn-ghost" id="signIn">Sign In</button>
+                    </div>
+                    <div class="overlay-panel overlay-right">
+                        <h1 class="text-3xl font-bold">Hello, Friend!</h1>
+                        <p class="text-sm font-light my-4">Enter your personal details and start your journey with us</p>
+                        <button class="btn btn-ghost" id="signUp">Sign Up</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        const signUpButton = document.getElementById('signUp');
+        const signInButton = document.getElementById('signIn');
+        const container = document.getElementById('authContainer');
+
+        signUpButton.addEventListener('click', () => {
+            container.classList.add("right-panel-active");
+        });
+
+        signInButton.addEventListener('click', () => {
+            container.classList.remove("right-panel-active");
+        });
+    </script>
+    
+    <script type="module">
+        // Import functions from the Firebase SDKs
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-app.js";
+        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-auth.js";
+
+        // IMPORTANT: Replace with your actual Firebase project configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyDbM0h5sLUauQ4xkT3ymMiGqhkM45mb5oU", // Your actual key
+            authDomain: "home-dashboard-cca63.firebaseapp.com",
+            projectId: "home-dashboard-cca63",
+            storageBucket: "home-dashboard-cca63.firebasestorage.app",
+            messagingSenderId: "285882468205",
+            appId: "1:285882468205:web:2bc1103425d549bad2fc64",
+            measurementId: "G-ZB2VMHQ7DX"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+
+        // Sign Up Logic
+        const signupForm = document.getElementById('signup-form');
+        const errorMessageSignup = document.getElementById('error-message-signup');
+
+        signupForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const fullName = document.getElementById('full_name').value;
+            const email = document.getElementById('email-signup').value;
+            const password = document.getElementById('password-signup').value;
+            
+            errorMessageSignup.textContent = ''; // Clear previous errors
+
+            createUserWithEmailAndPassword(auth, email, password)
+                .then((userCredential) => {
+                    const user = userCredential.user;
+                    // Update profile with the display name
+                    return updateProfile(user, {
+                        displayName: fullName
+                    });
+                })
+                .then(() => {
+                    console.log('User created and profile updated');
+                    window.location.href = 'dashboard.html';
+                })
+                .catch((error) => {
+                    errorMessageSignup.textContent = error.message.replace('Firebase: ', '');
+                });
+        });
+
+
+        // Login Logic
+        const loginForm = document.getElementById('login-form');
+        const errorMessageLogin = document.getElementById('error-message-login');
+
+        loginForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const email = document.getElementById('email-login').value;
+            const password = document.getElementById('password-login').value;
+
+            errorMessageLogin.textContent = ''; // Clear previous errors
+
+            signInWithEmailAndPassword(auth, email, password)
+                .then((userCredential) => {
+                    const user = userCredential.user;
+                    console.log('User logged in:', user);
+                    window.location.href = 'dashboard.html';
+                })
+                .catch((error) => {
+                    errorMessageLogin.textContent = error.message.replace('Firebase: ', '');
+                });
+        });
+    </script>
+</body>
+</html>

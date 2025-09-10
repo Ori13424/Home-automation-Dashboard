@@ -1,175 +1,184 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title data-i18n="title">ByteBot Support & Contact</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet" />
-  <style>
-    body {
-      font-family: 'Inter', sans-serif;
-      background-color: #F5F5F5;
-    }
-    nav a.active {
-      color: #1d4ed8; /* Tailwind blue-700 */
-      font-weight: 700;
-      border-bottom: 2px solid #3a77ff;
-      padding-bottom: 2px;
-    }
-  </style>
-</head>
-<body class="min-h-screen flex flex-col">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>ByteBot - Support & Contact</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
 
-  <!-- Header -->
-  <header class="flex justify-between items-center px-6 md:px-20 py-4 bg-white shadow-md sticky top-0 z-50">
-    <div class="text-2xl font-bold text-blue-700" data-i18n="brand">ByteBot</div>
-    <nav class="space-x-6 text-sm font-semibold hidden md:flex text-[#1B2A4B]">
-      <a href="index.html" class="hover:text-[#0B1229] transition" data-i18n="home">Home</a>
-      <a href="about_us_updated.html" class="hover:text-[#0B1229] transition" data-i18n="about_us">About Us</a>
-      <a href="about.html" class="hover:text-[#0B1229] transition" data-i18n="products">Products</a>
-      <a href="dashboard.html" class="hover:text-[#0B1229] transition" data-i18n="dashboard">Dashboard</a>
-      <a href="support.html" class="hover:text-[#0B1229] transition font-semibold text-blue-700" data-i18n="support">Support</a>
-    </nav>
-    <div class="flex items-center space-x-4">
-      <a href="sign_in_up.html" class="bg-blue-700 text-white px-5 py-2 rounded-full hover:bg-blue-800 transition text-sm font-semibold flex items-center gap-2">
-        <i class="fas fa-rocket"></i> <span data-i18n="get_started">Get Started</span>
-      </a>
-      <select id="languageToggle" class="border border-gray-300 rounded-md text-sm px-2 py-1 focus:outline-none">
-        <option value="en">EN</option>
-        <option value="bn">বাংলা</option>
-      </select>
-    </div>
-  </header>
-
-  <!-- Main Content -->
-  <main class="flex-grow max-w-4xl mx-auto px-6 py-12">
-    <h1 class="text-4xl font-bold text-[#0B1229] mb-10 text-center" data-i18n="support_contact">Support & Contact</h1>
-
-    <section class="bg-white rounded-3xl shadow p-8 mb-12">
-      <h2 class="text-2xl font-semibold text-[#1B2A4B] mb-6" data-i18n="support">Support</h2>
-      <p class="text-[#4A5568] mb-6 leading-relaxed" data-i18n="support_text">
-        Need help with your ByteBot devices or dashboard? Our support team is here to assist you with any questions or issues you may have.
-      </p>
-      <ul class="list-disc list-inside text-[#4A5568] space-y-2">
-        <li data-i18n="support_list1">Device setup and troubleshooting</li>
-        <li data-i18n="support_list2">Dashboard usage and features</li>
-        <li data-i18n="support_list3">Firmware updates and compatibility</li>
-        <li data-i18n="support_list4">General inquiries and feedback</li>
-      </ul>
-      <p class="mt-6 text-[#4A5568]">
-        <span data-i18n="visit_help_center">For detailed guides and FAQs, please visit our</span>
-        <a href="#" class="text-blue-700 underline" data-i18n="help_center">Help Center</a>.
-      </p>
-    </section>
-
-    <section class="bg-white rounded-3xl shadow p-8">
-      <h2 class="text-2xl font-semibold text-[#1B2A4B] mb-6" data-i18n="contact_us">Contact Us</h2>
-      <form class="space-y-6" id="contact-form" novalidate>
-        <div>
-          <label for="name" class="block text-[#7B8CA1] font-semibold mb-2" data-i18n="name">Name</label>
-          <input type="text" id="name" name="name" required
-            class="w-full rounded-xl border border-[#D1D5DB] px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-700 text-[#1B2A4B]"
-            placeholder="Your full name" />
-        </div>
-        <div>
-          <label for="email" class="block text-[#7B8CA1] font-semibold mb-2" data-i18n="email">Email</label>
-          <input type="email" id="email" name="email" required
-            class="w-full rounded-xl border border-[#D1D5DB] px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-700 text-[#1B2A4B]"
-            placeholder="you@example.com" />
-        </div>
-        <div>
-          <label for="subject" class="block text-[#7B8CA1] font-semibold mb-2" data-i18n="subject">Subject</label>
-          <input type="text" id="subject" name="subject" required
-            class="w-full rounded-xl border border-[#D1D5DB] px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-700 text-[#1B2A4B]"
-            placeholder="Subject of your message" />
-        </div>
-        <div>
-          <label for="message" class="block text-[#7B8CA1] font-semibold mb-2" data-i18n="message">Message</label>
-          <textarea id="message" name="message" rows="5" required
-            class="w-full rounded-xl border border-[#D1D5DB] px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-700 text-[#1B2A4B]"
-            placeholder="Write your message here..."></textarea>
-        </div>
-        <button type="submit"
-          class="bg-blue-700 hover:bg-blue-800 text-white font-semibold rounded-3xl py-3 px-6 transition w-full md:w-auto"
-          data-i18n="send_message">
-          Send Message
-        </button>
-
-        <!-- Inline message display -->
-        <div id="formMessage" role="alert" class="mt-4 text-center text-sm"></div>
-      </form>
-    </section>
-  </main>
-
-  <!-- Footer -->
-  <footer class="bg-blue-50 text-center text-sm text-gray-500 py-8">
-    <div class="mb-4 font-semibold text-blue-700 text-xl">ByteBot</div>
-    <nav class="space-x-4 mb-4">
-      <a class="hover:text-blue-600" data-i18n="home" href="index.html">Home</a>
-      <a class="hover:text-blue-600" data-i18n="about_us" href="about_us_updated.html">About Us</a>
-      <a class="hover:text-blue-600" data-i18n="products" href="about.html">Products</a>
-      <a class="hover:text-blue-600" data-i18n="support" href="support.html">Support</a>
-      <a class="hover:text-blue-600" data-i18n="dashboard" href="dashboard.html">Dashboard</a>
-    </nav>
-    <p data-i18n="©_2025_bytebot_inc_all_rights_reserved">© 2025 ByteBot Inc. All rights reserved.</p>
-  </footer>
-
-  <!-- Scripts -->
-  <script>
-    // Highlight active nav link
-    document.addEventListener('DOMContentLoaded', () => {
-      const currentPath = window.location.pathname.split('/').pop();
-      document.querySelectorAll('nav a').forEach(link => {
-        if (link.getAttribute('href') === currentPath) {
-          link.classList.add('active');
+    <style>
+        body {
+          font-family: 'Inter', sans-serif;
+          background-color: #f1f7fb;
         }
-      });
-    });
+        .fade-in {
+          opacity: 0;
+          transform: translateY(20px);
+          transition: all 0.6s ease-in-out;
+        }
+        .fade-in.visible {
+          opacity: 1;
+          transform: none;
+        }
+        .section-heading {
+          font-size: 2.5rem;
+          font-weight: bold;
+          color: #2a3a56;
+        }
+        .button-primary {
+          background-color: #3a77ff;
+          color: white;
+          padding: 12px 36px;
+          border-radius: 50px;
+          font-weight: 600;
+          transition: all 0.3s ease;
+          border: none;
+          cursor: pointer;
+          width: 100%;
+        }
+        .button-primary:hover {
+          background-color: #2a5eff;
+          transform: scale(1.05);
+        }
+        @media (min-width: 768px) {
+            .button-primary {
+                width: auto;
+            }
+        }
+        /* Active nav link style */
+        nav a.active {
+          color: #1d4ed8; /* Tailwind blue-700 */
+          font-weight: 700;
+          border-bottom: 2px solid #3a77ff;
+          padding-bottom: 2px;
+        }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen">
 
-    // Form handling with inline message
-    const contactForm = document.getElementById('contact-form');
-    const formMessage = document.getElementById('formMessage');
+    <header class="flex justify-between items-center px-6 md:px-20 py-4 bg-white shadow-md sticky top-0 z-50">
+        <div class="text-2xl font-bold text-blue-700">ByteBot</div>
+        <nav class="space-x-6 text-sm font-medium hidden md:block">
+            <a class="hover:text-blue-600" href="index.html">Home</a>
+            <a class="hover:text-blue-600" href="about_us_updated.html">About Us</a>
+            <a class="hover:text-blue-600" href="about.html">Products</a>
+            <a class="hover:text-blue-600" href="dashboard.html">Dashboard</a>
+            <a class="hover:text-blue-600 active" href="support.html">Support</a>
+        </nav>
+        <div class="flex items-center space-x-4">
+            <a href="sign_in_up.html" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition text-sm font-semibold">Get Started</a>
+            <select id="languageToggle" class="border border-gray-300 rounded-md text-sm px-2 py-1 focus:outline-none">
+                <option value="en">EN</option>
+                <option value="bn">বাংলা</option>
+            </select>
+        </div>
+    </header>
 
-    contactForm.addEventListener('submit', e => {
-      e.preventDefault();
-      formMessage.textContent = ''; // Clear previous message
-      formMessage.className = 'mt-4 text-center text-sm';
+    <main class="flex-grow container mx-auto px-6 py-16">
+        <div class="max-w-4xl mx-auto">
+            <section class="text-center mb-12 fade-in">
+                <h1 class="section-heading">Support & Contact</h1>
+            </section>
 
-      const name = contactForm.name.value.trim();
-      const email = contactForm.email.value.trim();
-      const subject = contactForm.subject.value.trim();
-      const message = contactForm.message.value.trim();
+            <section class="bg-white rounded-2xl shadow-lg p-8 md:p-12 mb-12 fade-in" style="animation-delay: 0.2s;">
+                <h2 class="text-2xl font-bold text-gray-800 mb-4">Frequently Asked Questions</h2>
+                <p class="text-gray-600 mb-6">
+                    Need help with your ByteBot devices? Our support team is here to assist you. For immediate answers, please visit our comprehensive <a href="#" class="text-blue-600 font-semibold hover:underline">Help Center</a>.
+                </p>
+                <ul class="list-disc list-inside text-gray-600 space-y-2">
+                    <li>Device setup and troubleshooting</li>
+                    <li>Dashboard usage and features</li>
+                    <li>Firmware updates and compatibility</li>
+                    <li>General inquiries and feedback</li>
+                </ul>
+            </section>
 
-      if (!name || !email || !subject || !message) {
-        formMessage.textContent = 'Please fill in all fields.';
-        formMessage.classList.add('text-red-600');
-        return;
-      }
+            <section class="bg-white rounded-2xl shadow-lg p-8 md:p-12 fade-in" style="animation-delay: 0.4s;">
+                <h2 class="text-2xl font-bold text-gray-800 mb-6">Contact Us Directly</h2>
+                <form id="contact-form" novalidate class="space-y-6">
+                    <div>
+                        <label for="name" class="block text-sm font-medium text-gray-700 mb-1">Name</label>
+                        <input type="text" id="name" name="name" required class="w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500" placeholder="Your full name" />
+                    </div>
+                    <div>
+                        <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                        <input type="email" id="email" name="email" required class="w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500" placeholder="you@example.com" />
+                    </div>
+                    <div>
+                        <label for="subject" class="block text-sm font-medium text-gray-700 mb-1">Subject</label>
+                        <input type="text" id="subject" name="subject" required class="w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500" placeholder="How can we help?" />
+                    </div>
+                    <div>
+                        <label for="message" class="block text-sm font-medium text-gray-700 mb-1">Message</label>
+                        <textarea id="message" name="message" rows="5" required class="w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500" placeholder="Write your message here..."></textarea>
+                    </div>
+                    <button type="submit" class="button-primary">Send Message</button>
+                    <div id="formMessage" role="alert" class="mt-4 text-center text-sm"></div>
+                </form>
+            </section>
+        </div>
+    </main>
 
-      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      if (!emailRegex.test(email)) {
-        formMessage.textContent = 'Please enter a valid email address.';
-        formMessage.classList.add('text-red-600');
-        return;
-      }
+    <footer class="bg-gradient-to-r from-blue-50 via-blue-100 to-blue-200 text-center text-sm text-gray-600 py-8">
+        <div class="mb-4 font-semibold text-blue-700 text-xl">ByteBot</div>
+        <nav class="space-x-4 mb-4">
+            <a class="hover:text-blue-600" href="index.html">Home</a>
+            <a class="hover:text-blue-600" href="about_us_updated.html">About Us</a>
+            <a class="hover:text-blue-600" href="about.html">Products</a>
+            <a class="hover:text-blue-600" href="support.html">Support</a>
+            <a class="hover:text-blue-600" href="dashboard.html">Dashboard</a>
+        </nav>
+        <p>© 2025 ByteBot Inc. All rights reserved.</p>
+    </footer>
 
-      formMessage.textContent = 'Thank you for contacting ByteBot support! We will get back to you shortly.';
-      formMessage.classList.add('text-green-600');
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // --- INTERSECTION OBSERVER FOR ANIMATIONS ---
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                    }
+                });
+            }, { threshold: 0.1 });
+            document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
 
-      contactForm.reset();
-    });
+            // --- ACTIVE NAV LINK ---
+            const currentPath = window.location.pathname.split('/').pop() || 'support.html';
+            document.querySelectorAll('header nav a').forEach(link => {
+                if (link.getAttribute('href') === currentPath) {
+                    link.classList.add('active');
+                }
+            });
 
-    // Language selector
-    const langSelect = document.getElementById("languageToggle");
-    const currentLang = localStorage.getItem("language") || "en";
-    langSelect.value = currentLang;
+            // --- LANGUAGE TOGGLE ---
+            const langSelect = document.getElementById("languageToggle");
+            langSelect.value = localStorage.getItem("language") || "en";
+            langSelect.addEventListener("change", function () {
+                localStorage.setItem("language", this.value);
+                location.reload();
+            });
 
-    langSelect.addEventListener("change", function () {
-      localStorage.setItem("language", this.value);
-      location.reload();
-    });
-  </script>
-  <script src="lang.js"></script>
+            // --- CONTACT FORM HANDLING ---
+            const contactForm = document.getElementById('contact-form');
+            const formMessage = document.getElementById('formMessage');
+            contactForm.addEventListener('submit', e => {
+                e.preventDefault();
+                formMessage.textContent = '';
+                formMessage.className = 'mt-4 text-center text-sm'; // Reset classes
+                
+                if (!contactForm.checkValidity()) {
+                    formMessage.textContent = 'Please fill in all required fields correctly.';
+                    formMessage.classList.add('text-red-600');
+                    return;
+                }
+                
+                formMessage.textContent = 'Thank you for your message! We will get back to you shortly.';
+                formMessage.classList.add('text-green-600');
+                contactForm.reset();
+            });
+        });
+    </script>
 </body>
 </html>

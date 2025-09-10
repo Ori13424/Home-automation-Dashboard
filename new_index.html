@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title data-i18n="welcome">ByteBot - Master Your Home's Smart Devices</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #1d4ed8;
+            --primary-hover: #1e40af; /* A darker shade for hover */
+            --accent-color: #3b82f6; /* A complementary lighter blue */
+            --text-dark: #212529;
+            --text-light: #6c757d;
+            --bg-main: #f0f7ff;
+            --bg-card: #ffffff;
+            --border-color: #e9ecef;
+            --shadow: 0 8px 24px rgba(149, 157, 165, 0.1);
+            --shadow-hover: 0 12px 30px rgba(149, 157, 165, 0.15);
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--bg-main);
+            color: var(--text-dark);
+            opacity: 0;
+            animation: fadeInPage 0.5s ease-out forwards;
+        }
+
+        /* Page Transition Overlay */
+        #page-transition-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: var(--bg-main);
+            z-index: 9999;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.4s ease-in-out;
+        }
+        #page-transition-overlay.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        /* Animations */
+        @keyframes fadeInPage {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        @keyframes slideInUp {
+            from { transform: translateY(30px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        @keyframes zoomIn {
+            from { transform: scale(0.9); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        .animate-on-scroll {
+            opacity: 0;
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+        .slide-in-up {
+             transform: translateY(30px);
+        }
+        .is-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        /* General Styles */
+        .section-heading {
+            font-size: 2.8rem;
+            font-weight: 700;
+            color: var(--text-dark);
+            line-height: 1.2;
+        }
+        .section-subheading {
+            font-size: 1.125rem;
+            color: var(--text-light);
+        }
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 0.8rem 2.5rem;
+            border-radius: 9999px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(29, 78, 216, 0.3);
+        }
+        .btn-primary:hover {
+            background-color: var(--primary-hover);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(29, 78, 216, 0.4);
+        }
+        
+        /* Custom classes to utilize CSS variables with Tailwind-like names */
+        .bg-primary-color { background-color: var(--primary-color); }
+        .hover\\:bg-primary-hover:hover { background-color: var(--primary-hover); }
+        .text-primary-color { color: var(--primary-color); }
+        .hover\\:text-primary-color:hover { color: var(--primary-color); }
+
+
+        /* Header */
+        header {
+            background-color: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+        }
+        .header-title {
+            background: linear-gradient(45deg, var(--primary-color), var(--accent-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        nav a {
+            transition: color 0.2s;
+            position: relative;
+            padding-bottom: 4px;
+        }
+        nav a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background-color: var(--primary-color);
+            transition: width 0.3s ease;
+        }
+        nav a:hover::after, nav a.active::after {
+            width: 100%;
+        }
+        nav a.active {
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+
+        /* Hero Section */
+        .hero-section {
+            background: linear-gradient(135deg, var(--bg-main) 0%, #d4eaff 100%);
+        }
+        .hero-image-container {
+            animation: zoomIn 1s ease-out forwards;
+        }
+        .hero-image-container img {
+             filter: drop-shadow(0 20px 25px rgba(0, 0, 0, 0.15));
+        }
+
+        /* Feature & Product Card */
+        .feature-card {
+            background-color: var(--bg-card);
+            border-radius: 1rem;
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow);
+            padding: 2rem;
+            text-align: center;
+            transition: all 0.3s ease;
+            height: 100%; /* Ensure cards in a row are same height */
+        }
+        .feature-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-hover);
+            border-color: var(--primary-color);
+        }
+        .feature-icon {
+            width: 4rem;
+            height: 4rem;
+            margin: 0 auto 1.5rem;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, var(--accent-color), var(--primary-color));
+            color: white;
+            box-shadow: 0 4px 12px rgba(29, 78, 216, 0.3);
+        }
+        
+        /* CTA Section */
+        .cta-section {
+             background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+             border-radius: 1.5rem;
+        }
+
+        /* Product Card Link */
+        .product-card-link {
+            text-decoration: none;
+            color: inherit;
+            display: block;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="page-transition-overlay"></div>
+
+    <header class="sticky top-0 z-50">
+        <div class="max-w-screen-xl mx-auto flex justify-between items-center px-6 md:px-8 py-4">
+            <div class="text-2xl font-bold header-title">ByteBot</div>
+            <nav class="space-x-8 text-sm font-medium hidden md:block">
+                <a class="text-gray-600 hover:text-primary-color" data-i18n="home" href="index.html">Home</a>
+                <a class="text-gray-600 hover:text-primary-color" data-i18n="about_us" href="about_us_updated.html">About Us</a>
+                <a class="text-gray-600 hover:text-primary-color" data-i18n="products" href="#products">Products</a>
+                <a class="text-gray-600 hover:text-primary-color" data-i18n="smarthome_dashboard" href="dashboard.html">Dashboard</a>
+                <a class="text-gray-600 hover:text-primary-color" data-i18n="support" href="support.html">Support</a>
+            </nav>
+            <div class="flex items-center space-x-4">
+                <a data-i18n="get_started" href="auth.html"
+                class="bg-primary-color text-white px-5 py-2 rounded-full hover:bg-primary-hover transition text-sm font-semibold shadow-md">
+                Get Started
+                </a>
+                <select id="languageToggle" class="border border-gray-300 rounded-md text-sm px-2 py-1.5 focus:outline-none focus:ring-2 focus:ring-primary-color">
+                <option value="en">EN</option>
+                <option value="bn">বাংলা</option>
+                </select>
+            </div>
+        </div>
+    </header>
+
+    <section class="hero-section">
+        <div class="max-w-screen-xl mx-auto flex flex-col md:flex-row items-center justify-between px-6 md:px-8 py-20 md:py-28">
+            <div class="md:w-1/2 text-center md:text-left animate-on-scroll slide-in-up">
+                <h1 class="section-heading mb-4" data-i18n="rooted_locally_built_securely_trusted_globally">Rooted locally. Built securely. Trusted globally.</h1>
+                <p class="section-subheading mb-8" data-i18n="modern_home_description">Experience a modern home with state-of-the-art features, locally crafted and fully controllable from your smartphone.</p>
+                <a href="#features" class="btn-primary" data-i18n="explore_now">Explore Now</a>
+            </div>
+            <div class="md:w-1/2 mt-12 md:mt-0 flex justify-center hero-image-container">
+                <img alt="Smart Home" class="w-full max-w-lg" src="images/bytebots_logo_blended-Picsart-BackgroundChanger-Picsart-BackgroundChanger.png"/>
+            </div>
+        </div>
+    </section>
+    
+    <section id="features" class="py-24 px-6 md:px-8 bg-white">
+        <div class="max-w-screen-xl mx-auto text-center">
+            <h2 class="section-heading mb-4 animate-on-scroll slide-in-up" data-i18n="seamless_control">Total Control, Ultimate Simplicity</h2>
+            <p class="section-subheading max-w-3xl mx-auto mb-16 animate-on-scroll slide-in-up" style="transition-delay: 0.1s;" data-i18n="manage_all_your_devices_effortlessly_from_one_place_with_our_easy-to-use_mobile_app">Manage your entire smart home ecosystem from a single, intuitive app. Effortless control is now at your fingertips, whether you're home or away.</p>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="feature-card animate-on-scroll slide-in-up" style="transition-delay: 0.2s;">
+                    <div class="feature-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-2">Ironclad Security</h3>
+                    <p class="text-gray-600">Your privacy is our priority. With end-to-end encryption, your home and data are always protected.</p>
+                </div>
+                <div class="feature-card animate-on-scroll slide-in-up" style="transition-delay: 0.3s;">
+                    <div class="feature-icon">
+                         <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18.36 6.64a9 9 0 1 1-12.73 0"></path><line x1="12" y1="2" x2="12" y2="12"></line></svg>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-2">Energy Efficiency</h3>
+                    <p class="text-gray-600">Monitor and manage your power usage to save on bills and reduce your carbon footprint effortlessly.</p>
+                </div>
+                <div class="feature-card animate-on-scroll slide-in-up" style="transition-delay: 0.4s;">
+                    <div class="feature-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-2">Smart Automation</h3>
+                    <p class="text-gray-600">Create custom scenes and schedules that adapt to your lifestyle, making your home work for you.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="products" class="py-24 px-6 md:px-8">
+        <div class="max-w-screen-xl mx-auto text-center">
+            <h2 class="section-heading mb-4 animate-on-scroll slide-in-up" data-i18n="our_products">Our Featured Products</h2>
+            <p class="section-subheading max-w-3xl mx-auto mb-16 animate-on-scroll slide-in-up" style="transition-delay: 0.1s;" data-i18n="product_description">Discover our range of smart devices designed to make your life easier and more efficient.</p>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+                <a href="smart_switch.html" class="product-card-link animate-on-scroll slide-in-up" style="transition-delay: 0.2s;">
+                    <div class="feature-card">
+                       <img src="images/demo1 (1).jpg" alt="Smart Switch" class="w-full h-49">
+                        <h3 class="text-xl font-semibold mb-2">Smart Switch</h3>
+                        <p class="text-gray-600">Control your lights and appliances from anywhere. Automate schedules and save energy with our intuitive smart switch.</p>
+                    </div>
+                </a>
+                <a href="smart_cleaner.html" class="product-card-link animate-on-scroll slide-in-up" style="transition-delay: 0.3s;">
+                    <div class="feature-card">
+                        <img src="images/demo1 (2).jpg" alt="Smart Cleaner" class="w-full h-49">
+                        <h3 class="text-xl font-semibold mb-2">Smart Cleaner</h3>
+                        <p class="text-gray-600">Keep your home spotless with our automated smart cleaner. Schedule cleanings and control it remotely via the app.</p>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </section>
+    
+    <section class="py-24 px-6 md:px-8 bg-white">
+        <div class="max-w-screen-xl mx-auto flex flex-col md:flex-row items-center gap-12 md:gap-20">
+            <div class="md:w-1/2 animate-on-scroll slide-in-up">
+                <h2 class="section-heading mb-4" data-i18n="how_it_works">How It Works</h2>
+                <p class="section-subheading mb-6">Control your devices with ease using our intuitive mobile app. Stay connected to your home, wherever you are. Get real-time updates and manage everything with a single tap.</p>
+                <ul class="space-y-4 text-gray-700">
+                    <li class="flex items-start"><span class="text-primary-color font-bold mr-3">1.</span> <strong>Install & Connect:</strong> Easily set up your ByteBot devices and connect them to your home Wi-Fi.</li>
+                    <li class="flex items-start"><span class="text-primary-color font-bold mr-3">2.</span> <strong>Customize in App:</strong> Name your devices, group them by room, and set custom schedules or scenes.</li>
+                    <li class="flex items-start"><span class="text-primary-color font-bold mr-3">3.</span> <strong>Control Anywhere:</strong> Enjoy full control over your home from anywhere in the world through the ByteBot app.</li>
+                </ul>
+            </div>
+            <div class="md:w-1/2 animate-on-scroll slide-in-up" style="transition-delay: 0.2s;">
+                <img alt="Smart App Interface" class="w-auto mx-auto transform transition-transform duration-500 hover:scale-105" src="images/ui2-Picsart-BackgroundChanger.png"/>
+            </div>
+        </div>
+    </section>
+
+    <section class="py-24 px-6 md:px-8">
+        <div class="cta-section max-w-screen-lg mx-auto text-center text-white p-12 md:p-16 animate-on-scroll slide-in-up">
+            <h2 class="text-3xl font-bold mb-4" data-i18n="control_your_smart_home_anytime_anywhere">Ready to Transform Your Home?</h2>
+            <p class="opacity-90 mb-8" data-i18n="download_the_app_to_manage_your_devices_on_the_go">Download the ByteBot app today and step into the future of smart living.</p>
+            <div class="space-x-4">
+                <a href="auth.html" class="bg-white text-primary-color px-6 py-3 rounded-full hover:bg-gray-200 transition text-sm font-semibold shadow-lg">Get Started Now</a>
+            </div>
+        </section>
+    </section>
+
+    <footer class="bg-white text-center text-sm py-12 px-6 md:px-8">
+        <div class="max-w-screen-xl mx-auto">
+            <div class="mb-4 font-bold text-2xl header-title">ByteBot</div>
+            <nav class="space-x-6 mb-6 text-gray-500">
+                <a class="hover:text-primary-color" data-i18n="home" href="index.html">Home</a>
+                <a class="hover:text-primary-color" data-i18n="about_us" href="about_us_updated.html">About Us</a>
+                <a class="hover:text-primary-color" data-i18n="products" href="#products">Products</a>
+                <a class="hover:text-primary-color" data-i18n="support" href="support.html">Support</a>
+                <a class="hover:text-primary-color" data-i18n="dashboard" href="dashboard.html">Dashboard</a>
+            </nav>
+            <p class="text-gray-400" data-i18n="©_2025_bytebot_inc_all_rights_reserved">© 2025 ByteBot Inc. All rights reserved.</p>
+        </div>
+    </footer>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        
+        // --- SMOOTH SCROLL FOR ANCHOR LINKS ---
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+
+        // --- ANIMATE ON SCROLL ---
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('is-visible');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.animate-on-scroll').forEach(el => {
+            observer.observe(el);
+        });
+      
+        // --- PAGE TRANSITION ---
+        const pageTransitionOverlay = document.getElementById('page-transition-overlay');
+        const navLinks = document.querySelectorAll('header a[href]');
+
+        navLinks.forEach(link => {
+            // Exclude anchor links and external links
+            if (link.hostname === window.location.hostname && !link.getAttribute('href').startsWith('#')) {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const destination = this.href;
+                    
+                    pageTransitionOverlay.classList.add('active');
+
+                    setTimeout(() => {
+                        window.location.href = destination;
+                    }, 400); // Match this with transition duration
+                });
+            }
+        });
+
+        // --- LANGUAGE TOGGLE ---
+        const langSelect = document.getElementById("languageToggle");
+        const currentLang = localStorage.getItem("language") || "en";
+        langSelect.value = currentLang;
+
+        langSelect.addEventListener("change", function () {
+            localStorage.setItem("language", this.value);
+            location.reload();
+        });
+
+        // --- ACTIVE NAV LINK HIGHLIGHT ---
+        const currentPath = window.location.pathname.split('/').pop() || 'index.html';
+        document.querySelectorAll('nav a').forEach(link => {
+            if (!link.getAttribute('href').startsWith('#')) {
+                const linkPath = link.getAttribute('href').split('/').pop() || 'index.html';
+                if (linkPath === currentPath) {
+                    link.classList.add('active');
+                }
+            }
+        });
+    });
+</script>
+<script src="lang.js"></script>
+<button data-i18n="en" onclick="changeLanguage('en')">EN</button>
+<button data-i18n="বাংলা" onclick="changeLanguage('bn')">বাংলা</button>
+<script src="lang.js"></script></body>
+
+</body>
+</html>
